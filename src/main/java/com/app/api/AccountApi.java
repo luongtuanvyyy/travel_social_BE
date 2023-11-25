@@ -23,10 +23,6 @@ public class AccountApi {
         return ResponseEntity.ok(accountService.blockAccount(id));
     }
 
-    @PostMapping(value = "/public/accounts/googleToken", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> googleToken(@RequestParam("token") String token) throws Exception {
-        return ResponseEntity.ok(accountService.googleToken(token));
-    }
     @DeleteMapping("/admin/accounts/{id}")
     public ResponseEntity<?> remove(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(accountService.removeAccount(id));

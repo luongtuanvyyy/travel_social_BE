@@ -13,4 +13,6 @@ public interface AuthService {
     APIResponse registerCompany (Account account, MultipartFile file);
     APIResponse updateInformation (UserPrincipal userPrincipal,Account account, MultipartFile file);
     APIResponse logout();
+
+    APIResponse googleToken(String token) throws Exception;
 }

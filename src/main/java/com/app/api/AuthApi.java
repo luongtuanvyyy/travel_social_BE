@@ -8,6 +8,7 @@ import com.app.security.UserPrincipal;
 import com.app.service.AuthService;
 import com.app.service.serviceImpl.CloudinaryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +44,11 @@ public class AuthApi {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping(value = "/auth/login/GGFBToken")
+    public ResponseEntity<?> googleToken(@RequestParam("token") String token) throws Exception {
+        APIResponse response =  authService.googleToken(token);
+        return ResponseEntity.ok(response);
+    }
     @PostMapping(path = "/auth/register-avatar", consumes = {"multipart/form-data"})
     public ResponseEntity<?> registerWithAvatar(
             @RequestPart(name = "account") Account account,

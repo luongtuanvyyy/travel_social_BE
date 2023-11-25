@@ -1,16 +1,17 @@
 package com.app.service.serviceImpl;
 
 import com.app.entity.Account;
+import com.app.exception.BadRequestException;
 import com.app.mapper.AccountMapper;
-import com.app.payload.response.APIResponse;
-import com.app.payload.response.AuthResponse;
-import com.app.payload.response.CloudinaryResponse;
-import com.app.payload.response.FailureAPIResponse;
+import com.app.payload.response.*;
 import com.app.repository.AccountRepository;
 import com.app.security.TokenProvider;
 import com.app.security.UserPrincipal;
 import com.app.service.AuthService;
+import com.app.type.EAuthProvider;
 import com.app.type.ERole;
+import org.apache.commons.codec.binary.Base64;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -152,5 +153,53 @@ public class AuthServiceImpl implements AuthService {
         return APIResponse.builder().message("update successful").success(true).data(exists).build();
     }
 
+    @Override
+    public APIResponse googleToken(String token) throws Exception {
+        String payload = token.split("\\.")[1];
 
+        String decodedPayload = new String(Base64.decodeBase64(payload));
+        JSONObject payloadJson = new JSONObject(decodedPayload);
+
+        String name = payloadJson.getString("name");
+        String picture = payloadJson.getString("picture");
+        String email  = payloadJson.getString("email");
+        String sign_in_provider = payloadJson.getJSONObject("firebase").getString("sign_in_provider");
+        String user_id  = payloadJson.getString("user_id");
+        Account account = new Account();
+        account.setEmail(email);
+        account.setName(name);
+        account.setAvatar(picture);
+        if(sign_in_provider.equals("google.com")){
+            account.setGgProviderId(user_id);
+            account.setProvider(EAuthProvider.google);
+        }
+        else {
+            account.setFbProviderId(user_id);
+            account.setProvider(EAuthProvider.facebook);
+        }
+        APIResponse response =  loginProvider(account);
+        return new SuccessAPIResponse(response);
+    }
+
+    public APIResponse loginProvider(Account account) {
+//        try {
+//            Authentication authentication = authenticationManager.authenticate(
+//                    new UsernamePasswordAuthenticationToken(account.getEmail(), account.getPassword())
+//            );
+//            SecurityContextHolder.getContext().setAuthentication(authentication);
+            Account acc = accountRepository.findByEmail(account.getEmail()).orElse(null);
+            if(acc == null){
+                acc = accountRepository.save(account);
+            }
+            if(!acc.getIsActivated()) {
+                return APIResponse.builder().message("Account has been blocked").success(false).build();
+            }
+
+            String token = tokenProvider.generateToken(acc);
+            AuthResponse authResponse = new AuthResponse(token, accountMapper.accountDto(acc));
+            return  APIResponse.builder().message("Success").success(true).data(authResponse).build();
+//        }catch (Exception ex){
+//            return FailureAPIResponse.builder().message("ex").success(false).build();
+//        }
+    }
 }

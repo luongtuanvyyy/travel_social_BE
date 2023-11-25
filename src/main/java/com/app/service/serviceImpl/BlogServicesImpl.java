@@ -1,8 +1,6 @@
 package com.app.service.serviceImpl;
 
 import com.app.entity.Blog;
-import com.app.entity.BlogReaction;
-import com.app.entity.Voucher;
 import com.app.payload.request.BlogQueryParam;
 import com.app.payload.response.APIResponse;
 import com.app.payload.response.CloudinaryResponse;
@@ -58,8 +56,21 @@ public class BlogServicesImpl implements BlogServices {
         Page<Blog> response = blogRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
     }
+    @Override
+    public APIResponse filterBlogNotSeen(BlogQueryParam blogQueryParam) {
+        Specification<Blog> spec = blogSpecification.getBlogSpecification(blogQueryParam);
+        Pageable pageable = requestParamsUtils.getPageable(blogQueryParam);
+        Page<Blog> response = blogRepository.findAllNotSeen(spec, pageable);
+        return new APIResponse(PageUtils.toPageResponse(response));
+    }
 
-
+    @Override
+    public APIResponse filterLeastBlog(BlogQueryParam blogQueryParam) {
+        Specification<Blog> spec = blogSpecification.getBlogSpecification(blogQueryParam);
+        Pageable pageable = requestParamsUtils.getPageable(blogQueryParam);
+        Page<Blog> response = blogRepository.findLatestBlogs(spec, pageable);
+        return new APIResponse(PageUtils.toPageResponse(response));
+    }
     @Override
     public APIResponse create(Blog blog, MultipartFile image) {
         if (image != null) {
@@ -99,6 +110,9 @@ public class BlogServicesImpl implements BlogServices {
             return new FailureAPIResponse(ex.getMessage());
         }
     }
+
+
+
 
     @Override
     public List<Blog> findByTitle(BlogQueryParam blogQueryParam) {

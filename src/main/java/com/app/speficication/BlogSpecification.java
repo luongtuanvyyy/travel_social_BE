@@ -46,7 +46,7 @@ public class BlogSpecification {
 
     public Specification<Blog> hasNameLikeBlog(String name) {
         return (Root<Blog> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
-            String nameWithoutDiacritics = removeDiacritics(name);
+            String nameWithoutDiacritics = removeDiacritics(name.trim());
             String nameUpperCase = nameWithoutDiacritics.toUpperCase();
             Predicate likePredicate = criteriaBuilder.like(
                     criteriaBuilder.upper(root.get("title")),

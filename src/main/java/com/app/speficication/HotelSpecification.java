@@ -21,7 +21,7 @@ public class HotelSpecification {
 //    }
     public Specification<Hotel> hasNameLike(String name) {
         return (Root<Hotel> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
-            String nameWithoutDiacritics = removeDiacritics(name);
+            String nameWithoutDiacritics = removeDiacritics(name.trim());
             String nameUpperCase = nameWithoutDiacritics.toUpperCase();
             Predicate likePredicate = criteriaBuilder.like(
                     criteriaBuilder.upper(root.get("name")),

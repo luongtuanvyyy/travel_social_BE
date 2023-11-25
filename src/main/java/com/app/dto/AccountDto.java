@@ -2,6 +2,7 @@ package com.app.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.app.type.ERole;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,10 +21,9 @@ public class AccountDto {
     private String cloudinaryId;
     private String description;
     private String email;
-    private String firstName;
+    private String name;
     private boolean gender;
     private String hotline;
-    private String lastName;
     private ERole role;
     private boolean isVerify = false;
     private boolean vip;
@@ -31,4 +31,6 @@ public class AccountDto {
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private Date createdAt;
     private String createdBy;
+    private String ggProviderId;
+    private String fbProviderId;
 }

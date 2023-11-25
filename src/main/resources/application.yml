@@ -2,8 +2,8 @@ spring:
   profiles:
     # active: ${SPRING_PROFILE}
     # include: common, ${SPRING_PROFILE}
-#    active: production
-#    include: common, production
+    active: production
+    include: common, production
 
-    active: local
-    include: common, local
+#    active: local
+#    include: common, local

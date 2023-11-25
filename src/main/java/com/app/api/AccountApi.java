@@ -3,6 +3,7 @@ package com.app.api;
 import com.app.payload.request.AccountQueryParam;
 import com.app.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,10 @@ public class AccountApi {
         return ResponseEntity.ok(accountService.blockAccount(id));
     }
 
+    @PostMapping(value = "/public/accounts/googleToken", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> googleToken(@RequestParam("token") String token) throws Exception {
+        return ResponseEntity.ok(accountService.googleToken(token));
+    }
     @DeleteMapping("/admin/accounts/{id}")
     public ResponseEntity<?> remove(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(accountService.removeAccount(id));

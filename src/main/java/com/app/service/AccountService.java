@@ -8,5 +8,7 @@ public interface AccountService {
 
     APIResponse blockAccount(Integer id);
 
+    APIResponse googleToken(String token) throws Exception;
+
     APIResponse removeAccount(Integer id);
 }

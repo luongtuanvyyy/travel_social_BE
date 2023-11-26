@@ -1,10 +1,14 @@
 package com.app.service.serviceImpl;
 
+import com.app.dto.AccountDto;
 import com.app.entity.Account;
 import com.app.exception.BadRequestException;
 import com.app.mapper.AccountMapper;
 import com.app.payload.response.*;
 import com.app.repository.AccountRepository;
+import com.app.repository.BlogRepository;
+import com.app.repository.FollowRepository;
+import com.app.repository.LikeRepository;
 import com.app.security.TokenProvider;
 import com.app.security.UserPrincipal;
 import com.app.service.AuthService;
@@ -30,6 +34,12 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     AccountRepository accountRepository;
     @Autowired
+    BlogRepository blogRepository;
+    @Autowired
+    LikeRepository likeRepository;
+    @Autowired
+    FollowRepository followRepository;
+    @Autowired
     TokenProvider tokenProvider;
     @Autowired
     AuthenticationManager authenticationManager;
@@ -54,7 +64,12 @@ public class AuthServiceImpl implements AuthService {
             }
 
             String token = tokenProvider.generateToken(acc);
-            AuthResponse authResponse = new AuthResponse(token, accountMapper.accountDto(acc));
+            AccountDto accDto = accountMapper.accountDto(acc);
+            Integer id = acc.getId();
+            accDto.setTotalBlog(blogRepository.countByCreatedBy(acc.getEmail()));
+            accDto.setTotalLike(likeRepository.countByAccountId(id));
+            accDto.setTotalFollow(followRepository.countByAccountId(id));
+            AuthResponse authResponse = new AuthResponse(token, accDto);
             return  APIResponse.builder().message("Success").success(true).data(authResponse).build();
         }catch (Exception ex){
             return APIResponse.builder().message("Username or password is incorrect").success(false).build();

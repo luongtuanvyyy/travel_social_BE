@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LikeRepository extends JpaRepository<Like, Integer> {
-
+    Integer countByAccountId(Integer accountId);
     Page<Like> findAll(Specification<Like> spec, Pageable pageable);
 }

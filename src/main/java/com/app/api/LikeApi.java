@@ -25,7 +25,7 @@ public class LikeApi {
     }
 
     @PostMapping("/user/likes")
-    public ResponseEntity<?> createLike(@RequestPart(name = "like") Like like) {
+    public ResponseEntity<?> createLike(@RequestBody Like like) {
         APIResponse response = likeServices.create(like);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

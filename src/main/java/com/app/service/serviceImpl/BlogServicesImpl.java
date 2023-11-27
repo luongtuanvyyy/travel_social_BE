@@ -56,6 +56,7 @@ public class BlogServicesImpl implements BlogServices {
         Page<Blog> response = blogRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
     }
+
     @Override
     public APIResponse filterBlogNotSeen(BlogQueryParam blogQueryParam) {
         Specification<Blog> spec = blogSpecification.getBlogSpecification(blogQueryParam);
@@ -71,34 +72,50 @@ public class BlogServicesImpl implements BlogServices {
         Page<Blog> response = blogRepository.findLatestBlogs(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
     }
+
     @Override
     public APIResponse create(Blog blog, MultipartFile image) {
-        if (image != null) {
-            CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "example");
-            blog.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-            blog.setImage(cloudinaryResponse.getUrl());
+        try {
+            if (blog.getTitle() == null || blog.getTitle().trim().isEmpty()) {
+                throw new IllegalArgumentException("Blog title cannot be empty");
+            }
+            if (image != null) {
+                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "example");
+                blog.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
+                blog.setImage(cloudinaryResponse.getUrl());
+            }
+            blog = blogRepository.save(blog);
+            return new SuccessAPIResponse(blog);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
         }
-        blog = blogRepository.save(blog);
-        return new SuccessAPIResponse(blog);
     }
 
     @Override
     public APIResponse update(Blog blog, MultipartFile image) {
-        if (blog == null) {
-            return new FailureAPIResponse("Blog id is required!");
+        try {
+
+            if (blog == null) {
+                return new FailureAPIResponse("Blog id is required!");
+            }
+            if (blog.getTitle() == null || blog.getTitle().trim().isEmpty()) {
+                throw new IllegalArgumentException("Blog title cannot be empty");
+            }
+            Blog exists = blogRepository.findById(blog.getId()).orElse(null);
+            if (exists == null) {
+                return new FailureAPIResponse("Cannot find blog with id: " + blog.getId());
+            }
+            if (image != null) {
+                cloudinaryService.deleteFile(blog.getCloudinaryId());
+                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "blog");
+                blog.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
+                blog.setImage(cloudinaryResponse.getUrl());
+            }
+            blog = blogRepository.save(blog);
+            return new SuccessAPIResponse(blog);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
         }
-        Blog exists = blogRepository.findById(blog.getId()).orElse(null);
-        if (exists == null) {
-            return new FailureAPIResponse("Cannot find blog with id: " + blog.getId());
-        }
-        if (image != null) {
-            cloudinaryService.deleteFile(blog.getCloudinaryId());
-            CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "blog");
-            blog.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-            blog.setImage(cloudinaryResponse.getUrl());
-        }
-        blog = blogRepository.save(blog);
-        return new SuccessAPIResponse(blog);
     }
 
     @Override
@@ -110,8 +127,6 @@ public class BlogServicesImpl implements BlogServices {
             return new FailureAPIResponse(ex.getMessage());
         }
     }
-
-
 
 
     @Override

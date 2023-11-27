@@ -15,10 +15,13 @@ public interface BlogServices {
 
     APIResponse filterBlog(BlogQueryParam blogQueryParam);
 
-    APIResponse create(Blog blog,MultipartFile image);
+    APIResponse filterBlogNotSeen(BlogQueryParam blogQueryParam);
+
+    APIResponse filterLeastBlog(BlogQueryParam blogQueryParam);
+
+    APIResponse create(Blog blog, MultipartFile image);
     APIResponse update(Blog blog,MultipartFile image);
     APIResponse delete(Integer id);
-
 
     List<Blog> findByTitle(BlogQueryParam blogQueryParam);
     APIResponse uploadExcel(MultipartFile excel);

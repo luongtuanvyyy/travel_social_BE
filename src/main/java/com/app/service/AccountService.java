@@ -8,5 +8,6 @@ public interface AccountService {
 
     APIResponse blockAccount(Integer id);
 
+
     APIResponse removeAccount(Integer id);
 }

@@ -15,6 +15,5 @@ import lombok.*;
 public class Follow extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "FOLLOWER_ID", referencedColumnName = "ID")
-    @JsonIgnore
     private Account account;
 }

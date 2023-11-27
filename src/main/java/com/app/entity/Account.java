@@ -19,6 +19,7 @@ import java.util.Date;
 public class Account extends BaseEntity {
     @Column(name = "ACCOUNT_NAME", unique = true)
     private String accountName;
+    private String name;
     private String address;
     private String avatar;
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -47,4 +48,7 @@ public class Account extends BaseEntity {
     private EAuthProvider provider;
     @JsonIgnore
     private String providerId;
+
+    private String ggProviderId;
+    private String fbProviderId;
 }

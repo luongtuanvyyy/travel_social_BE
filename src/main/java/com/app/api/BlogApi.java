@@ -25,6 +25,15 @@ public class BlogApi {
         return ResponseEntity.ok(blogServices.filterBlog(blogQueryParam));
     }
 
+    @GetMapping("/public/blogs/notSeen")
+    public ResponseEntity<?> filterBlogNotSeen(BlogQueryParam blogQueryParam) {
+        return ResponseEntity.ok(blogServices.filterBlogNotSeen(blogQueryParam));
+    }
+
+    @GetMapping("/public/blogs/least")
+    public ResponseEntity<?> filterLeastBlog(BlogQueryParam blogQueryParam) {
+        return ResponseEntity.ok(blogServices.filterLeastBlog(blogQueryParam));
+    }
     @PostMapping("/user/blogs")
     public ResponseEntity<?> createBlog(@RequestPart(name = "blog") Blog blog,
                                         @RequestPart(name = "image") @Nullable MultipartFile image) {

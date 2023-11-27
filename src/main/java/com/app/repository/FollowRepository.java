@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FollowRepository extends JpaRepository<Follow, Integer> {
-
+    Integer countByAccountId(Integer accountId);
     Page<Follow> findAll(Specification<Follow> spec, Pageable pageable);
 }

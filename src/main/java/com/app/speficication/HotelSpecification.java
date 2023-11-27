@@ -2,10 +2,9 @@ package com.app.speficication;
 
 import com.app.entity.Hotel;
 import com.app.payload.request.HotelQueryParam;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+
+import javax.persistence.criteria.*;
+
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
@@ -16,12 +15,12 @@ public class HotelSpecification {
     public Specification<Hotel> hasIdEqual(Integer id) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("id"), id);
     }
-//    public Specification<Hotel> hasRatingEqual(Float id) {
-//        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("id"), id);
-//    }
+    public Specification<Hotel> hasRatingEqual(Float rating) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("rating"), rating);
+    }
     public Specification<Hotel> hasNameLike(String name) {
         return (Root<Hotel> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
-            String nameWithoutDiacritics = removeDiacritics(name);
+            String nameWithoutDiacritics = removeDiacritics(name.trim());
             String nameUpperCase = nameWithoutDiacritics.toUpperCase();
             Predicate likePredicate = criteriaBuilder.like(
                     criteriaBuilder.upper(root.get("name")),
@@ -32,7 +31,7 @@ public class HotelSpecification {
     }
     public Specification<Hotel> hasAddressLike(String address) {
         return (Root<Hotel> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
-            String nameWithoutDiacritics = removeDiacritics(address);
+            String nameWithoutDiacritics = removeDiacritics(address.trim());
             String nameUpperCase = nameWithoutDiacritics.toUpperCase();
             Predicate likePredicate = criteriaBuilder.like(
                     criteriaBuilder.upper(root.get("address")),
@@ -52,9 +51,9 @@ public class HotelSpecification {
         if (hotelQueryParam.getId() != null) {
             spec = spec.and(hasIdEqual(hotelQueryParam.getId()));
         }
-//        if (hotelQueryParam.getRating() != null) {
-//            spec = spec.and(hasRatingEqual(hotelQueryParam.getRating()));
-//        }
+        if (hotelQueryParam.getRating() != null) {
+            spec = spec.and(hasRatingEqual(hotelQueryParam.getRating()));
+        }
         if (hotelQueryParam.getName() != null) {
             spec = spec.and(hasNameLike(hotelQueryParam.getName()));
         }

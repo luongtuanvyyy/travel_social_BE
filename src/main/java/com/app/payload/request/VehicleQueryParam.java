@@ -9,4 +9,10 @@ public class VehicleQueryParam extends BaseQueryRequest{
     Integer id;
 
     String name;
+
+    String address;
+    String type;
+    String email;
+    String website;
+    String hotline;
 }

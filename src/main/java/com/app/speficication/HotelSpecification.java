@@ -53,8 +53,7 @@ public class HotelSpecification {
     public Specification<Hotel> getHotelSpecification(HotelQueryParam hotelQueryParam) {
         Specification<Hotel> spec = Specification.where(null);
         if (hotelQueryParam.getId() != null) {
-
-                spec = spec.and(hasIdEqual(hotelQueryParam.getId()));
+            spec = spec.and(hasIdEqual(hotelQueryParam.getId()));
         }
 //        if (hotelQueryParam.getRating() != null) {
 //            spec = spec.and(hasRatingEqual(hotelQueryParam.getRating()));

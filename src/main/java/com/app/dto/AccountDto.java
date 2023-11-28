@@ -33,4 +33,7 @@ public class AccountDto {
     private String createdBy;
     private String ggProviderId;
     private String fbProviderId;
+    private Integer totalLike;
+    private Integer totalFollow;
+    private Integer totalBlog;
 }

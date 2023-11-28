@@ -43,32 +43,78 @@ public class VehicleServicesImpl implements VehicleServices {
 
     @Override
     public APIResponse create(Vehicle vehicle, MultipartFile image) {
-        if (image != null) {
-            CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "vehicle");
-            vehicle.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-            vehicle.setImage(cloudinaryResponse.getUrl());
+        try {
+            if (vehicle.getName() == null || vehicle.getName().trim().isEmpty()) {
+                throw new IllegalArgumentException("Vehicle name cannot be empty");
+            }
+            if (vehicle.getAddress() == null || vehicle.getAddress().trim().isEmpty()) {
+                throw new IllegalArgumentException("Vehicle address cannot be empty");
+            }
+            if (vehicle.getHotline() == null || vehicle.getHotline().trim().isEmpty()) {
+                throw new IllegalArgumentException("Vehicle hotline cannot be empty");
+            }
+            if (vehicle.getHotline() != null && !vehicle.getHotline().matches("\\d{10,11}")) {
+                throw new IllegalArgumentException("Invalid phone number");
+            }
+            if (vehicle.getType() == null || vehicle.getType().trim().isEmpty()) {
+                throw new IllegalArgumentException("Vehicle type cannot be empty");
+            }
+            if (vehicle.getEmail() == null || vehicle.getEmail().trim().isEmpty()) {
+                throw new IllegalArgumentException("Vehicle email cannot be empty");
+            }
+
+            if (image != null) {
+                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "vehicle");
+                vehicle.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
+                vehicle.setImage(cloudinaryResponse.getUrl());
+            }
+            vehicle = vehicleRepository.save(vehicle);
+            return new SuccessAPIResponse(vehicle);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
         }
-        vehicle = vehicleRepository.save(vehicle);
-        return new SuccessAPIResponse(vehicle);
     }
 
     @Override
     public APIResponse update(Vehicle vehicle, MultipartFile image) {
-        if (vehicle == null) {
-            return new FailureAPIResponse("Vehicle id is required!");
+        try {
+            if (vehicle == null) {
+                return new FailureAPIResponse("Vehicle id is required!");
+            }
+            if (vehicle.getName() == null || vehicle.getName().trim().isEmpty()) {
+                throw new IllegalArgumentException("Vehicle name cannot be empty");
+            }
+            if (vehicle.getAddress() == null || vehicle.getAddress().trim().isEmpty()) {
+                throw new IllegalArgumentException("Vehicle address cannot be empty");
+            }
+            if (vehicle.getHotline() == null || vehicle.getHotline().trim().isEmpty()) {
+                throw new IllegalArgumentException("Vehicle hotline cannot be empty");
+            }
+            if (vehicle.getHotline() != null && !vehicle.getHotline().matches("\\d{10,11}")) {
+                throw new IllegalArgumentException("Invalid phone number");
+            }
+            if (vehicle.getType() == null || vehicle.getType().trim().isEmpty()) {
+                throw new IllegalArgumentException("Vehicle type cannot be empty");
+            }
+            if (vehicle.getEmail() == null || vehicle.getEmail().trim().isEmpty()) {
+                throw new IllegalArgumentException("Vehicle email cannot be empty");
+            }
+
+            Vehicle exists = vehicleRepository.findById(vehicle.getId()).orElse(null);
+            if (exists == null) {
+                return new FailureAPIResponse("Cannot find vehicle with id: " + vehicle.getId());
+            }
+            if (image != null) {
+                cloudinaryService.deleteFile(vehicle.getCloudinaryId());
+                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "vehicle");
+                vehicle.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
+                vehicle.setImage(cloudinaryResponse.getUrl());
+            }
+            vehicle = vehicleRepository.save(vehicle);
+            return new SuccessAPIResponse(vehicle);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
         }
-        Vehicle exists = vehicleRepository.findById(vehicle.getId()).orElse(null);
-        if (exists == null) {
-            return new FailureAPIResponse("Cannot find vehicle with id: " + vehicle.getId());
-        }
-        if (image != null) {
-            cloudinaryService.deleteFile(vehicle.getCloudinaryId());
-            CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "vehicle");
-            vehicle.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-            vehicle.setImage(cloudinaryResponse.getUrl());
-        }
-        vehicle = vehicleRepository.save(vehicle);
-        return new SuccessAPIResponse(vehicle);
     }
 
     @Override

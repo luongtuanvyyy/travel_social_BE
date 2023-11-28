@@ -40,34 +40,82 @@ public class HotelServicesImpl implements HotelServices {
         return new APIResponse(PageUtils.toPageResponse(response));
 
     }
+
     @Override
     public APIResponse create(Hotel hotel, MultipartFile image) {
-        if (image != null) {
-            CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "hotel");
-            hotel.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-            hotel.setImage(cloudinaryResponse.getUrl());
+        try {
+            if (hotel.getName() == null || hotel.getName().trim().isEmpty()) {
+                throw new IllegalArgumentException("Hotel name cannot be empty");
+            }
+            if (hotel.getAddress() == null || hotel.getAddress().trim().isEmpty()) {
+                throw new IllegalArgumentException("Hotel address cannot be empty");
+            }
+            if (hotel.getHotline() == null || hotel.getHotline().trim().isEmpty()) {
+                throw new IllegalArgumentException("Hotel hotline cannot be empty");
+            }
+            if (hotel.getHotline() != null && !hotel.getHotline().matches("\\d{10,11}")) {
+                throw new IllegalArgumentException("Invalid phone number");
+            }
+            if (hotel.getType() == null || hotel.getType().trim().isEmpty()) {
+                throw new IllegalArgumentException("Hotel type cannot be empty");
+            }
+            if (hotel.getRoom() <= 0) {
+                throw new IllegalArgumentException("Hotel room cannot be empty");
+            }
+
+            if (image != null) {
+                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "hotel");
+                hotel.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
+                hotel.setImage(cloudinaryResponse.getUrl());
+            }
+
+            hotel = hotelRepository.save(hotel);
+            return new SuccessAPIResponse(hotel);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
         }
-        hotel = hotelRepository.save(hotel);
-        return new SuccessAPIResponse(hotel);
     }
 
     @Override
     public APIResponse update(Hotel hotel, MultipartFile image) {
-        if(hotel == null){
-            return new FailureAPIResponse("Hotel id is required!");
+        try {
+            if (hotel == null) {
+                return new FailureAPIResponse("Hotel id is required!");
+            }
+            if (hotel.getName() == null || hotel.getName().trim().isEmpty()) {
+                throw new IllegalArgumentException("Hotel name cannot be empty");
+            }
+            if (hotel.getAddress() == null || hotel.getAddress().trim().isEmpty()) {
+                throw new IllegalArgumentException("Hotel address cannot be empty");
+            }
+            if (hotel.getHotline() == null || hotel.getHotline().trim().isEmpty()) {
+                throw new IllegalArgumentException("Hotel hotline cannot be empty");
+            }
+            if (hotel.getHotline() != null && !hotel.getHotline().matches("\\d{10,11}")) {
+                throw new IllegalArgumentException("Invalid phone number");
+            }
+            if (hotel.getType() == null || hotel.getType().trim().isEmpty()) {
+                throw new IllegalArgumentException("Hotel type cannot be empty");
+            }
+            if (hotel.getRoom() <= 0) {
+                throw new IllegalArgumentException("Hotel room cannot be empty");
+            }
+
+            Hotel exists = hotelRepository.findById(hotel.getId()).orElse(null);
+            if (exists == null) {
+                return new FailureAPIResponse("Cannot find hotel with id: " + hotel.getId());
+            }
+            if (image != null) {
+                cloudinaryService.deleteFile(hotel.getCloudinaryId());
+                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "hotel");
+                hotel.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
+                hotel.setImage(cloudinaryResponse.getUrl());
+            }
+            hotel = hotelRepository.save(hotel);
+            return new SuccessAPIResponse(hotel);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
         }
-        Hotel exists = hotelRepository.findById(hotel.getId()).orElse(null);
-        if(exists == null){
-            return  new FailureAPIResponse("Cannot find hotel with id: "+hotel.getId());
-        }
-        if (image != null) {
-            cloudinaryService.deleteFile(hotel.getCloudinaryId());
-            CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "hotel");
-            hotel.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-            hotel.setImage(cloudinaryResponse.getUrl());
-        }
-        hotel = hotelRepository.save(hotel);
-        return new SuccessAPIResponse(hotel);
     }
 
     @Override
@@ -79,6 +127,7 @@ public class HotelServicesImpl implements HotelServices {
             return new FailureAPIResponse(ex.getMessage());
         }
     }
+
     @Override
     public APIResponse uploadExcel(MultipartFile excel) {
         return importExcelService.uploadExcel(excel, Hotel.class, hotelRepository);

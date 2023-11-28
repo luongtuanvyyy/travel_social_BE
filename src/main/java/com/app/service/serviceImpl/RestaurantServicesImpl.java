@@ -41,32 +41,53 @@ public class RestaurantServicesImpl implements RestaurantServices {
 
     @Override
     public APIResponse create(Restaurant restaurant, MultipartFile image) {
-        if (image != null) {
-            CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "restaurant");
-            restaurant.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-            restaurant.setImage(cloudinaryResponse.getUrl());
+        try {
+            if (restaurant.getName() == null || restaurant.getName().trim().isEmpty()) {
+                throw new IllegalArgumentException("Restaurant name cannot be empty");
+            }
+            if (restaurant.getAddress() == null || restaurant.getAddress().trim().isEmpty()) {
+                throw new IllegalArgumentException("Restaurant name cannot be empty");
+            }
+            if (image != null) {
+                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "restaurant");
+                restaurant.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
+                restaurant.setImage(cloudinaryResponse.getUrl());
+            }
+            restaurant = restaurantRepository.save(restaurant);
+            return new SuccessAPIResponse(restaurant);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
         }
-        restaurant = restaurantRepository.save(restaurant);
-        return new SuccessAPIResponse(restaurant);
     }
 
     @Override
     public APIResponse update(Restaurant restaurant, MultipartFile image) {
-        if(restaurant == null){
-            return new FailureAPIResponse("Restaurant id is required!");
+        try {
+            if (restaurant == null) {
+                return new FailureAPIResponse("Restaurant id is required!");
+            }
+            if (restaurant.getName() == null || restaurant.getName().trim().isEmpty()) {
+                throw new IllegalArgumentException("Restaurant name cannot be empty");
+            }
+            if (restaurant.getAddress() == null || restaurant.getAddress().trim().isEmpty()) {
+                throw new IllegalArgumentException("Restaurant name cannot be empty");
+            }
+
+            Restaurant exists = restaurantRepository.findById(restaurant.getId()).orElse(null);
+            if (exists == null) {
+                return new FailureAPIResponse("Cannot find restaurant with id: " + restaurant.getId());
+            }
+            if (image != null) {
+                cloudinaryService.deleteFile(restaurant.getCloudinaryId());
+                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "restaurant");
+                restaurant.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
+                restaurant.setImage(cloudinaryResponse.getUrl());
+            }
+            restaurant = restaurantRepository.save(restaurant);
+            return new SuccessAPIResponse(restaurant);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
         }
-        Restaurant exists = restaurantRepository.findById(restaurant.getId()).orElse(null);
-        if(exists == null){
-            return  new FailureAPIResponse("Cannot find restaurant with id: "+restaurant.getId());
-        }
-        if (image != null) {
-            cloudinaryService.deleteFile(restaurant.getCloudinaryId());
-            CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "restaurant");
-            restaurant.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-            restaurant.setImage(cloudinaryResponse.getUrl());
-        }
-        restaurant = restaurantRepository.save(restaurant);
-        return new SuccessAPIResponse(restaurant);
     }
 
     @Override

@@ -19,10 +19,65 @@ public class VehicleSpecification {
     }
     public Specification<Vehicle> hasNameLike(String name) {
         return (Root<Vehicle> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
-            String nameWithoutDiacritics = removeDiacritics(name);
+            String nameWithoutDiacritics = removeDiacritics(name.trim());
             String nameUpperCase = nameWithoutDiacritics.toUpperCase();
             Predicate likePredicate = criteriaBuilder.like(
                     criteriaBuilder.upper(root.get("name")),
+                    "%" + nameUpperCase + "%"
+            );
+            return likePredicate;
+        };
+    }
+    public Specification<Vehicle> hasAddressLike(String address) {
+        return (Root<Vehicle> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
+            String nameWithoutDiacritics = removeDiacritics(address.trim());
+            String nameUpperCase = nameWithoutDiacritics.toUpperCase();
+            Predicate likePredicate = criteriaBuilder.like(
+                    criteriaBuilder.upper(root.get("address")),
+                    "%" + nameUpperCase + "%"
+            );
+            return likePredicate;
+        };
+    }
+    public Specification<Vehicle> hasTypeLike(String type) {
+        return (Root<Vehicle> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
+            String nameWithoutDiacritics = removeDiacritics(type.trim());
+            String nameUpperCase = nameWithoutDiacritics.toUpperCase();
+            Predicate likePredicate = criteriaBuilder.like(
+                    criteriaBuilder.upper(root.get("type")),
+                    "%" + nameUpperCase + "%"
+            );
+            return likePredicate;
+        };
+    }
+    public Specification<Vehicle> hasWebsiteLike(String website) {
+        return (Root<Vehicle> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
+            String nameWithoutDiacritics = removeDiacritics(website.trim());
+            String nameUpperCase = nameWithoutDiacritics.toUpperCase();
+            Predicate likePredicate = criteriaBuilder.like(
+                    criteriaBuilder.upper(root.get("website")),
+                    "%" + nameUpperCase + "%"
+            );
+            return likePredicate;
+        };
+    }
+    public Specification<Vehicle> hasEmailLike(String email) {
+        return (Root<Vehicle> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
+            String nameWithoutDiacritics = removeDiacritics(email.trim());
+            String nameUpperCase = nameWithoutDiacritics.toUpperCase();
+            Predicate likePredicate = criteriaBuilder.like(
+                    criteriaBuilder.upper(root.get("email")),
+                    "%" + nameUpperCase + "%"
+            );
+            return likePredicate;
+        };
+    }
+    public Specification<Vehicle> hasHotlineLike(String hotline) {
+        return (Root<Vehicle> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
+            String nameWithoutDiacritics = removeDiacritics(hotline.trim());
+            String nameUpperCase = nameWithoutDiacritics.toUpperCase();
+            Predicate likePredicate = criteriaBuilder.like(
+                    criteriaBuilder.upper(root.get("hotline")),
                     "%" + nameUpperCase + "%"
             );
             return likePredicate;
@@ -41,6 +96,21 @@ public class VehicleSpecification {
         }
         if (vehicleQueryParam.getName() != null) {
             spec = spec.and(hasNameLike(vehicleQueryParam.getName()));
+        }
+        if (vehicleQueryParam.getAddress() != null) {
+            spec = spec.and(hasAddressLike(vehicleQueryParam.getAddress()));
+        }
+        if (vehicleQueryParam.getType() != null) {
+            spec = spec.and(hasTypeLike(vehicleQueryParam.getType()));
+        }
+        if (vehicleQueryParam.getWebsite() != null) {
+            spec = spec.and(hasWebsiteLike(vehicleQueryParam.getWebsite()));
+        }
+        if (vehicleQueryParam.getEmail() != null) {
+            spec = spec.and(hasEmailLike(vehicleQueryParam.getEmail()));
+        }
+        if (vehicleQueryParam.getHotline() != null) {
+            spec = spec.and(hasHotlineLike(vehicleQueryParam.getHotline()));
         }
 
         return spec;

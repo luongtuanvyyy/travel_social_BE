@@ -28,7 +28,7 @@ public class TourSpecification {
             String nameWithoutDiacritics = removeDiacritics(name);
             String nameUpperCase = nameWithoutDiacritics.toUpperCase();
             Predicate likePredicate = criteriaBuilder.like(
-                    criteriaBuilder.upper(root.get("name")),
+                    criteriaBuilder.upper(root.get("name.trim()")),
                     "%" + nameUpperCase + "%"
             );
             return likePredicate;

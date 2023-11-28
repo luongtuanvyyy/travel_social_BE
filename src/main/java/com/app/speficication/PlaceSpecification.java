@@ -19,7 +19,7 @@ public class PlaceSpecification {
 
     public Specification<Place> hasNamesLike(String Name) {
         return (Root<Place> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
-            String nameWithoutDiacritics = removeDiacritics(Name);
+            String nameWithoutDiacritics = removeDiacritics(Name.trim());
             String nameUpperCase = nameWithoutDiacritics.toUpperCase();
             Predicate likePredicate = criteriaBuilder.like(
                     criteriaBuilder.upper(root.get("name")),
@@ -30,7 +30,7 @@ public class PlaceSpecification {
     }
     public Specification<Place> hasAddressLike(String Address) {
         return (Root<Place> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
-            String nameWithoutDiacritics = removeDiacritics(Address);
+            String nameWithoutDiacritics = removeDiacritics(Address.trim());
             String nameUpperCase = nameWithoutDiacritics.toUpperCase();
             Predicate likePredicate = criteriaBuilder.like(
                     criteriaBuilder.upper(root.get("address")),

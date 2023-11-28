@@ -42,34 +42,74 @@ public class PlaceServicesImpl implements PlaceServices {
         Page<Place> response = placeRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
     }
+
     @Override
     public APIResponse create(Place place, MultipartFile image) {
-        if (image != null) {
-            CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "place");
-            place.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-            place.setImage(cloudinaryResponse.getUrl());
+        try {
+            if (place.getName() == null || place.getName().trim().isEmpty()) {
+                throw new IllegalArgumentException("Place name cannot be empty");
+            }
+            if (place.getAddress() == null || place.getAddress().trim().isEmpty()) {
+                throw new IllegalArgumentException("Place address cannot be empty");
+            }
+            if (place.getHotline() == null || place.getHotline().trim().isEmpty()) {
+                throw new IllegalArgumentException("Place hotnamw cannot be empty");
+            }
+            if (place.getHotline() != null && !place.getHotline().matches("\\d{10,11}")) {
+                throw new IllegalArgumentException("Invalid phone number");
+            }
+            if (place.getType() == null || place.getType().trim().isEmpty()) {
+                throw new IllegalArgumentException("Place type cannot be empty");
+            }
+            if (image != null) {
+                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "place");
+                place.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
+                place.setImage(cloudinaryResponse.getUrl());
+            }
+            place = placeRepository.save(place);
+            return new SuccessAPIResponse(place);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
         }
-        place = placeRepository.save(place);
-        return new SuccessAPIResponse(place);
     }
 
     @Override
     public APIResponse update(Place place, MultipartFile image) {
-        if(place == null){
-            return new FailureAPIResponse("Place id is required!");
+        try {
+            if (place == null) {
+                return new FailureAPIResponse("Place id is required!");
+            }
+            if (place.getName() == null || place.getName().trim().isEmpty()) {
+                throw new IllegalArgumentException("Place name cannot be empty");
+            }
+            if (place.getAddress() == null || place.getAddress().trim().isEmpty()) {
+                throw new IllegalArgumentException("Place address cannot be empty");
+            }
+            if (place.getHotline() == null || place.getHotline().trim().isEmpty()) {
+                throw new IllegalArgumentException("Place hotnamw cannot be empty");
+            }
+            if (place.getHotline() != null && !place.getHotline().matches("\\d{10,11}")) {
+                throw new IllegalArgumentException("Invalid phone number");
+            }
+            if (place.getType() == null || place.getType().trim().isEmpty()) {
+                throw new IllegalArgumentException("Place type cannot be empty");
+            }
+
+            Place exists = placeRepository.findById(place.getId()).orElse(null);
+            if (exists == null) {
+                return new FailureAPIResponse("Cannot find place with id: " + place.getId());
+            }
+            if (image != null) {
+                cloudinaryService.deleteFile(place.getCloudinaryId());
+                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "place");
+                place.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
+                place.setImage(cloudinaryResponse.getUrl());
+            }
+            place = placeRepository.save(place);
+            return new SuccessAPIResponse(place);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
         }
-        Place exists = placeRepository.findById(place.getId()).orElse(null);
-        if(exists == null){
-            return  new FailureAPIResponse("Cannot find place with id: "+place.getId());
-        }
-        if (image != null) {
-            cloudinaryService.deleteFile(place.getCloudinaryId());
-            CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "place");
-            place.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-            place.setImage(cloudinaryResponse.getUrl());
-        }
-        place = placeRepository.save(place);
-        return new SuccessAPIResponse(place);
     }
 
     @Override

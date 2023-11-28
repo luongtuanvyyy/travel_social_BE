@@ -25,7 +25,7 @@ public class FollowApi {
     }
 
     @PostMapping("/user/follows")
-    public ResponseEntity<?> createFollow(@RequestPart(name = "follow") Follow follow) {
+    public ResponseEntity<?> createFollow(@RequestBody Follow follow) {
         APIResponse response = followServices.create(follow);
         return ResponseEntity.ok().body(response);
     }

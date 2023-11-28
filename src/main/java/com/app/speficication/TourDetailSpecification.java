@@ -34,7 +34,7 @@ public class TourDetailSpecification {
     }
     public Specification<TourDetail> hasNameLike(String name) {
         return (Root<TourDetail> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
-            String nameWithoutDiacritics = removeDiacritics(name);
+            String nameWithoutDiacritics = removeDiacritics(name.trim());
             String nameUpperCase = nameWithoutDiacritics.toUpperCase();
             Predicate likePredicate = criteriaBuilder.like(
                     criteriaBuilder.upper(root.get("name")),

@@ -45,34 +45,50 @@ public class TourGuideServicesImpl implements TourGuideServices {
         Page<TourGuide> response = tuorGuideRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
     }
+
     @Override
     public APIResponse create(TourGuide tourGuide, MultipartFile image) {
-        if (image != null) {
-            CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "TourGuide");
-            tourGuide.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-            tourGuide.setAvatar(cloudinaryResponse.getUrl());
+        try {
+            if (tourGuide.getFullName() == null || tourGuide.getFullName().trim().isEmpty()) {
+                throw new IllegalArgumentException("Tour guide name cannot be empty");
+            }
+            if (image != null) {
+                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "TourGuide");
+                tourGuide.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
+                tourGuide.setAvatar(cloudinaryResponse.getUrl());
+            }
+            tourGuide = tuorGuideRepository.save(tourGuide);
+            return new SuccessAPIResponse(tourGuide);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
         }
-        tourGuide = tuorGuideRepository.save(tourGuide);
-        return new SuccessAPIResponse(tourGuide);
     }
 
     @Override
     public APIResponse update(TourGuide tourGuide, MultipartFile image) {
-        if (tourGuide == null) {
-            return new FailureAPIResponse("Tour guide id is required!");
+        try {
+
+            if (tourGuide == null) {
+                return new FailureAPIResponse("Tour guide id is required!");
+            }
+            if (tourGuide.getFullName() == null || tourGuide.getFullName().trim().isEmpty()) {
+                throw new IllegalArgumentException("Tour guide name cannot be empty");
+            }
+            TourGuide exists = tuorGuideRepository.findById(tourGuide.getId()).orElse(null);
+            if (exists == null) {
+                return new FailureAPIResponse("Cannot find tour guide with id: " + tourGuide.getId());
+            }
+            if (image != null) {
+                cloudinaryService.deleteFile(tourGuide.getCloudinaryId());
+                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "TourGuide");
+                tourGuide.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
+                tourGuide.setAvatar(cloudinaryResponse.getUrl());
+            }
+            tourGuide = tuorGuideRepository.save(tourGuide);
+            return new SuccessAPIResponse(tourGuide);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
         }
-        TourGuide exists = tuorGuideRepository.findById(tourGuide.getId()).orElse(null);
-        if (exists == null) {
-            return new FailureAPIResponse("Cannot find tour guide with id: " + tourGuide.getId());
-        }
-        if (image != null) {
-            cloudinaryService.deleteFile(tourGuide.getCloudinaryId());
-            CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "TourGuide");
-            tourGuide.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-            tourGuide.setAvatar(cloudinaryResponse.getUrl());
-        }
-        tourGuide = tuorGuideRepository.save(tourGuide);
-        return new SuccessAPIResponse(tourGuide);
     }
 
     @Override

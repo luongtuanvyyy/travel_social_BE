@@ -7,7 +7,7 @@ import com.app.payload.response.APIResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface HotelServices {
-    APIResponse filterHotel(HotelQueryParam hotelQueryParam);
+    APIResponse filterHotel(HotelQueryParam hotelQueryParam) throws Exception;
     APIResponse create(Hotel hotel, MultipartFile image);
     APIResponse update(Hotel hotel, MultipartFile image);
     APIResponse delete(Integer id);

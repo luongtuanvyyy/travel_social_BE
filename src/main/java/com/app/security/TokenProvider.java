@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.Map;
 
 @Component
 public class TokenProvider {
@@ -24,6 +25,17 @@ public class TokenProvider {
         Date expiredDate = new Date(now.getTime() + expiredTokenMsec);
         return Jwts.builder()
                 .setSubject(account.getId().toString())
+                .setIssuedAt(now)
+                .setExpiration(expiredDate)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+    }
+
+    public String generateTokenData(Account account) {
+        Date now = new Date();
+        Date expiredDate = new Date(now.getTime() + expiredTokenMsec);
+        return Jwts.builder()
+                .setSubject(String.valueOf(account))
                 .setIssuedAt(now)
                 .setExpiration(expiredDate)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
@@ -47,6 +59,10 @@ public class TokenProvider {
         return Integer.parseInt(claims.getSubject());
     }
 
+    public Claims getDataFromToken(String token) {
+        Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+        return claims;
+    }
     public boolean validateToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(authToken);

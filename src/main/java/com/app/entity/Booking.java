@@ -20,6 +20,10 @@ public class Booking extends BaseEntity {
     private EBooking status;
 
     @ManyToOne
+    @JoinColumn(name = "ACCOUNT_ID", referencedColumnName = "ID")
+    private Account accountId;
+
+    @ManyToOne
     @JoinColumn(name = "TOUR_ID", referencedColumnName = "ID")
     private Tour tourId;
 

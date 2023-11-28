@@ -44,7 +44,7 @@ public class AuthApi {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping(value = "/auth/login/GGFBToken")
+    @PostMapping(value = "/auth/login/Token")
     public ResponseEntity<?> googleToken(@RequestParam("token") String token) throws Exception {
         APIResponse response =  authService.googleToken(token);
         return ResponseEntity.ok(response);
@@ -78,7 +78,11 @@ public class AuthApi {
         APIResponse response = authService.logout();
         return ResponseEntity.ok(response);
     }
-
+    @GetMapping("/auth/getDataAccount")
+    public ResponseEntity<?> getAccount(@RequestParam("token") String token) {
+        APIResponse response = authService.getAccount(token);
+        return ResponseEntity.ok(response);
+    }
     @GetMapping("/profile")
     public ResponseEntity<?> getProfile() {
         return ResponseEntity.ok("null");

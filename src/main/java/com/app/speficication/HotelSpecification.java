@@ -6,6 +6,9 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
+import com.app.payload.response.APIResponse;
+import com.app.payload.response.FailureAPIResponse;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
@@ -50,7 +53,8 @@ public class HotelSpecification {
     public Specification<Hotel> getHotelSpecification(HotelQueryParam hotelQueryParam) {
         Specification<Hotel> spec = Specification.where(null);
         if (hotelQueryParam.getId() != null) {
-            spec = spec.and(hasIdEqual(hotelQueryParam.getId()));
+
+                spec = spec.and(hasIdEqual(hotelQueryParam.getId()));
         }
 //        if (hotelQueryParam.getRating() != null) {
 //            spec = spec.and(hasRatingEqual(hotelQueryParam.getRating()));

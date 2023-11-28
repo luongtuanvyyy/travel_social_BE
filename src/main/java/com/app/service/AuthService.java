@@ -15,4 +15,6 @@ public interface AuthService {
     APIResponse logout();
 
     APIResponse googleToken(String token) throws Exception;
+
+    APIResponse getAccount(String token);
 }

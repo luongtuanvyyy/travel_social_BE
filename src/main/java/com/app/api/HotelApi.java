@@ -11,6 +11,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api")
 public class HotelApi {
@@ -18,7 +20,7 @@ public class HotelApi {
     HotelServices hotelServices;
 
     @GetMapping("/public/hotels")
-    public ResponseEntity<?> getAllHotel(HotelQueryParam hotelQueryParam) {
+    public ResponseEntity<?> getAllHotel(@Valid HotelQueryParam hotelQueryParam) throws Exception {
         return ResponseEntity.ok(hotelServices.filterHotel(hotelQueryParam));
     }
 

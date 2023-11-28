@@ -23,6 +23,7 @@ public class Tour extends BaseEntity {
     private Integer size;
     private Integer registered;
     private Integer percent;
+// Can Luu Y
     private String vehicle;
 
     @Column(name = "CLOUDINARY_ID")

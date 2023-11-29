@@ -5,6 +5,8 @@ import com.app.payload.response.APIResponse;
 import com.app.security.UserPrincipal;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+
 public interface AuthService {
     APIResponse login(Account account);
     APIResponse register(Account account);
@@ -16,5 +18,8 @@ public interface AuthService {
 
     APIResponse googleToken(String token) throws Exception;
 
-    APIResponse getAccount(String token);
+//    APIResponse getAccount(String token);
+
+
+    APIResponse getUserRequest(HttpServletRequest request);
 }

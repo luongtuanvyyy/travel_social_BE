@@ -17,7 +17,6 @@ import io.jsonwebtoken.Claims;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @Service
@@ -184,21 +184,26 @@ public class AuthServiceImpl implements AuthService {
 
         if(acc != null){
             System.out.println("pas"+acc.getPassword());
-//            try {
-//                Authentication authentication = authenticationManager.authenticate(
-//                        new UsernamePasswordAuthenticationToken(acc.getEmail(), acc.getPassword())
-//                );
-//                SecurityContextHolder.getContext().setAuthentication(authentication);
+            try {
+                Authentication authentication = authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(acc.getEmail(), acc.getPassword())
+                );
+                SecurityContextHolder.getContext().setAuthentication(authentication);
                 if(!acc.getIsActivated()) {
                     return APIResponse.builder().message("Account has been blocked").success(false).build();
                 }
 
-                String eToken = tokenProvider.generateTokenData(acc);
-                AuthResponse authResponse = new AuthResponse(eToken, accountMapper.accountDto(acc));
+                String etoken = tokenProvider.generateToken(acc);
+                AccountDto accDto = accountMapper.accountDto(acc);
+                Integer id = acc.getId();
+                accDto.setTotalBlog(blogRepository.countByCreatedBy(acc.getEmail()));
+                accDto.setTotalLike(likeRepository.countByAccountId(id));
+                accDto.setTotalFollow(followRepository.countByAccountId(id));
+                AuthResponse authResponse = new AuthResponse(etoken, accDto);
                 return  APIResponse.builder().message("Success").success(true).data(authResponse).build();
-//            }catch (Exception ex){
-//                return APIResponse.builder().message(""+ex).success(false).build();
-//            }
+            }catch (Exception ex){
+                return APIResponse.builder().message(""+ex).success(false).build();
+            }
         }else {
             Account account = new Account();
             account.setEmail(email);
@@ -213,23 +218,62 @@ public class AuthServiceImpl implements AuthService {
 
             String encoderPassword = passwordEncoder.encode(user_id);
             account.setPassword(encoderPassword);
-
             Account accc = accountRepository.save(account);
-            String eToken = tokenProvider.generateTokenData(accc);
-            AuthResponse authResponse = new AuthResponse(eToken, accountMapper.accountDto(accc));
+            String etoken = tokenProvider.generateToken(accc);
+            AccountDto accDto = accountMapper.accountDto(accc);
+            Integer id = accc.getId();
+            accDto.setTotalBlog(blogRepository.countByCreatedBy(accc.getEmail()));
+            accDto.setTotalLike(likeRepository.countByAccountId(id));
+            accDto.setTotalFollow(followRepository.countByAccountId(id));
+            AuthResponse authResponse = new AuthResponse(etoken, accDto);
             return  APIResponse.builder().message("Success").success(true).data(authResponse).build();
         }
     }
 
+//    @Override
+//    public APIResponse getAccount(String token) {
+//        Account account;
+//        Claims claims =  tokenProvider.getDataFromToken(token);
+//        for (Map.Entry<String, Object> entry : claims.entrySet()) {
+//            System.out.println(entry.getKey() + ": " + entry.getValue());
+//        }
+//        APIResponse response = new APIResponse(claims);
+//        return response;
+//    }
+
     @Override
-    public APIResponse getAccount(String token) {
-        Account account;
-        Claims claims =  tokenProvider.getDataFromToken(token);
-        for (Map.Entry<String, Object> entry : claims.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
+    public APIResponse getUserRequest(HttpServletRequest request) {
+        AccountDto accDto;
+        String token = getTokenFromHeader(request);
+        int id;
+        if (token != null){
+            System.out.println(token);
+            id = tokenProvider.getIdFromToken(token);
+            Account account =  accountRepository.findById(id).orElse(null);
+            accDto = accountMapper.accountDto(account);
         }
-        APIResponse response = new APIResponse(claims);
+        else {
+            return APIResponse.builder().message("You need login").success(false).build();
+        }
+        APIResponse response = new APIResponse(accDto);
+
         return response;
+    }
+
+    public String getTokenFromHeader(HttpServletRequest request) {
+        // Lấy header authorization
+        String authorization = request.getHeader("Authorization");
+
+        // Kiểm tra header authorization tồn tại và có dạng Bearer <token>
+        if (authorization != null && authorization.startsWith("Bearer ")) {
+            // Lấy token từ header
+            String token = authorization.substring(7);
+            // Trả về token
+            return token;
+        } else {
+            // Không có token
+            return null;
+        }
     }
 }
 

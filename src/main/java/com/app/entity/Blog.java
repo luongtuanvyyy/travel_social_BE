@@ -16,6 +16,10 @@ public class Blog extends BaseEntity {
     @Column(columnDefinition = "LONGTEXT")
     private String description;
 
+    private String avatar;
+
+    private String name;
+
     @Column(name = "IS_VERIFY")
     private boolean isVerify;
 

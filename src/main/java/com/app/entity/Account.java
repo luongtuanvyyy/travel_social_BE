@@ -4,12 +4,16 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.app.type.EAuthProvider;
 import com.app.type.ERole;
+import io.jsonwebtoken.Claims;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -49,6 +53,5 @@ public class Account extends BaseEntity {
     @JsonIgnore
     private String providerId;
 
-    private String ggProviderId;
-    private String fbProviderId;
+
 }

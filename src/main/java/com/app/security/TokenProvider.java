@@ -59,10 +59,6 @@ public class TokenProvider {
         return Integer.parseInt(claims.getSubject());
     }
 
-    public Claims getDataFromToken(String token) {
-        Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
-        return claims;
-    }
     public boolean validateToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(authToken);

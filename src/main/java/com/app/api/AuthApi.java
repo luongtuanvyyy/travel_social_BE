@@ -14,6 +14,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/api")
 public class AuthApi {
@@ -45,7 +47,7 @@ public class AuthApi {
     }
 
     @PostMapping(value = "/auth/login/Token")
-    public ResponseEntity<?> googleToken(@RequestParam("token") String token) throws Exception {
+    public ResponseEntity<?> Login(@RequestParam("token") String token) throws Exception {
         APIResponse response =  authService.googleToken(token);
         return ResponseEntity.ok(response);
     }
@@ -78,9 +80,15 @@ public class AuthApi {
         APIResponse response = authService.logout();
         return ResponseEntity.ok(response);
     }
-    @GetMapping("/auth/getDataAccount")
-    public ResponseEntity<?> getAccount(@RequestParam("token") String token) {
-        APIResponse response = authService.getAccount(token);
+//    @GetMapping("/auth/getDataAccount")
+//    public ResponseEntity<?> getAccount(@RequestParam("token") String token) {
+//        APIResponse response = authService.getAccount(token);
+//        return ResponseEntity.ok(response);
+//    }
+
+    @GetMapping("/auth/getTokenFromHeader")
+    public ResponseEntity<?> getUserRequest(HttpServletRequest request) {
+        APIResponse response = authService.getUserRequest(request);
         return ResponseEntity.ok(response);
     }
     @GetMapping("/profile")

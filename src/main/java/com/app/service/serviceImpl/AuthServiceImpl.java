@@ -185,10 +185,10 @@ public class AuthServiceImpl implements AuthService {
         if(acc != null){
             System.out.println("pas"+acc.getPassword());
             try {
-                Authentication authentication = authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(acc.getEmail(), acc.getPassword())
-                );
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+//                Authentication authentication = authenticationManager.authenticate(
+//                        new UsernamePasswordAuthenticationToken(acc.getEmail(), acc.getPassword())
+//                );
+//                SecurityContextHolder.getContext().setAuthentication(authentication);
                 if(!acc.getIsActivated()) {
                     return APIResponse.builder().message("Account has been blocked").success(false).build();
                 }

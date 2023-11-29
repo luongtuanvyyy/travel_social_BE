@@ -50,4 +50,4 @@ jobs:
           app-name: 'furniturebe'
           slot-name: 'Production'
           package: '*.jar'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_D6B7F549CF4D4D5EA707EEA2719F11BA }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2F0CAA123180446E89BE189EE717A34E }}

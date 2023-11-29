@@ -15,19 +15,14 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @Setter
-public class BlogReaction {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class BlogReaction extends BaseEntity{
 
     private boolean share;
     private String comment;
 
     @Column(name = "REACTION_LIKE")
     private boolean reactionLike;
-    @Column(name = "CREATE_TIME")
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    private LocalDateTime createTime;
+
 
     @ManyToOne
     @JoinColumn(name = "BLOG_ID", referencedColumnName = "ID")

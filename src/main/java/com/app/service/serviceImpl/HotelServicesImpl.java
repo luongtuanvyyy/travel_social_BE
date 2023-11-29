@@ -32,11 +32,13 @@ public class HotelServicesImpl implements HotelServices {
     ImportExcelService importExcelService;
 
     @Override
-    public APIResponse filterHotel(HotelQueryParam hotelQueryParam) {
+    public APIResponse filterHotel(HotelQueryParam hotelQueryParam){
+
         Specification<Hotel> spec = hotelSpecification.getHotelSpecification(hotelQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(hotelQueryParam);
         Page<Hotel> response = hotelRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+
     }
 
     @Override

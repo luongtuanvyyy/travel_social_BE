@@ -18,7 +18,7 @@ public class Vehicle extends BaseEntity {
     private String hotline;
     private String type;
     private String website;
-        private String email;
+    private String email;
     private String image;
     @Column(columnDefinition = "LONGTEXT")
     private String description;

@@ -12,6 +12,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -36,15 +37,15 @@ public class BlogApi {
     }
     @PostMapping("/user/blogs")
     public ResponseEntity<?> createBlog(@RequestPart(name = "blog") Blog blog,
-                                        @RequestPart(name = "image") @Nullable MultipartFile image) {
-        APIResponse response = blogServices.create(blog, image);
+                                        @RequestPart(name = "image") @Nullable MultipartFile image, HttpServletRequest request) {
+        APIResponse response = blogServices.create(blog, image,request);
         return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/user/blogs")
     public ResponseEntity<?> updateBlog(@RequestPart(name = "blog") Blog blog,
-                                        @RequestPart(name = "image") @Nullable MultipartFile image) {
-        APIResponse response = blogServices.update(blog, image);
+                                        @RequestPart(name = "image") @Nullable MultipartFile image,HttpServletRequest request) {
+        APIResponse response = blogServices.update(blog, image,request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

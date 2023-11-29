@@ -1,17 +1,21 @@
 package com.app.service.serviceImpl;
 
+import com.app.entity.Account;
 import com.app.entity.Blog;
 import com.app.payload.request.BlogQueryParam;
 import com.app.payload.response.APIResponse;
 import com.app.payload.response.CloudinaryResponse;
 import com.app.payload.response.FailureAPIResponse;
 import com.app.payload.response.SuccessAPIResponse;
+import com.app.repository.AccountRepository;
 import com.app.repository.BlogInteractionResponsitory;
 import com.app.repository.BlogRepository;
+import com.app.security.TokenProvider;
 import com.app.service.BlogServices;
 import com.app.speficication.BlogSpecification;
 import com.app.utils.PageUtils;
 import com.app.utils.RequestParamsUtils;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +23,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +36,11 @@ public class BlogServicesImpl implements BlogServices {
     BlogInteractionResponsitory blogInteractionResponsitory;
     @Autowired
     BlogSpecification blogSpecification;
+    @Autowired
+    TokenProvider tokenProvider;
 
+    @Autowired
+    AccountRepository accountRepository;
     @Autowired
     RequestParamsUtils requestParamsUtils;
     @Autowired
@@ -74,7 +83,10 @@ public class BlogServicesImpl implements BlogServices {
     }
 
     @Override
-    public APIResponse create(Blog blog, MultipartFile image) {
+    public APIResponse create(Blog blog, MultipartFile image, HttpServletRequest request) {
+        String token = getTokenFromHeader(request);
+        int id = tokenProvider.getIdFromToken(token);
+        Account account =  accountRepository.findById(id).orElse(null);
         try {
             if (blog.getTitle() == null || blog.getTitle().trim().isEmpty()) {
                 throw new IllegalArgumentException("Blog title cannot be empty");
@@ -84,6 +96,9 @@ public class BlogServicesImpl implements BlogServices {
                 blog.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
                 blog.setImage(cloudinaryResponse.getUrl());
             }
+
+            blog.setAvatar(account.getAvatar());
+            blog.setName(account.getName());
             blog = blogRepository.save(blog);
             return new SuccessAPIResponse(blog);
         } catch (Exception ex) {
@@ -92,7 +107,7 @@ public class BlogServicesImpl implements BlogServices {
     }
 
     @Override
-    public APIResponse update(Blog blog, MultipartFile image) {
+    public APIResponse update(Blog blog, MultipartFile image, HttpServletRequest request) {
         try {
 
             if (blog == null) {
@@ -111,6 +126,7 @@ public class BlogServicesImpl implements BlogServices {
                 blog.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
                 blog.setImage(cloudinaryResponse.getUrl());
             }
+
             blog = blogRepository.save(blog);
             return new SuccessAPIResponse(blog);
         } catch (Exception ex) {
@@ -149,4 +165,19 @@ public class BlogServicesImpl implements BlogServices {
         return new SuccessAPIResponse(createdBlogs);
     }
 
+    public String getTokenFromHeader(HttpServletRequest request) {
+        // Lấy header authorization
+        String authorization = request.getHeader("Authorization");
+
+        // Kiểm tra header authorization tồn tại và có dạng Bearer <token>
+        if (authorization != null && authorization.startsWith("Bearer ")) {
+            // Lấy token từ header
+            String token = authorization.substring(7);
+            // Trả về token
+            return token;
+        } else {
+            // Không có token
+            return null;
+        }
+    }
 }

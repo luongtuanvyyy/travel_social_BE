@@ -6,6 +6,7 @@ import com.app.payload.request.BlogQueryParam;
 import com.app.payload.response.APIResponse;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,8 +20,10 @@ public interface BlogServices {
 
     APIResponse filterLeastBlog(BlogQueryParam blogQueryParam);
 
-    APIResponse create(Blog blog, MultipartFile image);
-    APIResponse update(Blog blog,MultipartFile image);
+    APIResponse create(Blog blog, MultipartFile image, HttpServletRequest request);
+
+    APIResponse update(Blog blog, MultipartFile image, HttpServletRequest request);
+
     APIResponse delete(Integer id);
 
     List<Blog> findByTitle(BlogQueryParam blogQueryParam);

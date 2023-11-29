@@ -18,6 +18,7 @@ public interface BlogRepository extends JpaRepository<Blog, Integer> {
     Integer countByCreatedBy(@Param("createdBy") String createdBy);
     @Query("SELECT b FROM Blog b ORDER BY b.createdAt DESC")
     Page<Blog> findLatestBlogs(Specification<Blog> spec, Pageable pageable);
+
     @Query("SELECT b FROM Blog b WHERE b.id NOT IN (SELECT v.blogId FROM View v)")
     Page<Blog>  findAllNotSeen(Specification<Blog> spec, Pageable pageable);
 

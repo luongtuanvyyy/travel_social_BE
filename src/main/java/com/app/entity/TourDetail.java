@@ -2,6 +2,7 @@ package com.app.entity;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
@@ -25,7 +26,8 @@ public class TourDetail {
 
     @ManyToOne
     @JoinColumn(name = "TOUR_ID", referencedColumnName = "id")
-    private Tour tourId;
+    @JsonBackReference
+    private Tour tour;
 
     @ManyToOne
     @JoinColumn(name = "PLACE_ID", referencedColumnName = "id")

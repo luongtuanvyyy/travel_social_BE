@@ -72,7 +72,7 @@ public class AuthServiceImpl implements AuthService {
             AuthResponse authResponse = new AuthResponse(token, accDto);
             return  APIResponse.builder().message("Success").success(true).data(authResponse).build();
         }catch (Exception ex){
-            return APIResponse.builder().message("Username or password is incorrect").success(false).build();
+            return APIResponse.builder().message(ex.getMessage()).success(false).build();
         }
     }
     @Override

@@ -17,7 +17,7 @@ import java.util.Date;
 @Entity
 @Table(name = "accounts")
 public class Account extends BaseEntity {
-    @Column(name = "ACCOUNT_NAME", unique = true)
+    @Column(name = "ACCOUNT_NAME")
     private String accountName;
     private String name;
     private String address;

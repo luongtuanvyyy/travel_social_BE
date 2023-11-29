@@ -3,10 +3,14 @@ package com.app.entity;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "TOUR")
@@ -15,16 +19,20 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @Setter
+
 public class Tour extends BaseEntity {
     private String name;
-    private BigDecimal price;
     private String departure;
     private String image;
     private Integer size;
     private Integer registered;
-    private Integer percent;
-// Can Luu Y
     private String vehicle;
+
+    private BigDecimal adult;
+    private BigDecimal children;
+    private BigDecimal baby;
+
+    private Integer discount;
 
     @Column(name = "CLOUDINARY_ID")
     private String cloudinaryId;
@@ -45,4 +53,47 @@ public class Tour extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "TOUR_TEMPLATE_ID", referencedColumnName = "ID")
     private TourTemplate tourTemplateId;
+
+    @OneToMany(mappedBy = "tour", fetch = FetchType.EAGER)
+    @JsonManagedReference
+    @Fetch(FetchMode.SUBSELECT)
+    private List<TourGuide> tourGuideList;
+
+    @OneToMany(mappedBy = "tour", fetch = FetchType.EAGER)
+    @JsonManagedReference
+    @Fetch(FetchMode.SUBSELECT)
+    private List<Favorite> favoriteList;
+
+    @OneToMany(mappedBy = "tour", fetch = FetchType.EAGER)
+    @JsonManagedReference
+    @Fetch(FetchMode.SUBSELECT)
+    private List<Review> reviewList;
+
+    @OneToMany(mappedBy = "tour", fetch = FetchType.EAGER)
+    @JsonManagedReference
+    @Fetch(FetchMode.SUBSELECT)
+    private List<TourDetail> tourDetailList;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

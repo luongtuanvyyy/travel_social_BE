@@ -1,6 +1,8 @@
 package com.app.entity;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 @Entity
@@ -16,5 +18,6 @@ public class Favorite extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "TOUR_ID", referencedColumnName = "ID")
-    private Tour tourId;
+    @JsonBackReference
+    private Tour tour;
 }

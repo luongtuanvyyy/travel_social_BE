@@ -22,7 +22,15 @@ public class TourApi {
     public ResponseEntity<?> filter(TourQueryParam tourQueryParam) {
         return ResponseEntity.ok(tourServices.filterTour(tourQueryParam));
     }
+    @GetMapping("/public/tours/nullDiscount")
+    public ResponseEntity<?> filterTourDiscount(TourQueryParam tourQueryParam) {
+        return ResponseEntity.ok(tourServices.filterTourDiscount(tourQueryParam));
+    }
 
+    @GetMapping("/public/tours/filterNewlyPosted")
+    public ResponseEntity<?> filterNewlyPosted(TourQueryParam tourQueryParam) {
+        return ResponseEntity.ok(tourServices.filterNewlyPosted(tourQueryParam));
+    }
     @PostMapping("/company/tours")
     public ResponseEntity<?> createTour(@RequestPart(name = "tour") Tour tour,
                                         @RequestPart(name = "image") MultipartFile image) {

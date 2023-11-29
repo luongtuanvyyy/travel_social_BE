@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @Builder
@@ -18,4 +19,6 @@ public class TourQueryParam extends BaseQueryRequest {
     String departure;
     Boolean sortRegistered;
     LocalDate start_date;
+    Date createdAt;
+    Integer discount;
 }

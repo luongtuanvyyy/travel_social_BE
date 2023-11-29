@@ -11,6 +11,11 @@ import java.util.List;
 
 public interface TourServices {
     APIResponse filterTour(TourQueryParam tourQueryParam);
+
+    APIResponse filterTourDiscount(TourQueryParam tourQueryParam);
+
+    APIResponse filterNewlyPosted(TourQueryParam tourQueryParam);
+
     APIResponse create(Tour tour, MultipartFile image);
     APIResponse update(Tour tour, MultipartFile image);
     APIResponse delete(Integer id);

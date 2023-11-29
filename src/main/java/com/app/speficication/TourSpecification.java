@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.text.Normalizer;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Component
 public class TourSpecification {
@@ -22,6 +23,7 @@ public class TourSpecification {
     public Specification<Tour> hasVehicleLike(String vehicle) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("vehicle"),  "%"+vehicle+"%");
     }
+
 
     public Specification<Tour> hasNameLike(String name) {
         return (Root<Tour> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
@@ -34,7 +36,12 @@ public class TourSpecification {
             return likePredicate;
         };
     }
-
+    public static Specification<Tour> isNewlyPosted() {
+        return (root, query, criteriaBuilder) -> {
+            LocalDate today = LocalDate.now();
+            return criteriaBuilder.equal(root.get("createdAt").as(LocalDate.class), today);
+        };
+    }
     private String removeDiacritics(String input) {
         return Normalizer.normalize(input, Normalizer.Form.NFD)
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
@@ -80,6 +87,7 @@ public class TourSpecification {
             spec = spec.and(startDateGreaterThanOrEqualTo(tourQueryParam.getStart_date()));
         }
 
-        return spec;
+
+            return spec;
     }
 }

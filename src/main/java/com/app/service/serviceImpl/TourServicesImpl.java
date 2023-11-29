@@ -2,8 +2,6 @@ package com.app.service.serviceImpl;
 
 
 import com.app.entity.Tour;
-import com.app.entity.TourPrice;
-import com.app.entity.Vehicle;
 import com.app.payload.request.TourQueryParam;
 import com.app.payload.response.APIResponse;
 import com.app.payload.response.CloudinaryResponse;
@@ -51,14 +49,28 @@ public class TourServicesImpl implements TourServices {
 //        String processedKeyword = userRepository.removeDiacritics(searchKeyword.toLowerCase());
 //        return userRepository.findByFullNameIgnoreCaseContaining(processedKeyword);
 //    }
-
+@Override
     public APIResponse filterTour(TourQueryParam tourQueryParam) {
         Specification<Tour> spec = tourSpecification.getTourSpecification(tourQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(tourQueryParam);
         Page<Tour> response = tourRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
     }
+@Override
+    public APIResponse filterTourDiscount(TourQueryParam tourQueryParam) {
+        Specification<Tour> spec = tourSpecification.getTourSpecification(tourQueryParam);
+        Pageable pageable = requestParamsUtils.getPageable(tourQueryParam);
+        Page<Tour> response = tourRepository.DiscountIsNotNull(spec, pageable);
+        return new APIResponse(PageUtils.toPageResponse(response));
+    }
 
+    @Override
+    public APIResponse filterNewlyPosted(TourQueryParam tourQueryParam) {
+        Specification<Tour> spec = tourSpecification.isNewlyPosted();
+        Pageable pageable = requestParamsUtils.getPageable(tourQueryParam);
+        Page<Tour> response = tourRepository.findAll(spec, pageable);
+        return new APIResponse(PageUtils.toPageResponse(response));
+    }
 
     @Override
     public APIResponse create(Tour tour, MultipartFile image) {

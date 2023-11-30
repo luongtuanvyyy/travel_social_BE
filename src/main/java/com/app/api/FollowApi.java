@@ -5,7 +5,9 @@ import com.app.entity.Follow;
 import com.app.payload.request.FollowQueryParam;
 import com.app.payload.response.APIResponse;
 import com.app.service.FollowServices;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,16 @@ public class FollowApi {
     @GetMapping("/user/follows")
     public ResponseEntity<?> getAllFollow(FollowQueryParam followQueryParam) {
         return ResponseEntity.ok(followServices.filterFollow(followQueryParam));
+    }
+
+    @GetMapping("/user/follows/getFollowByAccount")
+    public ResponseEntity<?> getFollowByAccount(@RequestParam("id") Integer id, FollowQueryParam followQueryParam) throws JsonProcessingException {
+        return ResponseEntity.ok(followServices.getFollowsByFollowerId(id, followQueryParam));
+    }
+
+    @GetMapping("/user/follows/getFollowsByGmail")
+    public ResponseEntity<?> getFollowsByGmail(@RequestParam("gmail") String gmail, FollowQueryParam followQueryParam) throws JsonProcessingException {
+        return ResponseEntity.ok(followServices.getFollowsByGmail(gmail, followQueryParam));
     }
 
     @PostMapping("/user/follows")

@@ -1,17 +1,18 @@
 package com.app.service.serviceImpl;
 
-import com.app.entity.Blog;
-import com.app.entity.Favorite;
+import com.app.dto.AccountData;
 import com.app.entity.Follow;
 import com.app.payload.request.FollowQueryParam;
 import com.app.payload.response.APIResponse;
 import com.app.payload.response.FailureAPIResponse;
 import com.app.payload.response.SuccessAPIResponse;
+import com.app.repository.AccountRepository;
 import com.app.repository.FollowRepository;
 import com.app.service.FollowServices;
 import com.app.utils.PageUtils;
 import com.app.utils.RequestParamsUtils;
 import com.app.speficication.FollowSpecification;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,9 @@ import java.util.List;
 public class FollowServicesImpl implements FollowServices {
     @Autowired
     FollowRepository followRepository;
+
+    @Autowired
+    AccountRepository accountRepository;
     @Autowired
     FollowSpecification followSpecification;
     @Autowired
@@ -42,6 +46,22 @@ public class FollowServicesImpl implements FollowServices {
         return new APIResponse(PageUtils.toPageResponse(response));
     }
 
+
+    @Override
+    public APIResponse getFollowsByFollowerId(Integer followerId, FollowQueryParam followQueryParam) throws JsonProcessingException {
+//        Specification<Follow> spec = followSpecification.getFollowSpecitification(followQueryParam);
+        Pageable pageable = requestParamsUtils.getPageable(followQueryParam);
+        Page<AccountData> response = accountRepository.findByFollowerId(followerId, pageable);
+        return new APIResponse(PageUtils.toPageResponse(response));
+    }
+
+    @Override
+    public APIResponse getFollowsByGmail(String Gmail, FollowQueryParam followQueryParam) throws JsonProcessingException {
+//        Specification<Follow> spec = followSpecification.getFollowSpecitification(followQueryParam);
+        Pageable pageable = requestParamsUtils.getPageable(followQueryParam);
+        Page<AccountData> response = accountRepository.findFollowByGmail(Gmail, pageable);
+        return new APIResponse(PageUtils.toPageResponse(response));
+    }
     @Override
     public APIResponse create(Follow follow) {
         follow = followRepository.save(follow);

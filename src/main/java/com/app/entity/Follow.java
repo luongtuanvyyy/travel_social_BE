@@ -13,6 +13,7 @@ import lombok.*;
 @Getter
 @Setter
 public class Follow extends BaseEntity {
+
     @ManyToOne
     @JoinColumn(name = "FOLLOWER_ID", referencedColumnName = "ID")
     private Account account;

@@ -1,6 +1,5 @@
 package com.app.api;
 
-import com.app.entity.TourPrice;
 import com.app.entity.TourTemplate;
 import com.app.payload.request.TourTemplateQueryParam;
 import com.app.payload.response.APIResponse;
@@ -15,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class TourTemplateApi {
+    //tu tu tinh
     @Autowired
     TourTemplateServices tourTemplateServices;
     @GetMapping("/company/tour-templates")

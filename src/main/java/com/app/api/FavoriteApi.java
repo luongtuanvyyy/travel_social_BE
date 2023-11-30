@@ -30,12 +30,6 @@ public class FavoriteApi {
         return ResponseEntity.ok().body(response);
     }
 
-    @PutMapping("/user/favorites")
-    public ResponseEntity<?> updateFavorite(@RequestPart(name = "favorite") Favorite favorite) {
-        APIResponse response = favoriteServices.update(favorite);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
     @DeleteMapping("/user/favorites")
     public ResponseEntity<?> deleteFavorite(@RequestParam("id") Integer id) {
         APIResponse response = favoriteServices.delete(id);

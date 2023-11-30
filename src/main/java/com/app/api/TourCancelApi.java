@@ -18,31 +18,31 @@ import java.util.List;
 public class TourCancelApi {
     @Autowired
     TourCancelServices tourCancelServices;
-
-    @GetMapping("/user/tour-cancels")
+// company
+    @GetMapping("/company/tour-cancels")
     public ResponseEntity<?> filterTourCancel(TourCancelQueryParam tourCancelQueryParam) {
         return ResponseEntity.ok(tourCancelServices.filterTourCancel(tourCancelQueryParam));
     }
 
-    @PostMapping("/user/tour-cancels")
+    @PostMapping("/company/tour-cancels")
     public ResponseEntity<?> createTourCancel(@RequestPart(name = "tour_cancel") TourCancel tour_cancel) {
         APIResponse response = tourCancelServices.create(tour_cancel);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PutMapping("/user/tour-cancels")
+    @PutMapping("/company/tour-cancels")
     public ResponseEntity<?> updateTourCancel(@RequestPart(name = "tour_cancel") TourCancel tour_cancel) {
         APIResponse response = tourCancelServices.update(tour_cancel);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @DeleteMapping("/user/tour-cancels")
+    @DeleteMapping("/company/tour-cancels")
     public ResponseEntity<?> deleteTourCancel(@RequestParam("id") Integer id) {
         APIResponse response = tourCancelServices.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PostMapping("/user/tour-cancels/upload-excel")
+    @PostMapping("/company/tour-cancels/upload-excel")
     public ResponseEntity<?> uploadExcel(@RequestPart(name = "excel") MultipartFile excel) {
         APIResponse response = tourCancelServices.uploadExcel(excel);
         return ResponseEntity.ok().body(response);

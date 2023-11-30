@@ -21,27 +21,27 @@ public class PlaceApi {
         return ResponseEntity.ok(placeServices.filterPlace(placeQueryParam));
     }
 
-    @PostMapping("/user/places")
+    @PostMapping("/company/places")
     public ResponseEntity<?> createPlace(@RequestPart(name = "place") Place place,
                                          @RequestPart(name = "image") MultipartFile image) {
         APIResponse response = placeServices.create(place, image);
         return ResponseEntity.ok().body(response);
     }
 
-    @PutMapping("/user/places")
+    @PutMapping("/company/places")
     public ResponseEntity<?> updatePlace(@RequestPart(name = "place") Place place,
                                          @Nullable @RequestPart(name = "image") MultipartFile image) {
         APIResponse response = placeServices.update(place, image);
         return ResponseEntity.ok().body(response);
     }
 
-    @DeleteMapping("/user/places")
+    @DeleteMapping("/company/places")
     public ResponseEntity<?> deletePlace(@RequestParam("id") Integer id) {
         APIResponse response = placeServices.delete(id);
         return ResponseEntity.ok().body(response);
     }
 
-    @PostMapping("/user/places/upload-excel")
+    @PostMapping("/company/places/upload-excel")
     public ResponseEntity<?> uploadExcel(@RequestPart(name = "excel") MultipartFile excel) {
         APIResponse response = placeServices.uploadExcel(excel);
         return ResponseEntity.ok().body(response);

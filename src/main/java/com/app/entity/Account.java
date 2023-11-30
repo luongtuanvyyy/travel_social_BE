@@ -34,14 +34,8 @@ public class Account extends BaseEntity {
     @Email
     @NotBlank
     private String email;
-    @Column(name = "FIRST_NAME")
-    private String firstName;
     private boolean gender;
-    private String hotline;
-    @Column(name = "LAST_NAME")
-    private String lastName;
-    @Column(name = "LOGIN_TYPE")
-    private String loginType;
+    private String phone;
     private ERole role = ERole.ROLE_USER;
     @Column(name = "IS_VERIFY")
     private boolean isVerify = false;

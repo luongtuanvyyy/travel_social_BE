@@ -20,8 +20,4 @@ public class TourGuide extends BaseEntity {
     @Column(name = "CLOUDINARY_ID")
     private String cloudinaryId;
 
-    @ManyToOne
-    @JoinColumn(name = "TOUR_ID", referencedColumnName = "ID")
-    @JsonBackReference
-    private Tour tour;
 }

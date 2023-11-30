@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class PaymentApi {
     @Autowired
     PaymentServices paymentServices;
-
     @GetMapping("/public/payment")
     public ResponseEntity<?> filterPayment(PaymentQueryParam paymentQueryParam) {
         return ResponseEntity.ok(paymentServices.filterPayment(paymentQueryParam));

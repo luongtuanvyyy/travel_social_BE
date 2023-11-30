@@ -80,17 +80,13 @@ public class AuthApi {
         APIResponse response = authService.logout();
         return ResponseEntity.ok(response);
     }
-//    @GetMapping("/auth/getDataAccount")
-//    public ResponseEntity<?> getAccount(@RequestParam("token") String token) {
-//        APIResponse response = authService.getAccount(token);
+//ko can
+//    @GetMapping("/auth/getTokenFromHeader")
+//    public ResponseEntity<?> getUserRequest(HttpServletRequest request) {
+//        APIResponse response = authService.getUserRequest(request);
 //        return ResponseEntity.ok(response);
 //    }
 
-    @GetMapping("/auth/getTokenFromHeader")
-    public ResponseEntity<?> getUserRequest(HttpServletRequest request) {
-        APIResponse response = authService.getUserRequest(request);
-        return ResponseEntity.ok(response);
-    }
     @GetMapping("/profile")
     public ResponseEntity<?> getProfile() {
         return ResponseEntity.ok("null");

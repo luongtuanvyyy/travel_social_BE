@@ -17,7 +17,7 @@ import java.util.List;
 public class TourDetailApi {
     @Autowired
     TourDetailServices tourDetailServices;
-
+// can get
     @GetMapping("/public/tour-details")
     public ResponseEntity<?> filter(TourDetailQueryParam tourDetailQueryParam) {
         return ResponseEntity.ok(tourDetailServices.filterTourDetail(tourDetailQueryParam));

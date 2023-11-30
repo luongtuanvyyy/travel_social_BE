@@ -30,12 +30,6 @@ public class ViewApi {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PutMapping("/user/views")
-    public ResponseEntity<?> updateView(@RequestPart(name = "view") View view) {
-        APIResponse response = viewServices.update(view);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
     @DeleteMapping("/user/views")
     public ResponseEntity<?> deleteView(@RequestParam("id") Integer id) {
         APIResponse response = viewServices.delete(id);

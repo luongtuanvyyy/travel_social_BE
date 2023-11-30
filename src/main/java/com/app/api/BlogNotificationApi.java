@@ -18,7 +18,7 @@ import java.util.List;
 public class BlogNotificationApi {
     @Autowired
     BlogNotificationServices blogNotificationServices;
-
+    //web socket
     @GetMapping("/user/blog-notifications")
     public ResponseEntity<?> getAllBlogNotification(BlogNotificationQueryParam blogNotificationQueryParam) {
         return ResponseEntity.ok(blogNotificationServices.filterBlogNotification(blogNotificationQueryParam));

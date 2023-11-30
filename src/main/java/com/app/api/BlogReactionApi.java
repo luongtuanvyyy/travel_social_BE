@@ -35,7 +35,7 @@ public class BlogReactionApi {
         APIResponse response = blogReactionServices.update(blogReaction);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-
+//k can
     @DeleteMapping("/user/blog-reactions")
     public ResponseEntity<?> deleteBlogReaction(@RequestParam("id") Integer id) {
         APIResponse response = blogReactionServices.delete(id);

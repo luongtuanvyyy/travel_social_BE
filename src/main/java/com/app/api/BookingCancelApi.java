@@ -18,28 +18,9 @@ import java.util.List;
 public class BookingCancelApi {
     @Autowired
     BookingCancelServices bookingCancelServices;
-
     @GetMapping("/user/booking-cancels")
     public ResponseEntity<?> filterBookingCancel(BookingCancelQueryParam bookingCancelQueryParam) {
         return ResponseEntity.ok(bookingCancelServices.filterBookingCancel(bookingCancelQueryParam));
-    }
-
-    @PostMapping("/user/booking-cancels")
-    public ResponseEntity<?> createBookingCancel(@RequestPart(name = "booking_cancel") BookingCancel bookingCancel) {
-        APIResponse response = bookingCancelServices.create(bookingCancel);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    @PutMapping("/user/booking-cancels")
-    public ResponseEntity<?> updateBookingCancel(@RequestPart(name = "booking_cancel") BookingCancel bookingCancel) {
-        APIResponse response = bookingCancelServices.update(bookingCancel);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    @DeleteMapping("/user/booking-cancels")
-    public ResponseEntity<?> deleteBookingCancel(@RequestParam("id") Integer id) {
-        APIResponse response = bookingCancelServices.delete(id);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping("/user/booking-cancels/upload-excel")

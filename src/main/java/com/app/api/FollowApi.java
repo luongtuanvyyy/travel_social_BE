@@ -25,14 +25,14 @@ public class FollowApi {
     public ResponseEntity<?> getAllFollow(FollowQueryParam followQueryParam) {
         return ResponseEntity.ok(followServices.filterFollow(followQueryParam));
     }
-
+//fl
     @GetMapping("/user/follows/getFollowByAccount")
-    public ResponseEntity<?> getFollowByAccount(@RequestParam("id") Integer id, FollowQueryParam followQueryParam) throws JsonProcessingException {
+    public ResponseEntity<?> getFollowById(@RequestParam("id") Integer id, FollowQueryParam followQueryParam) throws JsonProcessingException {
         return ResponseEntity.ok(followServices.getFollowsByFollowerId(id, followQueryParam));
     }
-
+    //fler
     @GetMapping("/user/follows/getFollowsByGmail")
-    public ResponseEntity<?> getFollowsByGmail(@RequestParam("gmail") String gmail, FollowQueryParam followQueryParam) throws JsonProcessingException {
+    public ResponseEntity<?> getFollowerByGmail(@RequestParam("gmail") String gmail, FollowQueryParam followQueryParam) throws JsonProcessingException {
         return ResponseEntity.ok(followServices.getFollowsByGmail(gmail, followQueryParam));
     }
 

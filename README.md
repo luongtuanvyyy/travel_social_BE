@@ -1,2 +1,2 @@
-# furniture-website-BE
-## Author: AnPhuc
+# Travel Social
+## Team BE

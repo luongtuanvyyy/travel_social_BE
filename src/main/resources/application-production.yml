@@ -3,9 +3,9 @@ spring:
     show-sql: true
     naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
   datasource:
-    url: jdbc:mysql://anphuc.mysql.database.azure.com/anphuc?useUnicode=yes&characterEncoding=UTF-8
-    username: anphuc
-    password:  phuc123@
+    url: jdbc:mysql://travel-social-mysql.mysql.database.azure.com/travelsocial?useUnicode=yes&characterEncoding=UTF-8
+    username: travelsocialmysql
+    password:  root123456!
   mail:
     host: smtp.gmail.com
     port: 587

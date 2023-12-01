@@ -83,18 +83,13 @@ public class BlogServicesImpl implements BlogServices {
     }
 
     @Override
-    public APIResponse create(Blog blog, MultipartFile image, HttpServletRequest request) {
+    public APIResponse create(Blog blog, HttpServletRequest request) {
         String token = getTokenFromHeader(request);
         int id = tokenProvider.getIdFromToken(token);
         Account account =  accountRepository.findById(id).orElse(null);
         try {
             if (blog.getTitle() == null || blog.getTitle().trim().isEmpty()) {
                 throw new IllegalArgumentException("Blog title cannot be empty");
-            }
-            if (image != null) {
-                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "example");
-                blog.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-                blog.setImage(cloudinaryResponse.getUrl());
             }
 
             blog.setAvatar(account.getAvatar());
@@ -107,7 +102,7 @@ public class BlogServicesImpl implements BlogServices {
     }
 
     @Override
-    public APIResponse update(Blog blog, MultipartFile image, HttpServletRequest request) {
+    public APIResponse update(Blog blog, HttpServletRequest request) {
         try {
 
             if (blog == null) {
@@ -119,12 +114,6 @@ public class BlogServicesImpl implements BlogServices {
             Blog exists = blogRepository.findById(blog.getId()).orElse(null);
             if (exists == null) {
                 return new FailureAPIResponse("Cannot find blog with id: " + blog.getId());
-            }
-            if (image != null) {
-                cloudinaryService.deleteFile(blog.getCloudinaryId());
-                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "blog");
-                blog.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-                blog.setImage(cloudinaryResponse.getUrl());
             }
 
             blog = blogRepository.save(blog);

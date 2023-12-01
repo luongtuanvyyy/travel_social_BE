@@ -35,16 +35,14 @@ public class VehicleApi {
     }
 
     @PostMapping("/company/vehicles")
-    public ResponseEntity<?> createVehicle(@RequestPart(name = "vehicle") Vehicle vehicle,
-                                           @RequestPart(name = "image") @Nullable MultipartFile image) {
-        APIResponse response = vehicleServices.create(vehicle, image);
+    public ResponseEntity<?> createVehicle(@RequestPart(name = "vehicle") Vehicle vehicle) {
+        APIResponse response = vehicleServices.create(vehicle);
         return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/company/vehicles")
-    public ResponseEntity<?> updateVehicle(@RequestPart(name = "vehicle") Vehicle vehicle,
-                                           @RequestPart(name = "image") @Nullable MultipartFile image) {
-        APIResponse response = vehicleServices.update(vehicle, image);
+    public ResponseEntity<?> updateVehicle(@RequestPart(name = "vehicle") Vehicle vehicle) {
+        APIResponse response = vehicleServices.update(vehicle);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

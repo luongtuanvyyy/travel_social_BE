@@ -42,7 +42,7 @@ public class HotelServicesImpl implements HotelServices {
     }
 
     @Override
-    public APIResponse create(Hotel hotel, MultipartFile image) {
+    public APIResponse create(Hotel hotel) {
         try {
             if (hotel.getName() == null || hotel.getName().trim().isEmpty()) {
                 throw new IllegalArgumentException("Hotel name cannot be empty");
@@ -63,11 +63,6 @@ public class HotelServicesImpl implements HotelServices {
                 throw new IllegalArgumentException("Hotel room cannot be empty");
             }
 
-            if (image != null) {
-                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "hotel");
-                hotel.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-                hotel.setImage(cloudinaryResponse.getUrl());
-            }
 
             hotel = hotelRepository.save(hotel);
             return new SuccessAPIResponse(hotel);
@@ -77,7 +72,7 @@ public class HotelServicesImpl implements HotelServices {
     }
 
     @Override
-    public APIResponse update(Hotel hotel, MultipartFile image) {
+    public APIResponse update(Hotel hotel) {
         try {
             if (hotel == null) {
                 return new FailureAPIResponse("Hotel id is required!");
@@ -105,12 +100,7 @@ public class HotelServicesImpl implements HotelServices {
             if (exists == null) {
                 return new FailureAPIResponse("Cannot find hotel with id: " + hotel.getId());
             }
-            if (image != null) {
-                cloudinaryService.deleteFile(hotel.getCloudinaryId());
-                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "hotel");
-                hotel.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-                hotel.setImage(cloudinaryResponse.getUrl());
-            }
+
             hotel = hotelRepository.save(hotel);
             return new SuccessAPIResponse(hotel);
         } catch (Exception ex) {

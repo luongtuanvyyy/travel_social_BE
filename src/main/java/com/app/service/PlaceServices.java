@@ -8,8 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface PlaceServices {
     APIResponse filterPlace(PlaceQueryParam placeQueryParam);
-    APIResponse create(Place place, MultipartFile image);
-    APIResponse update(Place place, MultipartFile image);
+    APIResponse create(Place place);
+    APIResponse update(Place place);
     APIResponse delete(Integer id);
     APIResponse uploadExcel(MultipartFile excel);
 }

@@ -42,7 +42,7 @@ public class VehicleServicesImpl implements VehicleServices {
     }
 
     @Override
-    public APIResponse create(Vehicle vehicle, MultipartFile image) {
+    public APIResponse create(Vehicle vehicle) {
         try {
             if (vehicle.getName() == null || vehicle.getName().trim().isEmpty()) {
                 throw new IllegalArgumentException("Vehicle name cannot be empty");
@@ -63,11 +63,7 @@ public class VehicleServicesImpl implements VehicleServices {
                 throw new IllegalArgumentException("Vehicle email cannot be empty");
             }
 
-            if (image != null) {
-                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "vehicle");
-                vehicle.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-                vehicle.setImage(cloudinaryResponse.getUrl());
-            }
+
             vehicle = vehicleRepository.save(vehicle);
             return new SuccessAPIResponse(vehicle);
         } catch (Exception ex) {
@@ -76,7 +72,7 @@ public class VehicleServicesImpl implements VehicleServices {
     }
 
     @Override
-    public APIResponse update(Vehicle vehicle, MultipartFile image) {
+    public APIResponse update(Vehicle vehicle) {
         try {
             if (vehicle == null) {
                 return new FailureAPIResponse("Vehicle id is required!");
@@ -104,12 +100,7 @@ public class VehicleServicesImpl implements VehicleServices {
             if (exists == null) {
                 return new FailureAPIResponse("Cannot find vehicle with id: " + vehicle.getId());
             }
-            if (image != null) {
-                cloudinaryService.deleteFile(vehicle.getCloudinaryId());
-                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "vehicle");
-                vehicle.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-                vehicle.setImage(cloudinaryResponse.getUrl());
-            }
+
             vehicle = vehicleRepository.save(vehicle);
             return new SuccessAPIResponse(vehicle);
         } catch (Exception ex) {

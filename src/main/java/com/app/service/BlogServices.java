@@ -20,9 +20,9 @@ public interface BlogServices {
 
     APIResponse filterLeastBlog(BlogQueryParam blogQueryParam);
 
-    APIResponse create(Blog blog, MultipartFile image, HttpServletRequest request);
+    APIResponse create(Blog blog, HttpServletRequest request);
 
-    APIResponse update(Blog blog, MultipartFile image, HttpServletRequest request);
+    APIResponse update(Blog blog, HttpServletRequest request);
 
     APIResponse delete(Integer id);
 

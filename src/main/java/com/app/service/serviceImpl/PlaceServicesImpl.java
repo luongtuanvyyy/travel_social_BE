@@ -44,7 +44,7 @@ public class PlaceServicesImpl implements PlaceServices {
     }
 
     @Override
-    public APIResponse create(Place place, MultipartFile image) {
+    public APIResponse create(Place place) {
         try {
             if (place.getName() == null || place.getName().trim().isEmpty()) {
                 throw new IllegalArgumentException("Place name cannot be empty");
@@ -61,11 +61,7 @@ public class PlaceServicesImpl implements PlaceServices {
             if (place.getType() == null || place.getType().trim().isEmpty()) {
                 throw new IllegalArgumentException("Place type cannot be empty");
             }
-            if (image != null) {
-                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "place");
-                place.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-                place.setImage(cloudinaryResponse.getUrl());
-            }
+
             place = placeRepository.save(place);
             return new SuccessAPIResponse(place);
         } catch (Exception ex) {
@@ -74,7 +70,7 @@ public class PlaceServicesImpl implements PlaceServices {
     }
 
     @Override
-    public APIResponse update(Place place, MultipartFile image) {
+    public APIResponse update(Place place) {
         try {
             if (place == null) {
                 return new FailureAPIResponse("Place id is required!");
@@ -98,12 +94,6 @@ public class PlaceServicesImpl implements PlaceServices {
             Place exists = placeRepository.findById(place.getId()).orElse(null);
             if (exists == null) {
                 return new FailureAPIResponse("Cannot find place with id: " + place.getId());
-            }
-            if (image != null) {
-                cloudinaryService.deleteFile(place.getCloudinaryId());
-                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "place");
-                place.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-                place.setImage(cloudinaryResponse.getUrl());
             }
             place = placeRepository.save(place);
             return new SuccessAPIResponse(place);

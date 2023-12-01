@@ -73,16 +73,12 @@ public class TourServicesImpl implements TourServices {
     }
 
     @Override
-    public APIResponse create(Tour tour, MultipartFile image) {
+    public APIResponse create(Tour tour) {
         try {
             if (tour.getName() == null || tour.getName().trim().isEmpty()) {
                 throw new IllegalArgumentException("Tour name cannot be empty");
             }
-            if (image != null) {
-                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "tour");
-                tour.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-                tour.setImage(cloudinaryResponse.getUrl());
-            }
+
             tour = tourRepository.save(tour);
             return new SuccessAPIResponse(tour);
         } catch (Exception ex) {
@@ -91,7 +87,7 @@ public class TourServicesImpl implements TourServices {
     }
 
     @Override
-    public APIResponse update(Tour tour, MultipartFile image) {
+    public APIResponse update(Tour tour) {
         try {
 
             if (tour == null) {
@@ -104,12 +100,7 @@ public class TourServicesImpl implements TourServices {
             if (exists == null) {
                 return new FailureAPIResponse("Cannot find tour with id: " + tour.getId());
             }
-            if (image != null) {
-                cloudinaryService.deleteFile(tour.getCloudinaryId());
-                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "tour");
-                tour.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-                tour.setImage(cloudinaryResponse.getUrl());
-            }
+
             tour = tourRepository.save(tour);
             return new SuccessAPIResponse(tour);
         } catch (Exception ex) {

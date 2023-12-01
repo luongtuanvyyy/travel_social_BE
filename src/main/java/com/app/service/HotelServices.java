@@ -8,8 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface HotelServices {
     APIResponse filterHotel(HotelQueryParam hotelQueryParam) throws Exception;
-    APIResponse create(Hotel hotel, MultipartFile image);
-    APIResponse update(Hotel hotel, MultipartFile image);
+    APIResponse create(Hotel hotel);
+    APIResponse update(Hotel hotel);
     APIResponse delete(Integer id);
     APIResponse uploadExcel(MultipartFile excel);
 }

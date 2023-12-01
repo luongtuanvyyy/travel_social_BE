@@ -7,8 +7,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface RestaurantServices {
     APIResponse filterRestaurant(RestaurantQueryParam restaurantQueryParam);
-    APIResponse create(Restaurant restaurant, MultipartFile image);
-    APIResponse update(Restaurant restaurant, MultipartFile image);
+    APIResponse create(Restaurant restaurant);
+    APIResponse update(Restaurant restaurant);
     APIResponse delete(Integer id);
     APIResponse uploadExcel(MultipartFile excel);
 }

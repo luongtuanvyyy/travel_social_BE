@@ -40,18 +40,13 @@ public class RestaurantServicesImpl implements RestaurantServices {
     }
 
     @Override
-    public APIResponse create(Restaurant restaurant, MultipartFile image) {
+    public APIResponse create(Restaurant restaurant) {
         try {
             if (restaurant.getName() == null || restaurant.getName().trim().isEmpty()) {
                 throw new IllegalArgumentException("Restaurant name cannot be empty");
             }
             if (restaurant.getAddress() == null || restaurant.getAddress().trim().isEmpty()) {
                 throw new IllegalArgumentException("Restaurant name cannot be empty");
-            }
-            if (image != null) {
-                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "restaurant");
-                restaurant.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-                restaurant.setImage(cloudinaryResponse.getUrl());
             }
             restaurant = restaurantRepository.save(restaurant);
             return new SuccessAPIResponse(restaurant);
@@ -61,7 +56,7 @@ public class RestaurantServicesImpl implements RestaurantServices {
     }
 
     @Override
-    public APIResponse update(Restaurant restaurant, MultipartFile image) {
+    public APIResponse update(Restaurant restaurant) {
         try {
             if (restaurant == null) {
                 return new FailureAPIResponse("Restaurant id is required!");
@@ -77,12 +72,7 @@ public class RestaurantServicesImpl implements RestaurantServices {
             if (exists == null) {
                 return new FailureAPIResponse("Cannot find restaurant with id: " + restaurant.getId());
             }
-            if (image != null) {
-                cloudinaryService.deleteFile(restaurant.getCloudinaryId());
-                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "restaurant");
-                restaurant.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-                restaurant.setImage(cloudinaryResponse.getUrl());
-            }
+
             restaurant = restaurantRepository.save(restaurant);
             return new SuccessAPIResponse(restaurant);
         } catch (Exception ex) {

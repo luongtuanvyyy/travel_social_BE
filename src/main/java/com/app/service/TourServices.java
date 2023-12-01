@@ -16,8 +16,8 @@ public interface TourServices {
 
     APIResponse filterNewlyPosted(TourQueryParam tourQueryParam);
 
-    APIResponse create(Tour tour, MultipartFile image);
-    APIResponse update(Tour tour, MultipartFile image);
+    APIResponse create(Tour tour);
+    APIResponse update(Tour tour);
     APIResponse delete(Integer id);
     APIResponse uploadExcel(MultipartFile excel);
     APIResponse createBatch(List<Tour> tours);

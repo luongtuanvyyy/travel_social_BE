@@ -22,16 +22,14 @@ public class PlaceApi {
     }
 
     @PostMapping("/company/places")
-    public ResponseEntity<?> createPlace(@RequestPart(name = "place") Place place,
-                                         @RequestPart(name = "image") MultipartFile image) {
-        APIResponse response = placeServices.create(place, image);
+    public ResponseEntity<?> createPlace(@RequestPart(name = "place") Place place) {
+        APIResponse response = placeServices.create(place);
         return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/company/places")
-    public ResponseEntity<?> updatePlace(@RequestPart(name = "place") Place place,
-                                         @Nullable @RequestPart(name = "image") MultipartFile image) {
-        APIResponse response = placeServices.update(place, image);
+    public ResponseEntity<?> updatePlace(@RequestPart(name = "place") Place place) {
+        APIResponse response = placeServices.update(place);
         return ResponseEntity.ok().body(response);
     }
 

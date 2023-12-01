@@ -22,16 +22,14 @@ public class RestaurantApi {
     }
 
     @PostMapping("/company/restaurants")
-    public ResponseEntity<?> createRestaurants(@RequestPart(name = "restaurant") Restaurant restaurant,
-                                               @RequestPart(name = "image") MultipartFile image) {
-        APIResponse response = restaurantServices.create(restaurant, image);
+    public ResponseEntity<?> createRestaurants(@RequestPart(name = "restaurant") Restaurant restaurant) {
+        APIResponse response = restaurantServices.create(restaurant);
         return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/company/restaurants")
-    public ResponseEntity<?> updateRestaurants(@RequestPart(name = "restaurant") Restaurant restaurant,
-                                               @Nullable @RequestPart(name = "image") MultipartFile image) {
-        APIResponse response = restaurantServices.update(restaurant, image);
+    public ResponseEntity<?> updateRestaurants(@RequestPart(name = "restaurant") Restaurant restaurant) {
+        APIResponse response = restaurantServices.update(restaurant);
         return ResponseEntity.ok().body(response);
     }
 

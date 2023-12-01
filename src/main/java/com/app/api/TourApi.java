@@ -32,16 +32,15 @@ public class TourApi {
         return ResponseEntity.ok(tourServices.filterNewlyPosted(tourQueryParam));
     }
     @PostMapping("/company/tours")
-    public ResponseEntity<?> createTour(@RequestPart(name = "tour") Tour tour,
-                                        @RequestPart(name = "image") MultipartFile image) {
-        APIResponse response = tourServices.create(tour, image);
+    public ResponseEntity<?> createTour(@RequestPart(name = "tour") Tour tour) {
+        APIResponse response = tourServices.create(tour);
         return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/company/tours")
-    public ResponseEntity<?> updateTour(@RequestPart(name = "tour") Tour tour,
-                                        @RequestPart(name = "image") MultipartFile image) {
-        APIResponse response = tourServices.update(tour, image);
+    public ResponseEntity<?> updateTour(@RequestPart(name = "tour") Tour tour
+                                     ) {
+        APIResponse response = tourServices.update(tour);
         return ResponseEntity.ok().body(response);
     }
 

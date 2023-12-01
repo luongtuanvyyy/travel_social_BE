@@ -25,16 +25,14 @@ public class HotelApi {
     }
 
     @PostMapping("/company/hotels")
-    public ResponseEntity<?> createHotel(@RequestPart(name = "hotel") Hotel hotel,
-                                         @RequestPart(name = "image") @Nullable MultipartFile image) {
-        APIResponse response = hotelServices.create(hotel, image);
+    public ResponseEntity<?> createHotel(@RequestPart(name = "hotel") Hotel hotel) {
+        APIResponse response = hotelServices.create(hotel);
         return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/company/hotels")
-    public ResponseEntity<?> updateHotel(@RequestPart(name = "hotel") Hotel hotel,
-                                         @RequestPart(name = "image") @Nullable MultipartFile image) {
-        APIResponse response = hotelServices.update(hotel, image);
+    public ResponseEntity<?> updateHotel(@RequestPart(name = "hotel") Hotel hotel) {
+        APIResponse response = hotelServices.update(hotel);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

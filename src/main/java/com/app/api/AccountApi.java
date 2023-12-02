@@ -14,13 +14,13 @@ public class AccountApi {
     @Autowired
     AccountService accountService;
 
-    @GetMapping("/public/admin/accounts")
+    @GetMapping("/admin/accounts")
     public ResponseEntity<?> getAllAccount(AccountQueryParam accountQueryParam) {
         try {
             return ResponseEntity.ok(accountService.filterAccount(accountQueryParam));
         } catch (Exception e) {
             // Handle the exception or log the error message
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
         }
     }
 

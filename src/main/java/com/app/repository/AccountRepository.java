@@ -16,7 +16,6 @@ import java.util.Optional;
 public interface AccountRepository extends JpaRepository<Account, Integer> {
     Optional<Account> findByEmail(String email);
 
-    @EntityGraph("graph.product")
     Page<Account> findAll(Specification<Account> spec, Pageable pageable);
 
     @Query(value = "SELECT new com.app.dto.AccountData(a.id, a.name, a.avatar)\n" +

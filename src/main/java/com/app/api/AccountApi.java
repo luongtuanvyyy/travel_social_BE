@@ -3,6 +3,7 @@ package com.app.api;
 import com.app.payload.request.AccountQueryParam;
 import com.app.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +14,14 @@ public class AccountApi {
     @Autowired
     AccountService accountService;
 
-    @GetMapping("/admin/accounts")
+    @GetMapping("/public/admin/accounts")
     public ResponseEntity<?> getAllAccount(AccountQueryParam accountQueryParam) {
-        return ResponseEntity.ok(accountService.filterAccount(accountQueryParam));
+        try {
+            return ResponseEntity.ok(accountService.filterAccount(accountQueryParam));
+        } catch (Exception e) {
+            // Handle the exception or log the error message
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+        }
     }
 
     @PutMapping("/admin/accounts/{id}")

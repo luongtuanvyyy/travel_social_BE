@@ -16,6 +16,8 @@ public interface TourServices {
 
     APIResponse filterNewlyPosted(TourQueryParam tourQueryParam);
 
+    APIResponse getAccountByTourId(Integer id, TourQueryParam tourQueryParam);
+
     APIResponse create(Tour tour);
     APIResponse update(Tour tour);
     APIResponse delete(Integer id);

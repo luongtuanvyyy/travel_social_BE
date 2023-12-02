@@ -22,6 +22,11 @@ public class TourApi {
     public ResponseEntity<?> filter(TourQueryParam tourQueryParam) {
         return ResponseEntity.ok(tourServices.filterTour(tourQueryParam));
     }
+
+    @GetMapping("/public/tours/getAccount")
+    public ResponseEntity<?> getAccount(@RequestParam("id") Integer id, TourQueryParam tourQueryParam) {
+        return ResponseEntity.ok(tourServices.getAccountByTourId(id, tourQueryParam));
+    }
     @GetMapping("/public/tours/nullDiscount")
     public ResponseEntity<?> filterTourDiscount(TourQueryParam tourQueryParam) {
         return ResponseEntity.ok(tourServices.filterTourDiscount(tourQueryParam));

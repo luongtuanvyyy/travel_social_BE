@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 public interface BlogRepository extends JpaRepository<Blog, Integer> {
 
 
-//    @EntityGraph("graph.product")
     Page<Blog> findAll(Specification<Blog> spec, Pageable pageable);
     @Query("SELECT COUNT(b) FROM Blog b WHERE b.createdBy = :createdBy")
     Integer countByCreatedBy(@Param("createdBy") String createdBy);

@@ -26,12 +26,23 @@ public class AccountApi {
 
     @PutMapping("/admin/accounts/{id}")
     public ResponseEntity<?> blockAccount(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(accountService.blockAccount(id));
+        try {
+            return ResponseEntity.ok(accountService.blockAccount(id));
+        } catch (Exception e) {
+            // Handle the exception or log the error message
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+        }
+
     }
 
     @DeleteMapping("/admin/accounts/{id}")
     public ResponseEntity<?> remove(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(accountService.removeAccount(id));
+        try {
+            return ResponseEntity.ok(accountService.removeAccount(id));
+        } catch (Exception e) {
+            // Handle the exception or log the error message
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+        }
     }
 
 }

@@ -1,10 +1,10 @@
 package com.app.service.serviceImpl;
 
 
+import com.app.dto.AccountData;
 import com.app.entity.Tour;
 import com.app.payload.request.TourQueryParam;
 import com.app.payload.response.APIResponse;
-import com.app.payload.response.CloudinaryResponse;
 import com.app.payload.response.FailureAPIResponse;
 import com.app.payload.response.SuccessAPIResponse;
 import com.app.repository.TourRepository;
@@ -72,6 +72,12 @@ public class TourServicesImpl implements TourServices {
         return new APIResponse(PageUtils.toPageResponse(response));
     }
 
+    @Override
+    public APIResponse getAccountByTourId(Integer id, TourQueryParam tourQueryParam) {
+        Pageable pageable = requestParamsUtils.getPageable(tourQueryParam);
+        Page<AccountData> response = tourRepository.getCompanyCreatedBY(id, pageable);
+        return new APIResponse(PageUtils.toPageResponse(response));
+    }
     @Override
     public APIResponse create(Tour tour) {
         try {

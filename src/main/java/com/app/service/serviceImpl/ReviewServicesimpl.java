@@ -48,30 +48,19 @@ public class ReviewServicesimpl implements ReviewServices {
     }
 
     @Override
-    public APIResponse create(Review review, MultipartFile image) {
-        if (image != null) {
-            CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "review");
-            review.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-            review.setImage(cloudinaryResponse.getUrl());
-        }
+    public APIResponse create(Review review) {
         review = reviewRepository.save(review);
         return new SuccessAPIResponse(review);
     }
 
     @Override
-    public APIResponse update(Review review, MultipartFile image) {
+    public APIResponse update(Review review) {
         if(review == null){
             return  new FailureAPIResponse("Review id is required!");
         }
         Review exists = reviewRepository.findById(review.getId()).orElse(null);
         if(exists == null){
-            return  new FailureAPIResponse("Cannot find reveiw with id: "+review.getId());
-        }
-        if (image != null) {
-            cloudinaryService.deleteFile(review.getCloudinaryId());
-            CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "review");
-            review.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
-            review.setImage(cloudinaryResponse.getUrl());
+            return  new FailureAPIResponse("Cannot find review with id: "+review.getId());
         }
         review = reviewRepository.save(review);
         return new SuccessAPIResponse(review);

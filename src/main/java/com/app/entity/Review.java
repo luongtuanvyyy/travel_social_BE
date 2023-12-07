@@ -16,13 +16,15 @@ public class Review extends BaseEntity {
     private Float rating;
     private String image;
 
+    private String title;
+    private String comment;
+
     @Column(name = "CLOUDINARY_ID")
     private String cloudinaryId;
 
     @ManyToOne
     @JoinColumn(name = "TOUR_ID", referencedColumnName = "ID")
-    @JsonBackReference
-    private Tour tour;
+    private Tour tourId;
 
     @ManyToOne
     @JoinColumn(name = "REVIEW_ID", referencedColumnName = "ID")

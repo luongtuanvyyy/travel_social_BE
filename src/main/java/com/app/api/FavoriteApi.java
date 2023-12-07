@@ -19,7 +19,7 @@ public class FavoriteApi {
     @Autowired
     FavoriteServices favoriteServices;
 
-    @GetMapping("/user/favorites")
+    @GetMapping("/public/favorites")
     public ResponseEntity<?> getAllFavorite(FavoriteQueryParam favoriteQueryParam) {
         return ResponseEntity.ok(favoriteServices.filterFavorite(favoriteQueryParam));
     }

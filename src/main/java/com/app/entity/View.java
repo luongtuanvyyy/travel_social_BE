@@ -11,6 +11,7 @@ import lombok.*;
 @Getter
 @Setter
 public class View extends BaseEntity {
+
     @ManyToOne
     @JoinColumn(name = "BLOG_ID", referencedColumnName = "ID")
     private Blog blogId;

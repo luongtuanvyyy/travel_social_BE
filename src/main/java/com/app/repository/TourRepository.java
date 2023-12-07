@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 public interface TourRepository extends JpaRepository<Tour, Integer> {
     Page<Tour> findAll(Specification<Tour> spec, Pageable pageable);
     @Query("SELECT t FROM Tour t WHERE t.discount IS NOT NULL")
-    Page<Tour> DiscountIsNotNull(Specification<Tour> spec, Pageable pageable);;
+    Page<Tour> DiscountIsNotNull(Specification<Tour> spec, Pageable pageable);
 
 
     @Query(value = "SELECT new com.app.dto.AccountData(a.id, a.name, a.avatar, a.isVerify, a.email)\n" +
@@ -25,7 +25,7 @@ public interface TourRepository extends JpaRepository<Tour, Integer> {
             "  FROM Tour t\n" +
             "  WHERE t.id = :tourId\n" +
             ")")
-    Page<AccountData> getCompanyCreatedBY(@Param("tourId")Integer tourId, Pageable pageable);;
+    Page<AccountData> getCompanyCreatedBY(@Param("tourId")Integer tourId, Pageable pageable);
 
 
 }

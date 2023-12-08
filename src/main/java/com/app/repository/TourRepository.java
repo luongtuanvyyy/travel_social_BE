@@ -1,6 +1,7 @@
 package com.app.repository;
 
 import com.app.dto.AccountData;
+import com.app.entity.Account;
 import com.app.entity.Tour;
 import io.swagger.models.auth.In;
 import org.springframework.data.domain.Page;
@@ -11,13 +12,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface TourRepository extends JpaRepository<Tour, Integer> {
     Page<Tour> findAll(Specification<Tour> spec, Pageable pageable);
     @Query("SELECT t FROM Tour t WHERE t.discount IS NOT NULL")
     Page<Tour> DiscountIsNotNull(Specification<Tour> spec, Pageable pageable);
 
-
+    Optional<Tour> findTourById(Integer id);
     @Query(value = "SELECT new com.app.dto.AccountData(a.id, a.name, a.avatar, a.isVerify, a.email)\n" +
             "FROM Account a\n" +
             "WHERE a.email IN (\n" +

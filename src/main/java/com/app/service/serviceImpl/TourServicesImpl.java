@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TourServicesImpl implements TourServices {
@@ -77,6 +78,12 @@ public class TourServicesImpl implements TourServices {
         Pageable pageable = requestParamsUtils.getPageable(tourQueryParam);
         Page<AccountData> response = tourRepository.getCompanyCreatedBY(id, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+    }
+
+    @Override
+    public APIResponse findbyid(Integer id) {
+       Optional<Tour> response = tourRepository.findTourById(id);
+        return new APIResponse(response);
     }
     @Override
     public APIResponse create(Tour tour) {

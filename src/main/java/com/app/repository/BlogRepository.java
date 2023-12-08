@@ -21,5 +21,8 @@ public interface BlogRepository extends JpaRepository<Blog, Integer> {
     @Query("SELECT b FROM Blog b WHERE b.id NOT IN (SELECT v.blogId FROM View v)")
     Page<Blog>  findAllNotSeen(Specification<Blog> spec, Pageable pageable);
 
+    @Query("SELECT b FROM Blog b WHERE b.id = :id")
+    Page<Blog> BlogID(@Param("id") Integer id, Pageable pageable);
+
 }
 

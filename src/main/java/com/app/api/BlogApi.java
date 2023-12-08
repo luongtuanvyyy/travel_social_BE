@@ -3,6 +3,7 @@ package com.app.api;
 import com.app.entity.Blog;
 import com.app.entity.Voucher;
 import com.app.payload.request.BlogQueryParam;
+import com.app.payload.request.TourQueryParam;
 import com.app.payload.response.APIResponse;
 import com.app.service.BlogServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,10 @@ import java.util.List;
 public class BlogApi {
     @Autowired
     BlogServices blogServices;
-
+    @PostMapping("/user/blogs/share")
+    public ResponseEntity<?> getAccount(@RequestParam("id") Integer id, BlogQueryParam blogQueryParam) {
+        return ResponseEntity.ok(blogServices.getAccountByBlogId(id, blogQueryParam));
+    }
     @GetMapping("/public/blogs")
     public ResponseEntity<?> getAllBlog(BlogQueryParam blogQueryParam) {
         return ResponseEntity.ok(blogServices.filterBlog(blogQueryParam));

@@ -2,6 +2,7 @@ package com.app.speficication;
 
 import com.app.entity.Blog;
 import com.app.entity.BlogReaction;
+import com.app.entity.Tour;
 import com.app.payload.request.BlogQueryParam;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -19,6 +20,9 @@ public class BlogSpecification {
     public Specification<Blog> hasNameLike(String keyword) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("title"), "%" + keyword + "%");
     }
+    public Specification<Blog> hasIdEqual(Integer id) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("id"), id);
+    }
 
     public Specification<BlogReaction> hasNameLikes(Integer keyword) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("id"), "%" + keyword + "%");
@@ -29,8 +33,8 @@ public class BlogSpecification {
         if (blogQueryParam.getTitle() != null) {
             spec = spec.and(hasNameLike(blogQueryParam.getTitle()));
         }
-        if (blogQueryParam.getTitle() != null) {
-            spec = spec.and(hasNameLikeBlog(blogQueryParam.getTitle()));
+        if (blogQueryParam.getId() != null) {
+            spec = spec.and(hasIdEqual(blogQueryParam.getId()));
         }
         return spec;
     }

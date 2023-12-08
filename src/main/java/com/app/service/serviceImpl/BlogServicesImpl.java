@@ -1,5 +1,6 @@
 package com.app.service.serviceImpl;
 
+import com.app.dto.AccountData;
 import com.app.entity.Account;
 import com.app.entity.Blog;
 import com.app.payload.request.BlogQueryParam;
@@ -152,6 +153,24 @@ public class BlogServicesImpl implements BlogServices {
             createdBlogs.add(createdBlog);
         }
         return new SuccessAPIResponse(createdBlogs);
+    }
+
+    @Override
+    public APIResponse getAccountByBlogId(Integer id, BlogQueryParam blogQueryParam) {
+        Blog blog = new Blog();
+        Pageable pageable = requestParamsUtils.getPageable(blogQueryParam);
+        Page<Blog> response = blogRepository.BlogID(id, pageable);
+        if (response.hasContent()) {
+            blog.setTitle(response.getContent().get(0).getTitle());
+            blog.setAvatar(response.getContent().get(0).getAvatar());
+            blog.setName(response.getContent().get(0).getName());
+            blog.setDescription(response.getContent().get(0).getDescription());
+            blog.setTour(response.getContent().get(0).getTour());
+            blog.setImage(response.getContent().get(0).getImage());
+            blog.setCloudinaryId(response.getContent().get(0).getCloudinaryId());
+        }
+        blog = blogRepository.save(blog);
+        return new APIResponse(PageUtils.toPageResponse(response));
     }
 
     public String getTokenFromHeader(HttpServletRequest request) {

@@ -3,6 +3,7 @@ package com.app.service;
 import com.app.entity.Blog;
 import com.app.entity.Voucher;
 import com.app.payload.request.BlogQueryParam;
+import com.app.payload.request.TourQueryParam;
 import com.app.payload.response.APIResponse;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,5 +30,7 @@ public interface BlogServices {
     List<Blog> findByTitle(BlogQueryParam blogQueryParam);
     APIResponse uploadExcel(MultipartFile excel);
     APIResponse createBatch(List<Blog> blogs);
+
+    APIResponse getAccountByBlogId(Integer id, BlogQueryParam blogQueryParam);
 
 }

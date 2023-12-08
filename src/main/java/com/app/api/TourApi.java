@@ -22,7 +22,10 @@ public class TourApi {
     public ResponseEntity<?> filter(TourQueryParam tourQueryParam) {
         return ResponseEntity.ok(tourServices.filterTour(tourQueryParam));
     }
-
+    @GetMapping("/public/tours/findById")
+    public ResponseEntity<?> findById(@RequestParam("id") Integer id) {
+        return ResponseEntity.ok(tourServices.findbyid(id));
+    }
     @GetMapping("/public/tours/getAccount")
     public ResponseEntity<?> getAccount(@RequestParam("id") Integer id, TourQueryParam tourQueryParam) {
         return ResponseEntity.ok(tourServices.getAccountByTourId(id, tourQueryParam));

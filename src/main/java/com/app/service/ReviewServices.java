@@ -11,8 +11,8 @@ import java.util.List;
 public interface ReviewServices {
     APIResponse filterReview(ReviewQueryParam reviewQueryParam);
 
-    APIResponse create(Review review, MultipartFile image);
-    APIResponse update(Review review,MultipartFile image);
+    APIResponse create(Review review);
+    APIResponse update(Review review);
     APIResponse delete(Integer id);
 
     APIResponse findByReviewTour(Integer id);

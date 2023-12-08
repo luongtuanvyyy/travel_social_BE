@@ -26,16 +26,14 @@ public class ReviewApi {
     }
 
     @PostMapping("/user/reviews")
-    public ResponseEntity<?> createReview(@RequestPart(name = "review") Review review,
-                                          @RequestPart(name = "image") @Nullable MultipartFile image) {
-        APIResponse response = reviewServices.create(review, image);
+    public ResponseEntity<?> createReview(@RequestPart(name = "review") Review review) {
+        APIResponse response = reviewServices.create(review);
         return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/user/reviews")
-    public ResponseEntity<?> updateReview(@RequestPart(name = "review") Review review,
-                                          @RequestPart(name = "image") @Nullable MultipartFile image) {
-        APIResponse response = reviewServices.update(review, image);
+    public ResponseEntity<?> updateReview(@RequestPart(name = "review") Review review) {
+        APIResponse response = reviewServices.update(review);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

@@ -19,5 +19,5 @@ public class Favorite extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "TOUR_ID", referencedColumnName = "ID")
     @JsonBackReference
-    private Tour tour;
+    private Tour tourId;
 }

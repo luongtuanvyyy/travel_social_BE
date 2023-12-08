@@ -165,6 +165,7 @@ public class BlogServicesImpl implements BlogServices {
             blog.setAvatar(response.getContent().get(0).getAvatar());
             blog.setName(response.getContent().get(0).getName());
             blog.setDescription(response.getContent().get(0).getDescription());
+            blog.setPlaceId(response.getContent().get(0).getPlaceId());
             blog.setTour(response.getContent().get(0).getTour());
             blog.setImage(response.getContent().get(0).getImage());
             blog.setCloudinaryId(response.getContent().get(0).getCloudinaryId());

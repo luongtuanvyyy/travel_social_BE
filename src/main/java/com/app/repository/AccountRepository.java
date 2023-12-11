@@ -11,6 +11,8 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Integer> {
@@ -25,8 +27,11 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
             "  FROM Follow f\n" +
             "  WHERE f.account.id = :followerId\n" +
             ")")
-    Page<AccountData> findByFollowerId(@Param("followerId")Integer followerId, Pageable pageable);
+    Page<AccountData> findByFollowerId(@Param("followerId") Integer followerId, Pageable pageable);
 
     @Query("SELECT new com.app.dto.AccountData(a.id, a.name, a.avatar)  FROM Account a INNER JOIN Follow f on f.account.id = a.id where f.createdBy = :Gmail")
-    Page<AccountData>  findFollowByGmail(@Param("Gmail")String Gmail, Pageable pageable);
+    Page<AccountData> findFollowByGmail(@Param("Gmail") String Gmail, Pageable pageable);
+
+    // @Query("SELECT image FROM Blog WHERE email = :createBy")
+    // Page<String[]> findImageByCreatedBy(@Param("createBy") String createBy);
 }

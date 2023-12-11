@@ -21,10 +21,12 @@ import java.util.List;
 public class BlogApi {
     @Autowired
     BlogServices blogServices;
+
     @PostMapping("/user/blogs/share")
     public ResponseEntity<?> getAccount(@RequestParam("id") Integer id, BlogQueryParam blogQueryParam) {
         return ResponseEntity.ok(blogServices.getAccountByBlogId(id, blogQueryParam));
     }
+
     @GetMapping("/public/blogs")
     public ResponseEntity<?> getAllBlog(BlogQueryParam blogQueryParam) {
         return ResponseEntity.ok(blogServices.filterBlog(blogQueryParam));
@@ -39,17 +41,18 @@ public class BlogApi {
     public ResponseEntity<?> filterLeastBlog(BlogQueryParam blogQueryParam) {
         return ResponseEntity.ok(blogServices.filterLeastBlog(blogQueryParam));
     }
+
     @PostMapping("/user/blogs")
     public ResponseEntity<?> createBlog(@RequestPart(name = "blog") Blog blog,
-                                         HttpServletRequest request) {
-        APIResponse response = blogServices.create(blog,request);
+            HttpServletRequest request) {
+        APIResponse response = blogServices.create(blog, request);
         return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/user/blogs")
     public ResponseEntity<?> updateBlog(@RequestPart(name = "blog") Blog blog,
-                                        HttpServletRequest request) {
-        APIResponse response = blogServices.update(blog,request);
+            HttpServletRequest request) {
+        APIResponse response = blogServices.update(blog, request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -64,6 +67,7 @@ public class BlogApi {
         APIResponse response = blogServices.uploadExcel(excel);
         return ResponseEntity.ok().body(response);
     }
+
     @PostMapping("/user/blogs/batch")
     public ResponseEntity<?> createBlogsBatch(@RequestBody List<Blog> blogs) {
         APIResponse response = blogServices.createBatch(blogs);

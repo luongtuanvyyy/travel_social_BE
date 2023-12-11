@@ -7,7 +7,6 @@ import com.app.payload.response.APIResponse;
 import com.app.service.FollowServices;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,14 +24,18 @@ public class FollowApi {
     public ResponseEntity<?> getAllFollow(FollowQueryParam followQueryParam) {
         return ResponseEntity.ok(followServices.filterFollow(followQueryParam));
     }
-//fl
+
+    // fl
     @GetMapping("/user/follows/getFollowByAccount")
-    public ResponseEntity<?> getFollowById(@RequestParam("id") Integer id, FollowQueryParam followQueryParam) throws JsonProcessingException {
+    public ResponseEntity<?> getFollowById(@RequestParam("id") Integer id, FollowQueryParam followQueryParam)
+            throws JsonProcessingException {
         return ResponseEntity.ok(followServices.getFollowsByFollowerId(id, followQueryParam));
     }
-    //fler
+
+    // fler
     @GetMapping("/user/follows/getFollowsByGmail")
-    public ResponseEntity<?> getFollowerByGmail(@RequestParam("gmail") String gmail, FollowQueryParam followQueryParam) throws JsonProcessingException {
+    public ResponseEntity<?> getFollowerByGmail(@RequestParam("gmail") String gmail, FollowQueryParam followQueryParam)
+            throws JsonProcessingException {
         return ResponseEntity.ok(followServices.getFollowsByGmail(gmail, followQueryParam));
     }
 
@@ -59,6 +62,7 @@ public class FollowApi {
         APIResponse response = followServices.uploadExcel(excel);
         return ResponseEntity.ok().body(response);
     }
+
     @PostMapping("/user/follows/batch")
     public ResponseEntity<?> createFollowsBatch(@RequestBody List<Follow> follows) {
         APIResponse response = followServices.createBatch(follows);

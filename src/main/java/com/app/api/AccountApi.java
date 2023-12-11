@@ -24,6 +24,8 @@ public class AccountApi {
         }
     }
 
+    
+
     @PutMapping("/admin/accounts/{id}")
     public ResponseEntity<?> blockAccount(@PathVariable("id") Integer id) {
         try {

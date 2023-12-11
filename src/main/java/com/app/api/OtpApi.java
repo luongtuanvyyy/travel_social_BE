@@ -1,6 +1,5 @@
 package com.app.api;
 
-
 import com.app.payload.response.APIResponse;
 import com.app.service.MailerService;
 import org.springframework.beans.factory.annotation.Autowired;

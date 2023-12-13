@@ -2,6 +2,7 @@ package com.app.api;
 
 import com.app.entity.Blog;
 import com.app.entity.Voucher;
+import com.app.payload.request.BlogModalQueryParam;
 import com.app.payload.request.BlogQueryParam;
 import com.app.payload.request.TourQueryParam;
 import com.app.payload.response.APIResponse;
@@ -27,9 +28,13 @@ public class BlogApi {
         return ResponseEntity.ok(blogServices.getAccountByBlogId(id, blogQueryParam));
     }
 
+    // @GetMapping("/public/blogs")
+    // public ResponseEntity<?> getAllBlog(BlogQueryParam blogQueryParam) {
+    //     return ResponseEntity.ok(blogServices.filterBlog(blogQueryParam));
+    // }
     @GetMapping("/public/blogs")
-    public ResponseEntity<?> getAllBlog(BlogQueryParam blogQueryParam) {
-        return ResponseEntity.ok(blogServices.filterBlog(blogQueryParam));
+    public ResponseEntity<?> getAllBlog(BlogModalQueryParam blogModalQueryParam) {
+        return ResponseEntity.ok(blogServices.getAllBlogWithAccount(blogModalQueryParam));
     }
 
     @GetMapping("/public/blogs/notSeen")

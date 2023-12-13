@@ -1,6 +1,8 @@
 package com.app.repository;
 
 import com.app.entity.Blog;
+import com.app.modal.BlogModal;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,5 +26,19 @@ public interface BlogRepository extends JpaRepository<Blog, Integer> {
     @Query("SELECT b FROM Blog b WHERE b.id = :id")
     Page<Blog> BlogID(@Param("id") Integer id, Pageable pageable);
 
+    @Query("SELECT NEW com.app.modal.BlogModal(" +
+            "b.id, b.createdAt, b.createdBy, b.isActivated, b.modifiedAt, " +
+            "b.modifiedBy, b.cloudinaryId, b.description, b.image, " +
+            "a.avatar, a.name, a.isVerify, " +
+            "COUNT(br.reactionLike), COUNT(br.comment), COUNT(br.share)) " +
+            "FROM " +
+            "Blog b " +
+            "LEFT JOIN BlogReaction br ON b.id = br.blog.id " +
+            "JOIN Account a ON b.createdBy = a.email " +
+            "GROUP BY " +
+            "b.id, b.createdAt, b.createdBy, b.isActivated, b.modifiedAt, " +
+            "b.modifiedBy, b.cloudinaryId, b.description, b.image, " +
+            "a.avatar, a.name, a.isVerify")
+    Page<BlogModal> getAllBlogWithAccount(Specification<BlogModal> spec, Pageable pageable);
 }
 

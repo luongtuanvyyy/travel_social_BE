@@ -17,7 +17,7 @@ public class BlogMapper {
         return dto == null ? null : modelMapper.map(dto, Blog.class);
     }
 
-    public BlogDto accountDto(Blog blog) {
+    public BlogDto blogDto(Blog blog) {
         return blog == null ? null : modelMapper.map(blog, BlogDto.class);
     }
 }

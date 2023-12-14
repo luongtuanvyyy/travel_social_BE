@@ -38,20 +38,29 @@ public class BookingNotificationServicesImpl implements BookingNotificationServi
     ImportExcelService importExcelService;
     @Override
     public APIResponse filterBookingNotification(BookingNotificationQueryParam bookingNotificationQueryParam) {
+        try {
         Specification<BookingNotification> spec = bookingNoficationSpecification.getBookingNotificationSpectication(bookingNotificationQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(bookingNotificationQueryParam);
         Page<BookingNotification> response = bookingNotificationRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override
     public APIResponse create(BookingNotification bookingNotification) {
+        try {
         bookingNotification = bookingNotificationRepository.save(bookingNotification);
         return new SuccessAPIResponse(bookingNotification);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override
     public APIResponse update(BookingNotification bookingNotification) {
+        try {
         if(bookingNotification == null){
             return  new FailureAPIResponse("Booking notification id is required!");
         }
@@ -61,6 +70,9 @@ public class BookingNotificationServicesImpl implements BookingNotificationServi
         }
         bookingNotification = bookingNotificationRepository.save(bookingNotification);
         return new SuccessAPIResponse(bookingNotification);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
 

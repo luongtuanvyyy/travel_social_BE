@@ -40,10 +40,14 @@ public class TourGuideServicesImpl implements TourGuideServices {
 
     @Override
     public APIResponse filterTourGuide(TourGuideQueryParam tourGuideQueryParam) {
+        try {
         Specification<TourGuide> spec = tourGuideSpecification.getTourGuideSpecification(tourGuideQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(tourGuideQueryParam);
         Page<TourGuide> response = tuorGuideRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override

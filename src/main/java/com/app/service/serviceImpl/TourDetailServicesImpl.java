@@ -42,21 +42,29 @@ public class TourDetailServicesImpl implements TourDetailServices {
 
     @Override
     public APIResponse filterTourDetail(TourDetailQueryParam tourDetailQueryParam) {
+        try {
         Specification<TourDetail> spec = tourDetailSpecification.getTourDetailSpecification(tourDetailQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(tourDetailQueryParam);
         Page<TourDetail> response = tourDetailRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override
     public APIResponse create(TourDetail tourDetail) {
-
+        try {
         tourDetail = tourDetailRepository.save(tourDetail);
         return new SuccessAPIResponse(tourDetail);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override
     public APIResponse update(TourDetail tourDetail) {
+        try {
         if(tourDetail == null){
             return  new FailureAPIResponse("Tour id is required!");
         }
@@ -66,6 +74,9 @@ public class TourDetailServicesImpl implements TourDetailServices {
         }
         tourDetail = tourDetailRepository.save(tourDetail);
         return new SuccessAPIResponse(tourDetail);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override

@@ -37,19 +37,29 @@ public class BookingCancelServiceimpl implements BookingCancelServices {
     ImportExcelService importExcelService;
     @Override
     public APIResponse filterBookingCancel(BookingCancelQueryParam bookingCancelQueryParam) {
+        try {
         Specification<BookingCancel> spec = bookingCancelSpecification.getBookingCanceSpecitification(bookingCancelQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(bookingCancelQueryParam);
         Page<BookingCancel> response = bookingCancelRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
     @Override
     public APIResponse create(BookingCancel bookingCancel) {
+        try {
         bookingCancel = bookingCancelRepository.save(bookingCancel);
         return new SuccessAPIResponse(bookingCancel);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override
     public APIResponse update(BookingCancel bookingCancel) {
+        try {
+
         if(bookingCancel == null){
             return  new FailureAPIResponse("Booking cancel id is required!");
         }
@@ -59,7 +69,11 @@ public class BookingCancelServiceimpl implements BookingCancelServices {
         }
         bookingCancel = bookingCancelRepository.save(bookingCancel);
         return new SuccessAPIResponse(bookingCancel);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
+
 
 
     @Override

@@ -33,15 +33,23 @@ public class PaymentServiceimpl implements PaymentServices {
     ImportExcelService importExcelService;
     @Override
     public APIResponse filterPayment(PaymentQueryParam paymentQueryParam) {
+        try {
         Specification<Payment> spec = paymentSpecification.getPaymentSpecitification(paymentQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(paymentQueryParam);
         Page<Payment> response = paymentRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
     @Override
     public APIResponse create(Payment payment) {
+        try {
         payment = paymentRepository.save(payment);
         return new SuccessAPIResponse(payment);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override

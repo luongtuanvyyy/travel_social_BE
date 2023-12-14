@@ -1,10 +1,12 @@
 package com.app.api;
 
+import com.app.dto.BookingDto;
 import com.app.entity.BlogReaction;
 import com.app.entity.Booking;
 import com.app.payload.request.BookingQueryParam;
 import com.app.payload.response.APIResponse;
 import com.app.service.BookingServices;
+import com.app.type.EBooking;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +25,14 @@ public class BookingApi {
     public ResponseEntity<?> filterBooking(BookingQueryParam bookingQueryParam) {
         return ResponseEntity.ok(bookingService.filterBooking(bookingQueryParam));
     }
+    @GetMapping("/user/bookings/getByStatus")
+    public ResponseEntity<?> getByStatus(@RequestParam("status") EBooking status, BookingQueryParam bookingQueryParam) {
+        return ResponseEntity.ok(bookingService.getByStatus(status,bookingQueryParam));
+    }
 
     @PostMapping("/user/bookings")
-    public ResponseEntity<?> createBooking(@RequestPart(name = "booking") Booking booking) {
-        APIResponse response = bookingService.create(booking);
+    public ResponseEntity<?> createBooking(@RequestPart(name = "bookingDto") BookingDto bookingDto) {
+        APIResponse response = bookingService.createBooking(bookingDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

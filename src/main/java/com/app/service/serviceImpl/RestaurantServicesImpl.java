@@ -33,10 +33,14 @@ public class RestaurantServicesImpl implements RestaurantServices {
 
     @Override
     public APIResponse filterRestaurant(RestaurantQueryParam restaurantQueryParam) {
+        try {
         Specification<Restaurant> spec = restaurantSpecification.getRestaurantSpecification(restaurantQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(restaurantQueryParam);
         Page<Restaurant> response = restaurantRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override

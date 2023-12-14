@@ -37,10 +37,14 @@ public class PlaceServicesImpl implements PlaceServices {
     ImportExcelService importExcelService;
 
     public APIResponse filterPlace(PlaceQueryParam placeQueryParam) {
+        try {
         Specification<Place> spec = placeSpecification.getPlaceSpecification(placeQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(placeQueryParam);
         Page<Place> response = placeRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override

@@ -1,13 +1,14 @@
 package com.app.api;
 
-import com.app.entity.BlogNotification;
 import com.app.entity.BlogReaction;
 import com.app.payload.request.BlogReactionQueryParam;
 import com.app.payload.response.APIResponse;
+import com.app.payload.response.FailureAPIResponse;
 import com.app.service.BlogReactionServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,9 +20,11 @@ public class BlogReactionApi {
     @Autowired
     BlogReactionServices blogReactionServices;
 
+
     @GetMapping("/public/blog-reactions")
     public ResponseEntity<?> filterBlogReaction(BlogReactionQueryParam blogReactionQueryParam) {
         return ResponseEntity.ok(blogReactionServices.filterBlogReaction(blogReactionQueryParam));
+
     }
 
     @PostMapping("/user/blog-reactions")

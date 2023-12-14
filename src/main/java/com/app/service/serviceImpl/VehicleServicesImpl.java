@@ -35,10 +35,14 @@ public class VehicleServicesImpl implements VehicleServices {
 
     @Override
     public APIResponse filterVehicle(VehicleQueryParam vehicleQueryParam) {
+        try {
         Specification<Vehicle> spec = vehicleSpecification.getVehicleSpecification(vehicleQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(vehicleQueryParam);
         Page<Vehicle> response = vehicleRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override

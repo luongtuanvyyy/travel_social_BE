@@ -41,20 +41,29 @@ public class ReviewServicesimpl implements ReviewServices {
 
     @Override
     public APIResponse filterReview(ReviewQueryParam reviewQueryParam) {
+        try {
         Specification<Review> spec = reviewSpecification.getReviewSpecification(reviewQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(reviewQueryParam);
         Page<Review> response = reviewRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override
     public APIResponse create(Review review) {
+        try {
         review = reviewRepository.save(review);
         return new SuccessAPIResponse(review);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override
     public APIResponse update(Review review) {
+        try {
         if(review == null){
             return  new FailureAPIResponse("Review id is required!");
         }
@@ -64,6 +73,9 @@ public class ReviewServicesimpl implements ReviewServices {
         }
         review = reviewRepository.save(review);
         return new SuccessAPIResponse(review);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override

@@ -19,7 +19,6 @@ import com.app.speficication.BlogModalSpecification;
 import com.app.speficication.BlogSpecification;
 import com.app.utils.PageUtils;
 import com.app.utils.RequestParamsUtils;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -65,34 +64,51 @@ public class BlogServicesImpl implements BlogServices {
 
     @Override
     public APIResponse filterBlog(BlogQueryParam blogQueryParam) {
+        try {
         Specification<Blog> spec = blogSpecification.getBlogSpecification(blogQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(blogQueryParam);
         Page<Blog> response = blogRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override
     public APIResponse getAllBlogWithAccount(BlogModalQueryParam blogModalQueryParam) {
+        try {
         Specification<BlogModal> spec = blogModalSpecification.getBlogModalSpecification(blogModalQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(blogModalQueryParam);
         Page<BlogModal> response = blogRepository.getAllBlogWithAccount(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override
     public APIResponse filterBlogNotSeen(BlogQueryParam blogQueryParam) {
+        try {
         Specification<Blog> spec = blogSpecification.getBlogSpecification(blogQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(blogQueryParam);
         Page<Blog> response = blogRepository.findAllNotSeen(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
+
     }
 
     @Override
     public APIResponse filterLeastBlog(BlogQueryParam blogQueryParam) {
+        try {
         Specification<Blog> spec = blogSpecification.getBlogSpecification(blogQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(blogQueryParam);
         Page<Blog> response = blogRepository.findLatestBlogs(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override

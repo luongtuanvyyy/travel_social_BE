@@ -36,20 +36,29 @@ public class BlogNotificationServicesImpl implements BlogNotificationServices {
     ImportExcelService importExcelService;
     @Override
     public APIResponse filterBlogNotification(BlogNotificationQueryParam blogNotificationQueryParam) {
+        try {
         Specification<BlogNotification> spec = blogNotificationSpecification.getAccountSpecification(blogNotificationQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(blogNotificationQueryParam);
         Page<BlogNotification> response = blogNotificationRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override
     public APIResponse create(BlogNotification blogNotification) {
+        try {
         blogNotification = blogNotificationRepository.save(blogNotification);
         return new SuccessAPIResponse(blogNotification);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override
     public APIResponse update(BlogNotification blogNotification) {
+        try {
         if (blogNotification == null) {
             return new FailureAPIResponse("Blog Notification id is required!");
         }
@@ -60,6 +69,9 @@ public class BlogNotificationServicesImpl implements BlogNotificationServices {
 
         blogNotification = blogNotificationRepository.save(blogNotification);
         return new SuccessAPIResponse(blogNotification);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override

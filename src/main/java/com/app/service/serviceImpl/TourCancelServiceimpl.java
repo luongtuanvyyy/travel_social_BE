@@ -37,19 +37,28 @@ public class TourCancelServiceimpl implements TourCancelServices {
     ImportExcelService importExcelService;
     @Override
     public APIResponse filterTourCancel(TourCancelQueryParam tourCancelQueryParam) {
+        try {
         Specification<TourCancel> spec = tourCancelSpecification.getTourCanceSpecitification(tourCancelQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(tourCancelQueryParam);
         Page<TourCancel> response = tourCancelRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
     @Override
     public APIResponse create(TourCancel tourCancel) {
+        try {
         tourCancel = tourCancelRepository.save(tourCancel);
         return new SuccessAPIResponse(tourCancel);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override
     public APIResponse update(TourCancel tourCancel) {
+        try {
         if(tourCancel == null){
             return  new FailureAPIResponse("Tour cancel id is required!");
         }
@@ -59,6 +68,9 @@ public class TourCancelServiceimpl implements TourCancelServices {
         }
         tourCancel = tourCancelRepository.save(tourCancel);
         return new SuccessAPIResponse(tourCancel);
+    } catch (Exception ex) {
+        return new FailureAPIResponse(ex.getMessage());
+    }
     }
 
 

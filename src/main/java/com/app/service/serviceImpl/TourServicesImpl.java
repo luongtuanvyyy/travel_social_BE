@@ -52,38 +52,60 @@ public class TourServicesImpl implements TourServices {
 //    }
 @Override
     public APIResponse filterTour(TourQueryParam tourQueryParam) {
+    try {
         Specification<Tour> spec = tourSpecification.getTourSpecification(tourQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(tourQueryParam);
         Page<Tour> response = tourRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+    } catch (Exception ex) {
+        return new FailureAPIResponse(ex.getMessage());
+    }
     }
 @Override
     public APIResponse filterTourDiscount(TourQueryParam tourQueryParam) {
+    try {
         Specification<Tour> spec = tourSpecification.getTourSpecification(tourQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(tourQueryParam);
         Page<Tour> response = tourRepository.DiscountIsNotNull(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+    } catch (Exception ex) {
+        return new FailureAPIResponse(ex.getMessage());
+    }
     }
 
     @Override
     public APIResponse filterNewlyPosted(TourQueryParam tourQueryParam) {
+    try {
+
         Specification<Tour> spec = tourSpecification.isNewlyPosted();
         Pageable pageable = requestParamsUtils.getPageable(tourQueryParam);
         Page<Tour> response = tourRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+    } catch (Exception ex) {
+        return new FailureAPIResponse(ex.getMessage());
+    }
     }
 
     @Override
     public APIResponse getAccountByTourId(Integer id, TourQueryParam tourQueryParam) {
+    try {
+
         Pageable pageable = requestParamsUtils.getPageable(tourQueryParam);
         Page<AccountData> response = tourRepository.getCompanyCreatedBY(id, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+    } catch (Exception ex) {
+        return new FailureAPIResponse(ex.getMessage());
+    }
     }
 
     @Override
     public APIResponse findbyid(Integer id) {
+    try {
        Optional<Tour> response = tourRepository.findTourById(id);
         return new APIResponse(response);
+    } catch (Exception ex) {
+        return new FailureAPIResponse(ex.getMessage());
+    }
     }
     @Override
     public APIResponse create(Tour tour) {

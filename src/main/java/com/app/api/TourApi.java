@@ -17,7 +17,7 @@ import java.util.List;
 public class TourApi {
     @Autowired
     TourServices tourServices;
-// get name atv  id  all review òf tour, tour deteil, get theo tinh
+
     @GetMapping("/public/tours")
     public ResponseEntity<?> filter(TourQueryParam tourQueryParam) {
         return ResponseEntity.ok(tourServices.filterTour(tourQueryParam));

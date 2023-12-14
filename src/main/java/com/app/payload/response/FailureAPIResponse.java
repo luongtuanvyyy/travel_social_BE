@@ -11,4 +11,5 @@ public class FailureAPIResponse extends APIResponse{
         this.success = false;
         this.data = data;
     }
+
 }

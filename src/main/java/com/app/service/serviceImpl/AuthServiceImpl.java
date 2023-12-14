@@ -13,7 +13,6 @@ import com.app.security.UserPrincipal;
 import com.app.service.AuthService;
 import com.app.type.EAuthProvider;
 import com.app.type.ERole;
-import io.jsonwebtoken.Claims;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
 
 @Service
 public class AuthServiceImpl implements AuthService {

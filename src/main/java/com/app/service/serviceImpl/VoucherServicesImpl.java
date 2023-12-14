@@ -34,10 +34,14 @@ public class VoucherServicesImpl implements VoucherServices {
     ImportExcelService importExcelService;
     @Override
     public APIResponse filterVoucher(VoucherQueryParam voucherQueryParam) {
+        try {
         Specification<Voucher> spec = voucherSpecification.getVoucherSpecification(voucherQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(voucherQueryParam);
         Page<Voucher> response = voucherRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override

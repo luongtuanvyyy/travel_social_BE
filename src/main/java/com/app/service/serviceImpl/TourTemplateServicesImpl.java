@@ -39,20 +39,29 @@ public class TourTemplateServicesImpl implements TourTemplateServices {
     ImportExcelService importExcelService;
     @Override
     public APIResponse filterTourTemplate(TourTemplateQueryParam tourTemplateQueryParam) {
+        try {
         Specification<TourTemplate> spec = tourTemplateSpecification.getTourTemplateSpecification(tourTemplateQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(tourTemplateQueryParam);
         Page<TourTemplate> response = tourTemplateRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override
     public APIResponse create(TourTemplate tourTemplate) {
+        try {
         tourTemplate = tourTemplateRepository.save(tourTemplate);
         return new SuccessAPIResponse(tourTemplate);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override
     public APIResponse update(TourTemplate tourTemplate) {
+        try {
         if(tourTemplate == null){
             return  new FailureAPIResponse("Tour template id is required!");
         }
@@ -62,6 +71,9 @@ public class TourTemplateServicesImpl implements TourTemplateServices {
         }
         tourTemplate = tourTemplateRepository.save(tourTemplate);
         return new SuccessAPIResponse(tourTemplate);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override

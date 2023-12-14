@@ -39,19 +39,28 @@ public class LikeServicesImpl implements LikeServices  {
 
     @Override
     public APIResponse filterLike(LikeQueryParam likeQueryParam) {
+        try {
         Specification<Like> spec = likeSpecification.getLikeSpecitification(likeQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(likeQueryParam);
         Page<Like> response = likeRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
     @Override
     public APIResponse create(Like like) {
+        try {
         like = likeRepository.save(like);
         return new SuccessAPIResponse(like);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override
     public APIResponse update(Like like) {
+        try {
         if(like == null){
             return  new FailureAPIResponse("Like id is required!");
         }
@@ -61,6 +70,9 @@ public class LikeServicesImpl implements LikeServices  {
         }
         like = likeRepository.save(like);
         return new SuccessAPIResponse(like);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
 

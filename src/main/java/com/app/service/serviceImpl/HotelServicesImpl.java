@@ -33,11 +33,14 @@ public class HotelServicesImpl implements HotelServices {
 
     @Override
     public APIResponse filterHotel(HotelQueryParam hotelQueryParam){
-
+        try {
         Specification<Hotel> spec = hotelSpecification.getHotelSpecification(hotelQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(hotelQueryParam);
         Page<Hotel> response = hotelRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
 
     }
 
@@ -62,8 +65,6 @@ public class HotelServicesImpl implements HotelServices {
             if (hotel.getRoom() <= 0) {
                 throw new IllegalArgumentException("Hotel room cannot be empty");
             }
-
-
             hotel = hotelRepository.save(hotel);
             return new SuccessAPIResponse(hotel);
         } catch (Exception ex) {

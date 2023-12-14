@@ -37,15 +37,23 @@ public class PersonBookingServicesImpl implements PersonBookingServices {
     ImportExcelService importExcelService;
     @Override
     public APIResponse filterPersonBooking(PersonBookingQueryParam personBookingQueryParam) {
+        try {
         Specification<PersonBooking> spec = personBookingSpecification.getPersonBookingSpecification(personBookingQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(personBookingQueryParam);
         Page<PersonBooking> response = personBookingRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
     @Override
     public APIResponse create(PersonBooking personBooking) {
+        try {
         personBooking = personBookingRepository.save(personBooking);
         return new SuccessAPIResponse(personBooking);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override

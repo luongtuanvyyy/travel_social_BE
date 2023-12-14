@@ -37,20 +37,29 @@ public class FavoriteServicesImpl implements FavoriteServices {
 
     @Override
     public APIResponse filterFavorite(FavoriteQueryParam favoriteQueryParam) {
+        try {
         Specification<Favorite> spec = favoriteSpecification.getFavoriteSpecitification(favoriteQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(favoriteQueryParam);
         Page<Favorite> response = favoriteRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override
     public APIResponse create(Favorite favorite) {
+        try {
         favorite = favoriteRepository.save(favorite);
         return new SuccessAPIResponse(favorite);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override
     public APIResponse update(Favorite favorite) {
+        try {
         if (favorite == null) {
             return new FailureAPIResponse("Favorite id is required!");
         }
@@ -61,6 +70,9 @@ public class FavoriteServicesImpl implements FavoriteServices {
 
         favorite = favoriteRepository.save(favorite);
         return new SuccessAPIResponse(favorite);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override

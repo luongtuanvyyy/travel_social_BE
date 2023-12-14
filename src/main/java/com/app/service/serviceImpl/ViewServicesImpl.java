@@ -37,15 +37,23 @@ public class ViewServicesImpl implements ViewServices {
 
     @Override
     public APIResponse filterView(ViewQueryParam viewQueryParam) {
+        try {
         Specification<View> spec = viewSpecification.getViewSpecification(viewQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(viewQueryParam);
         Page<View> response = viewRepository.findAll(spec, pageable);
         return new APIResponse(PageUtils.toPageResponse(response));
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
     @Override
     public APIResponse create(View view) {
+        try {
         view = viewRepository.save(view);
         return new SuccessAPIResponse(view);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override

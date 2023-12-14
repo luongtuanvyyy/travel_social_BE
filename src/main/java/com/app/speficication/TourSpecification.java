@@ -25,6 +25,7 @@ public class TourSpecification {
     }
 
 
+
     public Specification<Tour> hasNameLike(String name) {
         return (Root<Tour> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
             String nameWithoutDiacritics = removeDiacritics(name);

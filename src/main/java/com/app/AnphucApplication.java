@@ -6,7 +6,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @SpringBootApplication
 public class AnphucApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(AnphucApplication.class, args);
 	}

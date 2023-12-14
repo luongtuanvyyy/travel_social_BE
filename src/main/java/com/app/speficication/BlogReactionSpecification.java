@@ -2,6 +2,7 @@ package com.app.speficication;
 
 import com.app.entity.BlogReaction;
 import com.app.payload.request.BlogReactionQueryParam;
+import com.app.payload.response.FailureAPIResponse;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 

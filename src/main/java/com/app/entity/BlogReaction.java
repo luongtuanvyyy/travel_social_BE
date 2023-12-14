@@ -2,6 +2,7 @@ package com.app.entity;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -26,11 +27,9 @@ public class BlogReaction extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "BLOG_ID", referencedColumnName = "ID")
-    @JsonIgnore
     private Blog blog;
 
     @ManyToOne
     @JoinColumn(name = "ACCOUNT_ID", referencedColumnName = "ID")
-    @JsonIgnore
     private Account account;
 }

@@ -33,6 +33,7 @@ public class BlogReactionApi {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+
     @PutMapping("/user/blog-reactions")
     public ResponseEntity<?> updateBlogReaction(@RequestPart(name = "blog_reaction") BlogReaction blogReaction) {
         APIResponse response = blogReactionServices.update(blogReaction);

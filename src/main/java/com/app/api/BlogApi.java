@@ -28,7 +28,7 @@ public class BlogApi {
         return ResponseEntity.ok(blogServices.getAccountByBlogId(id, blogQueryParam));
     }
 
-    @GetMapping("/user/blogs")
+    @GetMapping("/public/blogs")
     public ResponseEntity<?> getAllBlog(BlogModalQueryParam blogModalQueryParam) {
         return ResponseEntity.ok(blogServices.getAllBlogWithAccount(blogModalQueryParam));
     }

@@ -117,12 +117,6 @@ public class BlogServicesImpl implements BlogServices {
         int id = tokenProvider.getIdFromToken(token);
         Account account = accountRepository.findById(id).orElse(null);
         try {
-            if (blog.getTitle() == null || blog.getTitle().trim().isEmpty()) {
-                throw new IllegalArgumentException("Blog title cannot be empty");
-            }
-
-            blog.setAvatar(account.getAvatar());
-            blog.setName(account.getName());
             blog = blogRepository.save(blog);
             return new SuccessAPIResponse(blog);
         } catch (Exception ex) {
@@ -136,9 +130,6 @@ public class BlogServicesImpl implements BlogServices {
 
             if (blog == null) {
                 return new FailureAPIResponse("Blog id is required!");
-            }
-            if (blog.getTitle() == null || blog.getTitle().trim().isEmpty()) {
-                throw new IllegalArgumentException("Blog title cannot be empty");
             }
             Blog exists = blogRepository.findById(blog.getId()).orElse(null);
             if (exists == null) {
@@ -188,17 +179,17 @@ public class BlogServicesImpl implements BlogServices {
         Pageable pageable = requestParamsUtils.getPageable(blogQueryParam);
         Page<Blog> response = blogRepository.BlogID(id, pageable);
         if (response.hasContent()) {
-            blog.setTitle(response.getContent().get(0).getTitle());
-            blog.setAvatar(response.getContent().get(0).getAvatar());
-            blog.setName(response.getContent().get(0).getName());
             blog.setDescription(response.getContent().get(0).getDescription());
             blog.setPlaceId(response.getContent().get(0).getPlaceId());
             blog.setTour(response.getContent().get(0).getTour());
             blog.setImage(response.getContent().get(0).getImage());
             blog.setCloudinaryId(response.getContent().get(0).getCloudinaryId());
+            blog.setCreatedAt(response.getContent().get(0).getCreatedAt());
+            blog.setCreatedBy(response.getContent().get(0).getCreatedBy());
+
         }
         blog = blogRepository.save(blog);
-        return new APIResponse(PageUtils.toPageResponse(response));
+        return new SuccessAPIResponse(blog);
     }
 
     public String getTokenFromHeader(HttpServletRequest request) {

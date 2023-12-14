@@ -25,6 +25,8 @@ public interface BlogRepository extends JpaRepository<Blog, Integer> {
 
     @Query("SELECT b FROM Blog b WHERE b.id = :id")
     Page<Blog> BlogID(@Param("id") Integer id, Pageable pageable);
+    @Query("SELECT b FROM Blog b WHERE b.id = :id")
+    Blog BlogIDD(@Param("id") Integer id);
 
     @Query("SELECT NEW com.app.modal.BlogModal(" +
             "b.id, b.createdAt, b.createdBy, b.isActivated, b.modifiedAt, " +

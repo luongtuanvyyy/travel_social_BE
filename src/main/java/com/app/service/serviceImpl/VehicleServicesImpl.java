@@ -39,7 +39,11 @@ public class VehicleServicesImpl implements VehicleServices {
         Specification<Vehicle> spec = vehicleSpecification.getVehicleSpecification(vehicleQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(vehicleQueryParam);
         Page<Vehicle> response = vehicleRepository.findAll(spec, pageable);
-        return new APIResponse(PageUtils.toPageResponse(response));
+            if (response.isEmpty()) {
+                return new APIResponse(false, "No data found");
+            } else {
+                return new APIResponse(PageUtils.toPageResponse(response));
+            }
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }

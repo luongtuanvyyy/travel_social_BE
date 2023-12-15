@@ -46,7 +46,11 @@ public class TourDetailServicesImpl implements TourDetailServices {
         Specification<TourDetail> spec = tourDetailSpecification.getTourDetailSpecification(tourDetailQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(tourDetailQueryParam);
         Page<TourDetail> response = tourDetailRepository.findAll(spec, pageable);
-        return new APIResponse(PageUtils.toPageResponse(response));
+            if (response.isEmpty()) {
+                return new APIResponse(false, "No data found");
+            } else {
+                return new APIResponse(PageUtils.toPageResponse(response));
+            }
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }

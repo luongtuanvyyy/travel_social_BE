@@ -19,11 +19,7 @@ import java.util.Date;
 @Builder
 @Getter
 @Setter
-public class BlogNotification {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
+public class BlogNotification extends BaseEntity{
     @Column(name = "NOTIFICATION_TYPE")
     private EBlogNotification notificationType;
 

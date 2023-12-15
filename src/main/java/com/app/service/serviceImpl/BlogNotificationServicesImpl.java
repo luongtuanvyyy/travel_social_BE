@@ -38,10 +38,14 @@ public class BlogNotificationServicesImpl implements BlogNotificationServices {
     @Override
     public APIResponse filterBlogNotification(BlogNotificationQueryParam blogNotificationQueryParam) {
         try {
-            Specification<BlogNotification> spec = blogNotificationSpecification.getAccountSpecification(blogNotificationQueryParam);
-            Pageable pageable = requestParamsUtils.getPageable(blogNotificationQueryParam);
-            Page<BlogNotification> response = blogNotificationRepository.findAll(spec, pageable);
-            return new APIResponse(PageUtils.toPageResponse(response));
+        Specification<BlogNotification> spec = blogNotificationSpecification.getAccountSpecification(blogNotificationQueryParam);
+        Pageable pageable = requestParamsUtils.getPageable(blogNotificationQueryParam);
+        Page<BlogNotification> response = blogNotificationRepository.findAll(spec, pageable);
+            if (response.isEmpty()) {
+                return new APIResponse(false, "No data found");
+            } else {
+                return new APIResponse(PageUtils.toPageResponse(response));
+            }
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }

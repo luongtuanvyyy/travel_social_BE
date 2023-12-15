@@ -33,7 +33,11 @@ public class AccountServiceImpl implements AccountService {
         Specification<Account> spec = accountSpecification.getAccountSpecification(accountQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(accountQueryParam);
         Page<Account> response = accountRepository.findAll(spec, pageable);
-        return new APIResponse(PageUtils.toPageResponse(response));
+            if (response.isEmpty()) {
+                return new APIResponse(false, "No data found");
+            } else {
+                return new APIResponse(PageUtils.toPageResponse(response));
+            }
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }

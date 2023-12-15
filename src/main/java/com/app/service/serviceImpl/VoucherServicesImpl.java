@@ -38,7 +38,11 @@ public class VoucherServicesImpl implements VoucherServices {
         Specification<Voucher> spec = voucherSpecification.getVoucherSpecification(voucherQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(voucherQueryParam);
         Page<Voucher> response = voucherRepository.findAll(spec, pageable);
-        return new APIResponse(PageUtils.toPageResponse(response));
+            if (response.isEmpty()) {
+                return new APIResponse(false, "No data found");
+            } else {
+                return new APIResponse(PageUtils.toPageResponse(response));
+            }
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }

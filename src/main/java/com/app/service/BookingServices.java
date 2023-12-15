@@ -15,6 +15,9 @@ public interface BookingServices {
 
     APIResponse createBooking(BookingDto bookingDto);
 
+
+    APIResponse updateBooking(BookingDto bookingDto);
+
     APIResponse getByStatus(EBooking status, BookingQueryParam bookingQueryParam);
 
     APIResponse create(Booking booking);

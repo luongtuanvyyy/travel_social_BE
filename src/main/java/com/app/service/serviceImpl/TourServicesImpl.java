@@ -56,7 +56,11 @@ public class TourServicesImpl implements TourServices {
         Specification<Tour> spec = tourSpecification.getTourSpecification(tourQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(tourQueryParam);
         Page<Tour> response = tourRepository.findAll(spec, pageable);
-        return new APIResponse(PageUtils.toPageResponse(response));
+        if (response.isEmpty()) {
+            return new APIResponse(false, "No data found");
+        } else {
+            return new APIResponse(PageUtils.toPageResponse(response));
+        }
     } catch (Exception ex) {
         return new FailureAPIResponse(ex.getMessage());
     }
@@ -67,7 +71,11 @@ public class TourServicesImpl implements TourServices {
         Specification<Tour> spec = tourSpecification.getTourSpecification(tourQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(tourQueryParam);
         Page<Tour> response = tourRepository.DiscountIsNotNull(spec, pageable);
-        return new APIResponse(PageUtils.toPageResponse(response));
+        if (response.isEmpty()) {
+            return new APIResponse(false, "No data found");
+        } else {
+            return new APIResponse(PageUtils.toPageResponse(response));
+        }
     } catch (Exception ex) {
         return new FailureAPIResponse(ex.getMessage());
     }
@@ -80,7 +88,11 @@ public class TourServicesImpl implements TourServices {
         Specification<Tour> spec = tourSpecification.isNewlyPosted();
         Pageable pageable = requestParamsUtils.getPageable(tourQueryParam);
         Page<Tour> response = tourRepository.findAll(spec, pageable);
-        return new APIResponse(PageUtils.toPageResponse(response));
+        if (response.isEmpty()) {
+            return new APIResponse(false, "No data found");
+        } else {
+            return new APIResponse(PageUtils.toPageResponse(response));
+        }
     } catch (Exception ex) {
         return new FailureAPIResponse(ex.getMessage());
     }
@@ -92,7 +104,11 @@ public class TourServicesImpl implements TourServices {
 
         Pageable pageable = requestParamsUtils.getPageable(tourQueryParam);
         Page<AccountData> response = tourRepository.getCompanyCreatedBY(id, pageable);
-        return new APIResponse(PageUtils.toPageResponse(response));
+        if (response.isEmpty()) {
+            return new APIResponse(false, "No data found");
+        } else {
+            return new APIResponse(PageUtils.toPageResponse(response));
+        }
     } catch (Exception ex) {
         return new FailureAPIResponse(ex.getMessage());
     }
@@ -102,7 +118,11 @@ public class TourServicesImpl implements TourServices {
     public APIResponse findbyid(Integer id) {
     try {
        Optional<Tour> response = tourRepository.findTourById(id);
-        return new APIResponse(response);
+        if (response.isEmpty()) {
+            return new APIResponse(false, "No data found");
+        } else {
+            return new APIResponse(response);
+        }
     } catch (Exception ex) {
         return new FailureAPIResponse(ex.getMessage());
     }

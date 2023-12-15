@@ -37,8 +37,8 @@ public class BookingApi {
     }
 
     @PutMapping("/user/bookings")
-    public ResponseEntity<?> updateBooking(@RequestPart(name = "booking") Booking booking) {
-        APIResponse response = bookingService.update(booking);
+    public ResponseEntity<?> updateBooking(@RequestPart(name = "bookingDto") BookingDto bookingDto) {
+        APIResponse response = bookingService.updateBooking(bookingDto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

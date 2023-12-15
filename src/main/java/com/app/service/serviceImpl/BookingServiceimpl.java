@@ -5,6 +5,7 @@ import com.app.dto.PersonBookingDto;
 import com.app.entity.Booking;
 import com.app.entity.PersonBooking;
 import com.app.mapper.BookingMapper;
+import com.app.mapper.PersonBookingMapper;
 import com.app.payload.request.BookingQueryParam;
 import com.app.payload.response.APIResponse;
 import com.app.payload.response.FailureAPIResponse;
@@ -33,6 +34,9 @@ import java.util.stream.Collectors;
 public class BookingServiceimpl implements BookingServices {
     @Autowired
     BookingMapper bookingMapper;
+    @Autowired
+    PersonBookingMapper personBookingMapper;
+
     @Autowired
     BookingSpecification bookingSpecification;
     @Autowired
@@ -78,6 +82,74 @@ public class BookingServiceimpl implements BookingServices {
                 personBooking.setGender(personBookingDto.isGender());
                 personBooking.setAges(personBookingDto.getAges());
                 personBooking.setRelationship(personBookingDto.getRelationship());
+                personBooking.setBookingId(bookingId);
+                personBookingRepository.save(personBooking);
+            }
+            return new SuccessAPIResponse(bookingDto);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
+    }
+
+    @Override
+    public APIResponse updateBooking(BookingDto bookingDto) {
+        if(bookingDto == null){
+            return  new FailureAPIResponse("Booking id is required!");
+        }
+        Booking exists = bookingRepository.findById(bookingDto.getId()).orElse(null);
+        if(exists == null){
+            return  new FailureAPIResponse("Cannot find booking with id: "+bookingDto.getId());
+        }
+        try {
+
+            if (bookingDto.getNote() != null) {
+                exists.setNote(bookingDto.getNote());
+            }
+            if (bookingDto.getAdult() != null) {
+                exists.setAdult(bookingDto.getAdult());
+            }
+            if (bookingDto.getChildren() != null) {
+                exists.setChildren(bookingDto.getChildren());
+            }
+            if (bookingDto.getBaby() != null) {
+                exists.setBaby(bookingDto.getBaby());
+            }
+            if (bookingDto.getQr() != null) {
+                exists.setQr(bookingDto.getQr());
+            }
+            if (bookingDto.getStatus() != null) {
+                exists.setStatus(bookingDto.getStatus());
+            }
+            if (bookingDto.getTourId() != null) {
+                exists.setTourId(bookingDto.getTourId());
+            }
+            if (bookingDto.getPaymentId() != null) {
+                exists.setPaymentId(bookingDto.getPaymentId());
+            }
+            if (bookingDto.getAccountId() != null) {
+                exists.setAccountId(bookingDto.getAccountId());
+            }
+            exists.setCreatedAt(exists.getCreatedAt());
+            exists.setCreatedBy(exists.getCreatedBy());
+            Booking bookingId = bookingRepository.save(exists);
+            for (PersonBookingDto personBookingDto : bookingDto.getPersonBookings()) {
+                PersonBooking personBooking = new PersonBooking();
+                if (personBookingDto.getFullName() != null) {
+                    personBooking.setFullName(personBookingDto.getFullName());
+                }
+                if (personBookingDto.getBirthday() != null) {
+                    personBooking.setBirthday(personBookingDto.getBirthday());
+                }
+                Boolean gender = personBookingDto.isGender();
+                if (gender != null && gender) {
+                    personBooking.setGender(gender);
+                }
+                if (personBookingDto.getAges() != null) {
+                    personBooking.setAges(personBookingDto.getAges());
+                }
+                if (personBookingDto.getRelationship() != null) {
+                    personBooking.setRelationship(personBookingDto.getRelationship());
+                }
                 personBooking.setBookingId(bookingId);
                 personBookingRepository.save(personBooking);
             }

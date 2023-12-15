@@ -37,7 +37,11 @@ public class RestaurantServicesImpl implements RestaurantServices {
         Specification<Restaurant> spec = restaurantSpecification.getRestaurantSpecification(restaurantQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(restaurantQueryParam);
         Page<Restaurant> response = restaurantRepository.findAll(spec, pageable);
-        return new APIResponse(PageUtils.toPageResponse(response));
+            if (response.isEmpty()) {
+                return new APIResponse(false, "No data found");
+            } else {
+                return new APIResponse(PageUtils.toPageResponse(response));
+            }
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }

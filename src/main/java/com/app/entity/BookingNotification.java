@@ -16,17 +16,9 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @Setter
-public class BookingNotification {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
+public class BookingNotification extends BaseEntity {
     @Column(name = "NOTIFICATION_TYPE")
     private EBooking notificationType;
-
-    @Column(name = "CREATE_TIME")
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    private LocalDateTime createTime;
 
     @ManyToOne
     @JoinColumn(name = "BOOKING_ID", referencedColumnName = "ID")

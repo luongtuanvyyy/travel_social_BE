@@ -16,13 +16,9 @@ import java.util.Date;
 @AllArgsConstructor
 public class BlogModal {
     private int id;
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private Date createdAt;
     private String createdBy;
     private boolean isActivated;
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private Date modifiedAt;
     private String modifiedBy;
     private String cloudinaryId;

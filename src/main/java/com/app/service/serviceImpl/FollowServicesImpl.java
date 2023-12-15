@@ -61,16 +61,6 @@ public class FollowServicesImpl implements FollowServices {
         }
     }
 
-    public APIResponse getTopFollower(String email, FollowQueryParam followQueryParam) {
-        try {
-            Pageable pageable = requestParamsUtils.getPageableNoSort(followQueryParam);
-            Page<AccountData> response = followRepository.findTopFollower( email , pageable);
-            return new APIResponse(PageUtils.toPageResponse(response));
-        } catch (Exception ex) {
-            return new FailureAPIResponse(ex.getMessage());
-        }
-    }
-
 
     @Override
     public APIResponse getFollowsByFollowerId(Integer followerId, FollowQueryParam followQueryParam) throws JsonProcessingException {

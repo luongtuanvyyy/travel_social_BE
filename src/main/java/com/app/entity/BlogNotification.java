@@ -1,13 +1,16 @@
 package com.app.entity;
 
 import com.app.type.EBlogNotification;
+
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "BLOG_NOTIFICATION")
@@ -25,8 +28,9 @@ public class BlogNotification {
     private EBlogNotification notificationType;
 
     @Column(name = "CREATE_TIME")
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    private LocalDateTime createTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private Date createTime;
 
     @ManyToOne
     @JoinColumn(name = "BLOG_ID")

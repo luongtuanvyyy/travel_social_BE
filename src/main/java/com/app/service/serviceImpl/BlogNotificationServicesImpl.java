@@ -34,13 +34,14 @@ public class BlogNotificationServicesImpl implements BlogNotificationServices {
     CloudinaryService cloudinaryService;
     @Autowired
     ImportExcelService importExcelService;
+
     @Override
     public APIResponse filterBlogNotification(BlogNotificationQueryParam blogNotificationQueryParam) {
         try {
-        Specification<BlogNotification> spec = blogNotificationSpecification.getAccountSpecification(blogNotificationQueryParam);
-        Pageable pageable = requestParamsUtils.getPageable(blogNotificationQueryParam);
-        Page<BlogNotification> response = blogNotificationRepository.findAll(spec, pageable);
-        return new APIResponse(PageUtils.toPageResponse(response));
+            Specification<BlogNotification> spec = blogNotificationSpecification.getAccountSpecification(blogNotificationQueryParam);
+            Pageable pageable = requestParamsUtils.getPageable(blogNotificationQueryParam);
+            Page<BlogNotification> response = blogNotificationRepository.findAll(spec, pageable);
+            return new APIResponse(PageUtils.toPageResponse(response));
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }
@@ -49,8 +50,8 @@ public class BlogNotificationServicesImpl implements BlogNotificationServices {
     @Override
     public APIResponse create(BlogNotification blogNotification) {
         try {
-        blogNotification = blogNotificationRepository.save(blogNotification);
-        return new SuccessAPIResponse(blogNotification);
+            blogNotification = blogNotificationRepository.save(blogNotification);
+            return new SuccessAPIResponse(blogNotification);
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }
@@ -59,16 +60,16 @@ public class BlogNotificationServicesImpl implements BlogNotificationServices {
     @Override
     public APIResponse update(BlogNotification blogNotification) {
         try {
-        if (blogNotification == null) {
-            return new FailureAPIResponse("Blog Notification id is required!");
-        }
-        BlogNotification exists = blogNotificationRepository.findById(blogNotification.getId()).orElse(null);
-        if (exists == null) {
-            return new FailureAPIResponse("Cannot find blog notification with id: " + blogNotification.getId());
-        }
+            if (blogNotification == null) {
+                return new FailureAPIResponse("Blog Notification id is required!");
+            }
+            BlogNotification exists = blogNotificationRepository.findById(blogNotification.getId()).orElse(null);
+            if (exists == null) {
+                return new FailureAPIResponse("Cannot find blog notification with id: " + blogNotification.getId());
+            }
 
-        blogNotification = blogNotificationRepository.save(blogNotification);
-        return new SuccessAPIResponse(blogNotification);
+            blogNotification = blogNotificationRepository.save(blogNotification);
+            return new SuccessAPIResponse(blogNotification);
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }
@@ -93,10 +94,22 @@ public class BlogNotificationServicesImpl implements BlogNotificationServices {
     public APIResponse createBatch(List<BlogNotification> blogNotifications) {
         List<BlogNotification> createdBlogNotifications = new ArrayList<>();
         for (BlogNotification blogNotification : blogNotifications) {
-            BlogNotification createBlogNotification= blogNotificationRepository.save(blogNotification);
+            BlogNotification createBlogNotification = blogNotificationRepository.save(blogNotification);
             createdBlogNotifications.add(createBlogNotification);
         }
         return new SuccessAPIResponse(createdBlogNotifications);
+    }
+
+    @Override
+    public APIResponse getBlogNotificationByEmail(String email, BlogNotificationQueryParam blogNotificationQueryParam) {
+        try {
+            Specification<BlogNotification> spec = blogNotificationSpecification.getAccountSpecification(blogNotificationQueryParam);
+            Pageable pageable = requestParamsUtils.getPageable(blogNotificationQueryParam);
+            Page<BlogNotification> blogNotifications = blogNotificationRepository.findAllByEmail(email, pageable);
+            return new SuccessAPIResponse(blogNotifications);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
 }

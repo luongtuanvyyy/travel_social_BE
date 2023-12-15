@@ -14,14 +14,19 @@ import java.util.List;
 public interface FollowServices {
     APIResponse filterFollow(FollowQueryParam followQueryParam);
 
+    APIResponse getTopFollower(String email, FollowQueryParam followQueryParam) throws JsonProcessingException;
 
     APIResponse getFollowsByFollowerId(Integer followerId, FollowQueryParam followQueryParam) throws JsonProcessingException;
 
     APIResponse getFollowsByGmail(String Gmail, FollowQueryParam followQueryParam) throws JsonProcessingException;
 
     APIResponse create(Follow follow);
+
     APIResponse update(Follow follow);
+
     APIResponse delete(Integer id);
+
     APIResponse uploadExcel(MultipartFile excel);
+
     APIResponse createBatch(List<Follow> follows);
 }

@@ -15,4 +15,8 @@ public class RequestParamsUtils {
         Sort sort = getSort(baseQueryRequest.getSortField(), baseQueryRequest.getOrderBy());
         return PageRequest.of(baseQueryRequest.getPage(), baseQueryRequest.getPageSize(), sort);
     }
+    public Pageable getPageableNoSort(BaseQueryRequest baseQueryRequest){
+        return PageRequest.of(baseQueryRequest.getPage(), baseQueryRequest.getPageSize());
+    }
+
 }

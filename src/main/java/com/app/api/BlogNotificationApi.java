@@ -18,10 +18,22 @@ import java.util.List;
 public class BlogNotificationApi {
     @Autowired
     BlogNotificationServices blogNotificationServices;
+
     //web socket
     @GetMapping("/user/blog-notifications")
     public ResponseEntity<?> getAllBlogNotification(BlogNotificationQueryParam blogNotificationQueryParam) {
         return ResponseEntity.ok(blogNotificationServices.filterBlogNotification(blogNotificationQueryParam));
+    }
+
+    @GetMapping("/public/blog-notifications")
+    public ResponseEntity<?> getAllBlogNotification(@RequestParam("email") String email, BlogNotificationQueryParam blogNotificationQueryParam) {
+        try {
+            APIResponse response = blogNotificationServices.getBlogNotificationByEmail(email, blogNotificationQueryParam);
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
     }
 
     @PostMapping("/user/blog-notifications")
@@ -47,6 +59,7 @@ public class BlogNotificationApi {
         APIResponse response = blogNotificationServices.uploadExcel(excel);
         return ResponseEntity.ok().body(response);
     }
+
     @PostMapping("/user/blog-notifications/batch")
     public ResponseEntity<?> createBlogNotificationsBatch(@RequestBody List<BlogNotification> blogNotifications) {
         APIResponse response = blogNotificationServices.createBatch(blogNotifications);

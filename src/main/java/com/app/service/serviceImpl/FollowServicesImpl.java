@@ -38,13 +38,24 @@ public class FollowServicesImpl implements FollowServices {
     CloudinaryService cloudinaryService;
     @Autowired
     ImportExcelService importExcelService;
+
     @Override
     public APIResponse filterFollow(FollowQueryParam followQueryParam) {
         try {
-        Specification<Follow> spec = followSpecification.getFollowSpecitification(followQueryParam);
-        Pageable pageable = requestParamsUtils.getPageable(followQueryParam);
-        Page<Follow> response = followRepository.findAll(spec, pageable);
-        return new APIResponse(PageUtils.toPageResponse(response));
+            Specification<Follow> spec = followSpecification.getFollowSpecitification(followQueryParam);
+            Pageable pageable = requestParamsUtils.getPageable(followQueryParam);
+            Page<Follow> response = followRepository.findAll(spec, pageable);
+            return new APIResponse(PageUtils.toPageResponse(response));
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
+    }
+
+    public APIResponse getTopFollower(String email, FollowQueryParam followQueryParam) {
+        try {
+            Pageable pageable = requestParamsUtils.getPageableNoSort(followQueryParam);
+            Page<AccountData> response = followRepository.findTopFollower( email , pageable);
+            return new APIResponse(PageUtils.toPageResponse(response));
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }
@@ -55,9 +66,9 @@ public class FollowServicesImpl implements FollowServices {
     public APIResponse getFollowsByFollowerId(Integer followerId, FollowQueryParam followQueryParam) throws JsonProcessingException {
 //        Specification<Follow> spec = followSpecification.getFollowSpecitification(followQueryParam);
         try {
-        Pageable pageable = requestParamsUtils.getPageable(followQueryParam);
-        Page<AccountData> response = accountRepository.findByFollowerId(followerId, pageable);
-        return new APIResponse(PageUtils.toPageResponse(response));
+            Pageable pageable = requestParamsUtils.getPageable(followQueryParam);
+            Page<AccountData> response = accountRepository.findByFollowerId(followerId, pageable);
+            return new APIResponse(PageUtils.toPageResponse(response));
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }
@@ -66,18 +77,19 @@ public class FollowServicesImpl implements FollowServices {
     @Override
     public APIResponse getFollowsByGmail(String Gmail, FollowQueryParam followQueryParam) throws JsonProcessingException {
         try {
-        Pageable pageable = requestParamsUtils.getPageable(followQueryParam);
-        Page<AccountData> response = accountRepository.findFollowByGmail(Gmail, pageable);
-        return new APIResponse(PageUtils.toPageResponse(response));
+            Pageable pageable = requestParamsUtils.getPageable(followQueryParam);
+            Page<AccountData> response = accountRepository.findFollowByGmail(Gmail, pageable);
+            return new APIResponse(PageUtils.toPageResponse(response));
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }
     }
+
     @Override
     public APIResponse create(Follow follow) {
         try {
-        follow = followRepository.save(follow);
-        return new SuccessAPIResponse(follow);
+            follow = followRepository.save(follow);
+            return new SuccessAPIResponse(follow);
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }

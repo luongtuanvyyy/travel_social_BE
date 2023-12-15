@@ -1,11 +1,11 @@
 package com.app.payload.request;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
 @Builder
-public class BlogModalQueryParam extends BaseQueryRequest{
-    Integer id;
-    String createdBy;
+public class BlogModalQueryParam extends BaseQueryRequest {
+
 }

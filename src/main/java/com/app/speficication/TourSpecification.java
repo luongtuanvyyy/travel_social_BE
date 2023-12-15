@@ -2,10 +2,12 @@ package com.app.speficication;
 
 import com.app.entity.Tour;
 import com.app.payload.request.TourQueryParam;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
@@ -20,10 +22,10 @@ public class TourSpecification {
     public Specification<Tour> hasIdEqual(Integer id) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("id"), id);
     }
-    public Specification<Tour> hasVehicleLike(String vehicle) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("vehicle"),  "%"+vehicle+"%");
-    }
 
+    public Specification<Tour> hasVehicleLike(String vehicle) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("vehicle"), "%" + vehicle + "%");
+    }
 
 
     public Specification<Tour> hasNameLike(String name) {
@@ -37,12 +39,14 @@ public class TourSpecification {
             return likePredicate;
         };
     }
+
     public static Specification<Tour> isNewlyPosted() {
         return (root, query, criteriaBuilder) -> {
             LocalDate today = LocalDate.now();
             return criteriaBuilder.equal(root.get("createdAt").as(LocalDate.class), today);
         };
     }
+
     private String removeDiacritics(String input) {
         return Normalizer.normalize(input, Normalizer.Form.NFD)
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
@@ -62,9 +66,9 @@ public class TourSpecification {
         };
     }
 
-    public void sortRegistered(){
+    public void sortRegistered() {
 
-        return  ;
+        return;
     }
 
     public Specification<Tour> getTourSpecification(TourQueryParam tourQueryParam) {
@@ -87,8 +91,6 @@ public class TourSpecification {
         if (tourQueryParam.getStart_date() != null) {
             spec = spec.and(startDateGreaterThanOrEqualTo(tourQueryParam.getStart_date()));
         }
-
-
-            return spec;
+        return spec;
     }
 }

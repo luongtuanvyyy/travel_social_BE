@@ -13,12 +13,9 @@ import lombok.*;
 @Getter
 @Setter
 public class Blog extends BaseEntity {
-    private String title;
     private String image;
     @Column(columnDefinition = "LONGTEXT")
     private String description;
-    private String avatar;
-    private String name;
     @Column(name = "IS_VERIFY")
     private boolean isVerify;
     @Column(name = "CLOUDINARY_ID")

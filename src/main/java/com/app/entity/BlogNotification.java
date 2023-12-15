@@ -16,17 +16,9 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @Setter
-public class BlogNotification {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
+public class BlogNotification extends BaseEntity{
     @Column(name = "NOTIFICATION_TYPE")
     private EBlogNotification notificationType;
-
-    @Column(name = "CREATE_TIME")
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    private LocalDateTime createTime;
 
     @ManyToOne
     @JoinColumn(name = "BLOG_ID")

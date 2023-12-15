@@ -45,7 +45,11 @@ public class ReviewServicesimpl implements ReviewServices {
         Specification<Review> spec = reviewSpecification.getReviewSpecification(reviewQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(reviewQueryParam);
         Page<Review> response = reviewRepository.findAll(spec, pageable);
-        return new APIResponse(PageUtils.toPageResponse(response));
+            if (response.isEmpty()) {
+                return new APIResponse(false, "No data found");
+            } else {
+                return new APIResponse(PageUtils.toPageResponse(response));
+            }
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }

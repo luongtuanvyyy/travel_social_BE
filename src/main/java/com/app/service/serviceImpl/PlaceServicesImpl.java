@@ -41,7 +41,11 @@ public class PlaceServicesImpl implements PlaceServices {
         Specification<Place> spec = placeSpecification.getPlaceSpecification(placeQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(placeQueryParam);
         Page<Place> response = placeRepository.findAll(spec, pageable);
-        return new APIResponse(PageUtils.toPageResponse(response));
+            if (response.isEmpty()) {
+                return new APIResponse(false, "No data found");
+            } else {
+                return new APIResponse(PageUtils.toPageResponse(response));
+            }
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }

@@ -44,7 +44,11 @@ public class FollowServicesImpl implements FollowServices {
         Specification<Follow> spec = followSpecification.getFollowSpecitification(followQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(followQueryParam);
         Page<Follow> response = followRepository.findAll(spec, pageable);
-        return new APIResponse(PageUtils.toPageResponse(response));
+            if (response.isEmpty()) {
+                return new APIResponse(false, "No data found");
+            } else {
+                return new APIResponse(PageUtils.toPageResponse(response));
+            }
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }
@@ -57,7 +61,11 @@ public class FollowServicesImpl implements FollowServices {
         try {
         Pageable pageable = requestParamsUtils.getPageable(followQueryParam);
         Page<AccountData> response = accountRepository.findByFollowerId(followerId, pageable);
-        return new APIResponse(PageUtils.toPageResponse(response));
+            if (response.isEmpty()) {
+                return new APIResponse(false, "No data found");
+            } else {
+                return new APIResponse(PageUtils.toPageResponse(response));
+            }
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }
@@ -68,7 +76,11 @@ public class FollowServicesImpl implements FollowServices {
         try {
         Pageable pageable = requestParamsUtils.getPageable(followQueryParam);
         Page<AccountData> response = accountRepository.findFollowByGmail(Gmail, pageable);
-        return new APIResponse(PageUtils.toPageResponse(response));
+            if (response.isEmpty()) {
+                return new APIResponse(false, "No data found");
+            } else {
+                return new APIResponse(PageUtils.toPageResponse(response));
+            }
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }

@@ -9,12 +9,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookingDto {
+    private Integer id;
     private String note;
     private Integer adult;
     private Integer children;
@@ -24,5 +26,7 @@ public class BookingDto {
     private Account accountId;
     private Tour tourId;
     private Payment paymentId;
+    private Date createdAt;
+    private String createdBy;
     private List<PersonBookingDto> personBookings;
 }

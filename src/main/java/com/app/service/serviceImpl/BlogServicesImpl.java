@@ -68,7 +68,11 @@ public class BlogServicesImpl implements BlogServices {
         Specification<Blog> spec = blogSpecification.getBlogSpecification(blogQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(blogQueryParam);
         Page<Blog> response = blogRepository.findAll(spec, pageable);
-        return new APIResponse(PageUtils.toPageResponse(response));
+            if (response.isEmpty()) {
+                return new APIResponse(false, "No data found");
+            } else {
+                return new APIResponse(PageUtils.toPageResponse(response));
+            }
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }
@@ -80,7 +84,11 @@ public class BlogServicesImpl implements BlogServices {
         Specification<BlogModal> spec = blogModalSpecification.getBlogModalSpecification(blogModalQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(blogModalQueryParam);
         Page<BlogModal> response = blogRepository.getAllBlogWithAccount(spec, pageable);
-        return new APIResponse(PageUtils.toPageResponse(response));
+            if (response.isEmpty()) {
+                return new APIResponse(false, "No data found");
+            } else {
+                return new APIResponse(PageUtils.toPageResponse(response));
+            }
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }
@@ -92,7 +100,11 @@ public class BlogServicesImpl implements BlogServices {
         Specification<Blog> spec = blogSpecification.getBlogSpecification(blogQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(blogQueryParam);
         Page<Blog> response = blogRepository.findAllNotSeen(spec, pageable);
-        return new APIResponse(PageUtils.toPageResponse(response));
+            if (response.isEmpty()) {
+                return new APIResponse(false, "No data found");
+            } else {
+                return new APIResponse(PageUtils.toPageResponse(response));
+            }
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }
@@ -105,7 +117,11 @@ public class BlogServicesImpl implements BlogServices {
         Specification<Blog> spec = blogSpecification.getBlogSpecification(blogQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(blogQueryParam);
         Page<Blog> response = blogRepository.findLatestBlogs(spec, pageable);
-        return new APIResponse(PageUtils.toPageResponse(response));
+            if (response.isEmpty()) {
+                return new APIResponse(false, "No data found");
+            } else {
+                return new APIResponse(PageUtils.toPageResponse(response));
+            }
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }

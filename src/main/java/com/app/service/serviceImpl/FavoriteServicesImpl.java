@@ -35,17 +35,21 @@ public class FavoriteServicesImpl implements FavoriteServices {
     @Autowired
     ImportExcelService importExcelService;
 
-    @Override
-    public APIResponse filterFavorite(FavoriteQueryParam favoriteQueryParam) {
-        try {
-        Specification<Favorite> spec = favoriteSpecification.getFavoriteSpecitification(favoriteQueryParam);
-        Pageable pageable = requestParamsUtils.getPageable(favoriteQueryParam);
-        Page<Favorite> response = favoriteRepository.findAll(spec, pageable);
-        return new APIResponse(PageUtils.toPageResponse(response));
-        } catch (Exception ex) {
-            return new FailureAPIResponse(ex.getMessage());
+        @Override
+        public APIResponse filterFavorite(FavoriteQueryParam favoriteQueryParam) {
+            try {
+            Specification<Favorite> spec = favoriteSpecification.getFavoriteSpecitification(favoriteQueryParam);
+            Pageable pageable = requestParamsUtils.getPageable(favoriteQueryParam);
+            Page<Favorite> response = favoriteRepository.findAll(spec, pageable);
+                if (response.isEmpty()) {
+                    return new APIResponse(false, "No data found");
+                } else {
+                    return new APIResponse(PageUtils.toPageResponse(response));
+                }
+            } catch (Exception ex) {
+                return new FailureAPIResponse(ex.getMessage());
+            }
         }
-    }
 
     @Override
     public APIResponse create(Favorite favorite) {

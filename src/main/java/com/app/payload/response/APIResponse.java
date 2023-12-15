@@ -21,4 +21,8 @@ public class APIResponse {
     public APIResponse(Object data) {
         this.data = data;
     }
+
+    public APIResponse(boolean success, String message) {
+        this.success = success; this.message = message;
+    }
 }

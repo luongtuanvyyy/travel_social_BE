@@ -41,7 +41,11 @@ public class TourCancelServiceimpl implements TourCancelServices {
         Specification<TourCancel> spec = tourCancelSpecification.getTourCanceSpecitification(tourCancelQueryParam);
         Pageable pageable = requestParamsUtils.getPageable(tourCancelQueryParam);
         Page<TourCancel> response = tourCancelRepository.findAll(spec, pageable);
-        return new APIResponse(PageUtils.toPageResponse(response));
+            if (response.isEmpty()) {
+                return new APIResponse(false, "No data found");
+            } else {
+                return new APIResponse(PageUtils.toPageResponse(response));
+            }
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }

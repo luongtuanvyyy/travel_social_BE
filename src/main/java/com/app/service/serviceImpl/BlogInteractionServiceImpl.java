@@ -65,6 +65,22 @@ public class BlogInteractionServiceImpl implements BlogInteractionService {
     }
 
     @Override
+    public APIResponse updateComment(Integer blogCommentId, String content) {
+        Optional<BlogComment> existBlogComment = blogCommentRepository.findById(blogCommentId);
+        if (existBlogComment.isEmpty()) {
+            return new FailureAPIResponse("This blogCommentId does not exist");
+        }
+        BlogComment blogComment = existBlogComment.get();
+        blogComment.setContent(content);
+        try {
+            blogCommentRepository.save(blogComment);
+            return new SuccessAPIResponse("Update comment successfully");
+        } catch (Exception e) {
+            return new FailureAPIResponse("Error: " + e.getMessage());
+        }
+    }
+
+    @Override
     public APIResponse likeBlog(Integer blogId, UserPrincipal userPrincipal) {
         Optional<Blog> existBlog = blogRepository.findById(blogId);
         if (existBlog.isEmpty()) {

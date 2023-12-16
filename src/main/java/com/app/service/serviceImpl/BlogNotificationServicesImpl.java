@@ -110,7 +110,7 @@ public class BlogNotificationServicesImpl implements BlogNotificationServices {
             Specification<BlogNotification> spec = blogNotificationSpecification.getAccountSpecification(blogNotificationQueryParam);
             Pageable pageable = requestParamsUtils.getPageable(blogNotificationQueryParam);
             Page<BlogNotification> blogNotifications = blogNotificationRepository.findAllByEmail(email, pageable);
-            return new SuccessAPIResponse(blogNotifications);
+            return new APIResponse(PageUtils.toPageResponse(blogNotifications));
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }

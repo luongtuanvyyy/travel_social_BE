@@ -13,18 +13,14 @@ public class AccountData {
     String avatar;
     Boolean isVerify;
     String email;
+    Long followerCount;
 
-    public AccountData(Integer id, String name, String avatar, String email) {
-        this.id = id;
-        this.name = name;
-        this.avatar = avatar;
-        this.email = email;
-    }
-
-    public AccountData(Integer id, String name, String avatar, boolean isVerify) {
+    public AccountData (Integer id, String name, String avatar, Boolean isVerify, String email) {
         this.id = id;
         this.name = name;
         this.avatar = avatar;
         this.isVerify = isVerify;
+        this.email = email;
     }
 }
+

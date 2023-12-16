@@ -6,6 +6,9 @@ import com.app.payload.request.BlogModalQueryParam;
 import com.app.payload.request.BlogQueryParam;
 import com.app.payload.request.TourQueryParam;
 import com.app.payload.response.APIResponse;
+import com.app.security.CurrentUser;
+import com.app.security.UserPrincipal;
+import com.app.service.BlogInteractionService;
 import com.app.service.BlogServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +25,9 @@ import java.util.List;
 public class BlogApi {
     @Autowired
     BlogServices blogServices;
+
+    @Autowired
+    BlogInteractionService blogInteractionService;
 
     @PostMapping("/user/blogs/share")
     public ResponseEntity<?> getAccount(@RequestParam("id") Integer id, BlogQueryParam blogQueryParam) {
@@ -72,6 +78,30 @@ public class BlogApi {
     @PostMapping("/user/blogs/batch")
     public ResponseEntity<?> createBlogsBatch(@RequestBody List<Blog> blogs) {
         APIResponse response = blogServices.createBatch(blogs);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("/user/blogs/comments")
+    public ResponseEntity<?> addComment(@RequestParam("blogId") Integer blogId, @RequestParam("content") String content) {
+        APIResponse response = blogInteractionService.addComment(blogId, content);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @DeleteMapping("/user/blogs/comments")
+    public ResponseEntity<?> deleteComment(@RequestParam("blogCommentId") Integer blogCommentId) {
+        APIResponse response = blogInteractionService.deleteComment(blogCommentId);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("/user/blogs/likes")
+    public ResponseEntity<?> addComment(@RequestParam("blogId") Integer blogId, @CurrentUser UserPrincipal userPrincipal) {
+        APIResponse response = blogInteractionService.likeBlog(blogId, userPrincipal);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @DeleteMapping("/user/blogs/un-likes")
+    public ResponseEntity<?> unlikeBlog(@RequestParam("blogId") Integer blogId, @CurrentUser UserPrincipal userPrincipal) {
+        APIResponse response = blogInteractionService.unlikeBlog(blogId, userPrincipal);
         return ResponseEntity.ok().body(response);
     }
 

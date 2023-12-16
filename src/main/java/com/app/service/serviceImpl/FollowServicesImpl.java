@@ -1,17 +1,21 @@
 package com.app.service.serviceImpl;
 
 import com.app.dto.AccountData;
+import com.app.dto.AccountDto2;
+import com.app.entity.Account;
 import com.app.entity.Follow;
+import com.app.mapper.AccountMapper;
 import com.app.payload.request.FollowQueryParam;
 import com.app.payload.response.APIResponse;
 import com.app.payload.response.FailureAPIResponse;
 import com.app.payload.response.SuccessAPIResponse;
 import com.app.repository.AccountRepository;
 import com.app.repository.FollowRepository;
+import com.app.security.UserPrincipal;
 import com.app.service.FollowServices;
+import com.app.speficication.FollowSpecification;
 import com.app.utils.PageUtils;
 import com.app.utils.RequestParamsUtils;
-import com.app.speficication.FollowSpecification;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +26,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class FollowServicesImpl implements FollowServices {
@@ -39,68 +45,40 @@ public class FollowServicesImpl implements FollowServices {
     @Autowired
     ImportExcelService importExcelService;
 
+    @Autowired
+    private AccountMapper accountMapper;
+
     @Override
     public APIResponse filterFollow(FollowQueryParam followQueryParam) {
         try {
-        Specification<Follow> spec = followSpecification.getFollowSpecitification(followQueryParam);
-        Pageable pageable = requestParamsUtils.getPageable(followQueryParam);
-        Page<Follow> response = followRepository.findAll(spec, pageable);
-        return new APIResponse(PageUtils.toPageResponse(response));
-        } catch (Exception ex) {
-            return new FailureAPIResponse(ex.getMessage());
-        }
-    }
-
-    public APIResponse getTopFollower(String email, FollowQueryParam followQueryParam) {
-        try {
-            Pageable pageable = requestParamsUtils.getPageableNoSort(followQueryParam);
-            Page<AccountData> response = followRepository.findTopFollower( email , pageable);
+            Specification<Follow> spec = followSpecification.getFollowSpecitification(followQueryParam);
+            Pageable pageable = requestParamsUtils.getPageable(followQueryParam);
+            Page<Follow> response = followRepository.findAll(spec, pageable);
             return new APIResponse(PageUtils.toPageResponse(response));
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }
     }
-
-
     @Override
-    public APIResponse getFollowsByFollowerId(Integer followerId, FollowQueryParam followQueryParam) throws JsonProcessingException {
-//        Specification<Follow> spec = followSpecification.getFollowSpecitification(followQueryParam);
-        try {
-        Pageable pageable = requestParamsUtils.getPageable(followQueryParam);
-        Page<AccountData> response = accountRepository.findByFollowerId(followerId, pageable);
-            if (response.isEmpty()) {
-                return new APIResponse(false, "No data found");
-            } else {
-                return new APIResponse(PageUtils.toPageResponse(response));
-            }
-        } catch (Exception ex) {
-            return new FailureAPIResponse(ex.getMessage());
+    public APIResponse create(Integer userId, UserPrincipal userPrincipal) {
+        Optional<Account> optionalAccount = accountRepository.findById(userId);
+        if (optionalAccount.isEmpty()) {
+            return new FailureAPIResponse("This userId does not exist");
         }
-    }
+        Account existAcc = optionalAccount.get();
+        Follow existingFollow = followRepository.findByAccountAndCreatedBy(existAcc, userPrincipal.getEmail());
+        if (existingFollow != null) {
+            return new FailureAPIResponse("You have already followed this userId");
+        }
+        Follow follow = new Follow();
+        follow.setAccount(existAcc);
+        try {
+            followRepository.save(follow);
+            return new SuccessAPIResponse("Follow successfully");
+        } catch (Exception e) {
+            return new FailureAPIResponse("Error: " + e.getMessage());
+        }
 
-    @Override
-    public APIResponse getFollowsByGmail(String Gmail, FollowQueryParam followQueryParam) throws JsonProcessingException {
-        try {
-        Pageable pageable = requestParamsUtils.getPageable(followQueryParam);
-        Page<AccountData> response = accountRepository.findFollowByGmail(Gmail, pageable);
-            if (response.isEmpty()) {
-                return new APIResponse(false, "No data found");
-            } else {
-                return new APIResponse(PageUtils.toPageResponse(response));
-            }
-        } catch (Exception ex) {
-            return new FailureAPIResponse(ex.getMessage());
-        }
-    }
-
-    @Override
-    public APIResponse create(Follow follow) {
-        try {
-            follow = followRepository.save(follow);
-            return new SuccessAPIResponse(follow);
-        } catch (Exception ex) {
-            return new FailureAPIResponse(ex.getMessage());
-        }
     }
 
     @Override
@@ -118,12 +96,21 @@ public class FollowServicesImpl implements FollowServices {
     }
 
     @Override
-    public APIResponse delete(Integer id) {
+    public APIResponse delete(Integer userId, UserPrincipal userPrincipal) {
+        Optional<Account> optionalAccount = accountRepository.findById(userId);
+        if (optionalAccount.isEmpty()) {
+            return new FailureAPIResponse("This userId does not exist");
+        }
+        Account existAcc = optionalAccount.get();
+        Follow existingFollow = followRepository.findByAccountAndCreatedBy(existAcc, userPrincipal.getEmail());
+        if (existingFollow == null) {
+            return new FailureAPIResponse("You have already unfollowed this userId");
+        }
         try {
-            followRepository.deleteById(id);
-            return new SuccessAPIResponse("Delete successfully!");
-        } catch (Exception ex) {
-            return new FailureAPIResponse(ex.getMessage());
+            followRepository.delete(existingFollow);
+            return new SuccessAPIResponse("UnFollow successfully");
+        } catch (Exception e) {
+            return new FailureAPIResponse("Error: " + e.getMessage());
         }
     }
 
@@ -140,5 +127,41 @@ public class FollowServicesImpl implements FollowServices {
             createdFollows.add(createdFollow);
         }
         return new SuccessAPIResponse(createdFollows);
+    }
+
+    @Override
+    public APIResponse getListYouFollow(UserPrincipal userPrincipal) {
+        System.out.println("Email: " + userPrincipal.getEmail());
+        List<Follow> listYouFollow = followRepository.findByCreatedBy(userPrincipal.getEmail());
+        if (listYouFollow.size() == 0) {
+            new SuccessAPIResponse("You haven't followed anyone yet");
+        }
+
+        List<AccountDto2> peopleYouFollow = listYouFollow.stream()
+                .map(accountMapper::accountDtoFromFollow)
+                .collect(Collectors.toList());
+        return new SuccessAPIResponse("Get the list of people you followed successfully", peopleYouFollow);
+    }
+
+    @Override
+    public APIResponse getListFollowYou(UserPrincipal userPrincipal) {
+        List<Follow> listFollowYou = followRepository.findByAccount(userPrincipal.toAccount());
+        if (listFollowYou.size() == 0) {
+            return new SuccessAPIResponse("You don't have any followers yet");
+        }
+        List<AccountDto2> peopleFollowYou = listFollowYou.stream()
+                .map(accountMapper::accountDtoFromFollow)
+                .collect(Collectors.toList());
+        return new SuccessAPIResponse("Get your follower list successfully", peopleFollowYou);
+    }
+    @Override
+    public APIResponse getTopFollower() {
+        try {
+            List<AccountData> response = followRepository.getAccountsOrderByFollowerCount();
+            return new APIResponse(response);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 }

@@ -51,6 +51,25 @@ public class BlogInteractionServiceImpl implements BlogInteractionService {
     }
 
     @Override
+    public APIResponse replyComment(Integer parentCommentId, String content) {
+        Optional<BlogComment> parentComment = blogCommentRepository.findById(parentCommentId);
+        if (parentComment.isEmpty()) {
+            return new FailureAPIResponse("This parentCommentId does not exist");
+        }
+
+        BlogComment reply = new BlogComment();
+        reply.setParentComment(parentComment.get());
+        reply.setContent(content);
+
+        try {
+            blogCommentRepository.save(reply);
+            return new SuccessAPIResponse("Reply added successfully");
+        } catch (Exception e) {
+            return new FailureAPIResponse("Error: " + e.getMessage());
+        }
+    }
+
+    @Override
     public APIResponse deleteComment(Integer blogCommentId) {
         Optional<BlogComment> existBlogComment = blogCommentRepository.findById(blogCommentId);
         if (existBlogComment.isEmpty()) {

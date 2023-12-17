@@ -87,6 +87,13 @@ public class BlogApi {
         return ResponseEntity.ok().body(response);
     }
 
+    @PostMapping("/user/blogs/replies")
+    public ResponseEntity<?> replyComment(@RequestParam("parentCommentId") Integer parentCommentId, @RequestParam("content") String content) {
+        APIResponse response = blogInteractionService.replyComment(parentCommentId, content);
+        return ResponseEntity.ok().body(response);
+    }
+
+
     @DeleteMapping("/user/blogs/comments")
     public ResponseEntity<?> deleteComment(@RequestParam("blogCommentId") Integer blogCommentId) {
         APIResponse response = blogInteractionService.deleteComment(blogCommentId);
@@ -105,9 +112,16 @@ public class BlogApi {
         return ResponseEntity.ok().body(response);
     }
 
-    @DeleteMapping("/user/blogs/un-likes")
+    @DeleteMapping("/user/blogs/likes")
     public ResponseEntity<?> unlikeBlog(@RequestParam("blogId") Integer blogId, @CurrentUser UserPrincipal userPrincipal) {
         APIResponse response = blogInteractionService.unlikeBlog(blogId, userPrincipal);
+        return ResponseEntity.ok().body(response);
+    }
+
+
+    @GetMapping("/public/blogs/comments")
+    public ResponseEntity<?> getComment(@RequestParam("blogId") Integer blogId) {
+        APIResponse response = blogServices.getComment(blogId);
         return ResponseEntity.ok().body(response);
     }
 

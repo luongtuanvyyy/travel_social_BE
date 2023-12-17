@@ -3,6 +3,7 @@ package com.app.service.serviceImpl;
 import com.app.dto.AccountData;
 import com.app.entity.Account;
 import com.app.entity.Blog;
+import com.app.entity.BlogComment;
 import com.app.modal.BlogModal;
 import com.app.payload.request.BlogModalQueryParam;
 import com.app.payload.request.BlogQueryParam;
@@ -11,6 +12,7 @@ import com.app.payload.response.CloudinaryResponse;
 import com.app.payload.response.FailureAPIResponse;
 import com.app.payload.response.SuccessAPIResponse;
 import com.app.repository.AccountRepository;
+import com.app.repository.BlogCommentRepository;
 import com.app.repository.BlogInteractionResponsitory;
 import com.app.repository.BlogRepository;
 import com.app.security.TokenProvider;
@@ -51,6 +53,8 @@ public class BlogServicesImpl implements BlogServices {
     CloudinaryService cloudinaryService;
     @Autowired
     ImportExcelService importExcelService;
+    @Autowired
+    BlogCommentRepository blogCommentRepository;
 
     @Override
     public List<Blog> findAll() {
@@ -91,6 +95,20 @@ public class BlogServicesImpl implements BlogServices {
             }
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
+        }
+    }
+
+    @Override
+    public APIResponse getComment(Integer blogId) {
+        Optional<Blog> existBlog = blogRepository.findById(blogId);
+        if (existBlog.isEmpty()) {
+            return new FailureAPIResponse("This blogId does not exist");
+        }
+        try {
+            List<BlogComment> blogCommentList = blogCommentRepository.findByBlog(existBlog.get());
+            return new SuccessAPIResponse(blogCommentList);
+        } catch (Exception e) {
+            return new FailureAPIResponse("Error: " + e.getMessage());
         }
     }
 

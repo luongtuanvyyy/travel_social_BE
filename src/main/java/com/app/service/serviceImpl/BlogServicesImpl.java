@@ -11,10 +11,7 @@ import com.app.payload.response.APIResponse;
 import com.app.payload.response.CloudinaryResponse;
 import com.app.payload.response.FailureAPIResponse;
 import com.app.payload.response.SuccessAPIResponse;
-import com.app.repository.AccountRepository;
-import com.app.repository.BlogCommentRepository;
-import com.app.repository.BlogInteractionResponsitory;
-import com.app.repository.BlogRepository;
+import com.app.repository.*;
 import com.app.security.TokenProvider;
 import com.app.service.BlogServices;
 import com.app.speficication.BlogModalSpecification;
@@ -46,6 +43,8 @@ public class BlogServicesImpl implements BlogServices {
     @Autowired
     BlogModalSpecification blogModalSpecification;
     @Autowired
+    BlogReactionRepository blogReactionRepository;
+    @Autowired
     AccountRepository accountRepository;
     @Autowired
     RequestParamsUtils requestParamsUtils;
@@ -69,9 +68,9 @@ public class BlogServicesImpl implements BlogServices {
     @Override
     public APIResponse filterBlog(BlogQueryParam blogQueryParam) {
         try {
-        Specification<Blog> spec = blogSpecification.getBlogSpecification(blogQueryParam);
-        Pageable pageable = requestParamsUtils.getPageable(blogQueryParam);
-        Page<Blog> response = blogRepository.findAll(spec, pageable);
+            Specification<Blog> spec = blogSpecification.getBlogSpecification(blogQueryParam);
+            Pageable pageable = requestParamsUtils.getPageable(blogQueryParam);
+            Page<Blog> response = blogRepository.findAll(spec, pageable);
             if (response.isEmpty()) {
                 return new APIResponse(false, "No data found");
             } else {
@@ -85,9 +84,9 @@ public class BlogServicesImpl implements BlogServices {
     @Override
     public APIResponse getAllBlogWithAccount(BlogModalQueryParam blogModalQueryParam) {
         try {
-        Specification<BlogModal> spec = blogModalSpecification.getBlogModalSpecification(blogModalQueryParam);
-        Pageable pageable = requestParamsUtils.getPageable(blogModalQueryParam);
-        Page<BlogModal> response = blogRepository.getAllBlogWithAccount(spec, pageable);
+            Specification<BlogModal> spec = blogModalSpecification.getBlogModalSpecification(blogModalQueryParam);
+            Pageable pageable = requestParamsUtils.getPageable(blogModalQueryParam);
+            Page<BlogModal> response = blogRepository.getAllBlogWithAccount(spec, pageable);
             if (response.isEmpty()) {
                 return new APIResponse(false, "No data found");
             } else {
@@ -113,11 +112,27 @@ public class BlogServicesImpl implements BlogServices {
     }
 
     @Override
+    public APIResponse getBlogAccount(Integer id, BlogModalQueryParam blogModalQueryParam) {
+        try {
+            Pageable pageable = requestParamsUtils.getPageable(blogModalQueryParam);
+            Page<BlogModal> response = blogRepository.getBlogAccount(id, pageable);
+            response.getContent().get(0).setComment(blogReactionRepository.getAllCommentByBlogId(id));
+            if (response.isEmpty()) {
+                return new APIResponse(false, "No data found");
+            } else {
+                return new APIResponse(PageUtils.toPageResponse(response));
+            }
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
+    }
+
+    @Override
     public APIResponse filterBlogNotSeen(BlogQueryParam blogQueryParam) {
         try {
-        Specification<Blog> spec = blogSpecification.getBlogSpecification(blogQueryParam);
-        Pageable pageable = requestParamsUtils.getPageable(blogQueryParam);
-        Page<Blog> response = blogRepository.findAllNotSeen(spec, pageable);
+            Specification<Blog> spec = blogSpecification.getBlogSpecification(blogQueryParam);
+            Pageable pageable = requestParamsUtils.getPageable(blogQueryParam);
+            Page<Blog> response = blogRepository.findAllNotSeen(spec, pageable);
             if (response.isEmpty()) {
                 return new APIResponse(false, "No data found");
             } else {
@@ -132,9 +147,9 @@ public class BlogServicesImpl implements BlogServices {
     @Override
     public APIResponse filterLeastBlog(BlogQueryParam blogQueryParam) {
         try {
-        Specification<Blog> spec = blogSpecification.getBlogSpecification(blogQueryParam);
-        Pageable pageable = requestParamsUtils.getPageable(blogQueryParam);
-        Page<Blog> response = blogRepository.findLatestBlogs(spec, pageable);
+            Specification<Blog> spec = blogSpecification.getBlogSpecification(blogQueryParam);
+            Pageable pageable = requestParamsUtils.getPageable(blogQueryParam);
+            Page<Blog> response = blogRepository.findLatestBlogs(spec, pageable);
             if (response.isEmpty()) {
                 return new APIResponse(false, "No data found");
             } else {

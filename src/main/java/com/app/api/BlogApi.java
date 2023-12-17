@@ -39,6 +39,11 @@ public class BlogApi {
         return ResponseEntity.ok(blogServices.getAllBlogWithAccount(blogModalQueryParam));
     }
 
+    @GetMapping("/public/blog")
+    public ResponseEntity<?> getBlog(@RequestParam("id") String id, BlogModalQueryParam blogModalQueryParam) {
+        return ResponseEntity.ok(blogServices.getBlogAccount(Integer.parseInt(id), blogModalQueryParam));
+    }
+
     @GetMapping("/public/blogs/notSeen")
     public ResponseEntity<?> filterBlogNotSeen(BlogQueryParam blogQueryParam) {
         return ResponseEntity.ok(blogServices.filterBlogNotSeen(blogQueryParam));
@@ -51,14 +56,14 @@ public class BlogApi {
 
     @PostMapping("/user/blogs")
     public ResponseEntity<?> createBlog(@RequestPart(name = "blog") Blog blog,
-            HttpServletRequest request) {
+                                        HttpServletRequest request) {
         APIResponse response = blogServices.create(blog, request);
         return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/user/blogs")
     public ResponseEntity<?> updateBlog(@RequestPart(name = "blog") Blog blog,
-            HttpServletRequest request) {
+                                        HttpServletRequest request) {
         APIResponse response = blogServices.update(blog, request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

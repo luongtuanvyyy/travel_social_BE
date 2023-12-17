@@ -100,6 +100,12 @@ public class BlogApi {
         return ResponseEntity.ok().body(response);
     }
 
+    @PutMapping("/user/blogs/comments")
+    public ResponseEntity<?> updateComment(@RequestParam("blogCommentId") Integer blogCommentId, @RequestParam("content") String content) {
+        APIResponse response = blogInteractionService.updateComment(blogCommentId, content);
+        return ResponseEntity.ok().body(response);
+    }
+
     @PostMapping("/user/blogs/likes")
     public ResponseEntity<?> addComment(@RequestParam("blogId") Integer blogId, @CurrentUser UserPrincipal userPrincipal) {
         APIResponse response = blogInteractionService.likeBlog(blogId, userPrincipal);

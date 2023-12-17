@@ -1,6 +1,7 @@
 package com.app.service.serviceImpl;
 
-import com.app.dto.AccountDto2;
+import com.app.constant.NotificationType;
+import com.app.dto.Notification;
 import com.app.entity.Blog;
 import com.app.entity.BlogComment;
 import com.app.entity.BlogLike;
@@ -149,10 +150,14 @@ public class BlogInteractionServiceImpl implements BlogInteractionService {
     public APIResponse getListLikeYourBlog(UserPrincipal userPrincipal) {
         try {
             List<Blog> blogsCreatedByUser = blogRepository.findByCreatedBy(userPrincipal.getEmail());
-            List<AccountDto2> peopleLikedYourBlogs = blogsCreatedByUser.stream()
+            List<Notification> peopleLikedYourBlogs = blogsCreatedByUser.stream()
                     .flatMap(blog -> {
-                        List<AccountDto2> likers = blogLikeRepository.findByBlog(blog).stream()
-                                .map(blogLike -> accountMapper.accountDto2(accountRepository.findByEmail(blogLike.getCreatedBy()).get()))
+                        List<Notification> likers = blogLikeRepository.findByBlog(blog).stream()
+                                .map(blogLike -> accountMapper
+                                        .toNotification(
+                                                accountRepository.findByEmail(blogLike.getCreatedBy()).get(),
+                                                NotificationType.LIKE_YOUR_BLOG,
+                                                accountRepository.findByEmail(blogLike.getCreatedBy()).get().getEmail() + " Like your Blog"))
                                 .collect(Collectors.toList());
                         return likers.stream();
                     })
@@ -174,10 +179,13 @@ public class BlogInteractionServiceImpl implements BlogInteractionService {
     public APIResponse getListCommentYourBlog(UserPrincipal userPrincipal) {
         try {
             List<Blog> blogsCreatedByUser = blogRepository.findByCreatedBy(userPrincipal.getEmail());
-            List<AccountDto2> peopleLikedYourBlogs = blogsCreatedByUser.stream()
+            List<Notification> peopleLikedYourBlogs = blogsCreatedByUser.stream()
                     .flatMap(blog -> {
-                        List<AccountDto2> likers = blogCommentRepository.findByBlog(blog).stream()
-                                .map(blogLike -> accountMapper.accountDto2(accountRepository.findByEmail(blogLike.getCreatedBy()).get()))
+                        List<Notification> likers = blogCommentRepository.findByBlog(blog).stream()
+                                .map(blogLike -> accountMapper.toNotification(
+                                        accountRepository.findByEmail(blogLike.getCreatedBy()).get(),
+                                        NotificationType.COMMENT_ON_YOUR_BLOG,
+                                        accountRepository.findByEmail(blogLike.getCreatedBy()).get().getEmail() + " Comment on your Blog"))
                                 .collect(Collectors.toList());
                         return likers.stream();
                     })

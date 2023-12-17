@@ -1,9 +1,7 @@
 package com.app.service.serviceImpl;
 
-import com.app.dto.AccountDto2;
+import com.app.dto.Notification;
 import com.app.entity.Account;
-import com.app.entity.Blog;
-import com.app.entity.Follow;
 import com.app.entity.Like;
 import com.app.mapper.AccountMapper;
 import com.app.payload.request.LikeQueryParam;
@@ -148,8 +146,8 @@ public class LikeServicesImpl implements LikeServices  {
             new SuccessAPIResponse("You haven't liked anyone yet");
         }
 
-        List<AccountDto2> peopleYouLike = listYouLike.stream()
-                .map(accountMapper::accountDtoFromLike)
+        List<Notification> peopleYouLike = listYouLike.stream()
+                .map(accountMapper::notificationFromLike)
                 .collect(Collectors.toList());
         return new SuccessAPIResponse("Get the list of people you liked successfully", peopleYouLike);
     }
@@ -160,8 +158,8 @@ public class LikeServicesImpl implements LikeServices  {
         if(listLikeYou.size() == 0) {
             return new SuccessAPIResponse("You don't have any liked yet");
         }
-        List<AccountDto2> peopleLikeYou = listLikeYou.stream()
-                .map(accountMapper::accountDtoFromLike)
+        List<Notification> peopleLikeYou = listLikeYou.stream()
+                .map(accountMapper::notificationFromLike)
                 .collect(Collectors.toList());
         return new SuccessAPIResponse("Get the list of people liked you successfully", peopleLikeYou);
     }

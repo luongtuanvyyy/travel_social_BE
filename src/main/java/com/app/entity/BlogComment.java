@@ -27,6 +27,5 @@ public class BlogComment extends BaseEntity {
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<BlogComment> replies;
 
-
     private String content;
 }

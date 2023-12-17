@@ -2,6 +2,7 @@ package com.app.api;
 
 import com.app.entity.Blog;
 import com.app.entity.Voucher;
+import com.app.payload.request.BaseQueryRequest;
 import com.app.payload.request.BlogModalQueryParam;
 import com.app.payload.request.BlogQueryParam;
 import com.app.payload.request.TourQueryParam;
@@ -125,8 +126,8 @@ public class BlogApi {
 
 
     @GetMapping("/public/blogs/comments")
-    public ResponseEntity<?> getComment(@RequestParam("blogId") Integer blogId) {
-        APIResponse response = blogServices.getComment(blogId);
+    public ResponseEntity<?> getComment(@RequestParam("blogId") Integer blogId, BaseQueryRequest baseQueryRequest) {
+        APIResponse response = blogServices.getComment(blogId, baseQueryRequest);
         return ResponseEntity.ok().body(response);
     }
 

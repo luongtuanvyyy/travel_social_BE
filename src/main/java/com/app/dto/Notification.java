@@ -10,7 +10,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountDto2 {
+public class Notification {
     private Integer id;
     private String name;
     private String address;
@@ -21,4 +21,7 @@ public class AccountDto2 {
     private boolean vip;
     @JsonFormat(pattern = "MM-dd-yyyy")
     private Date createdAt;
+    
+    private String notificationType;
+    private String description;
 }

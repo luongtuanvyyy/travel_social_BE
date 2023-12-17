@@ -1,7 +1,7 @@
 package com.app.service.serviceImpl;
 
 import com.app.dto.AccountData;
-import com.app.dto.AccountDto2;
+import com.app.dto.Notification;
 import com.app.entity.Account;
 import com.app.entity.Follow;
 import com.app.mapper.AccountMapper;
@@ -16,7 +16,6 @@ import com.app.service.FollowServices;
 import com.app.speficication.FollowSpecification;
 import com.app.utils.PageUtils;
 import com.app.utils.RequestParamsUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -137,8 +136,8 @@ public class FollowServicesImpl implements FollowServices {
             new SuccessAPIResponse("You haven't followed anyone yet");
         }
 
-        List<AccountDto2> peopleYouFollow = listYouFollow.stream()
-                .map(accountMapper::accountDtoFromFollow)
+        List<Notification> peopleYouFollow = listYouFollow.stream()
+                .map(accountMapper::notificationFromFollow)
                 .collect(Collectors.toList());
         return new SuccessAPIResponse("Get the list of people you followed successfully", peopleYouFollow);
     }
@@ -149,8 +148,8 @@ public class FollowServicesImpl implements FollowServices {
         if (listFollowYou.size() == 0) {
             return new SuccessAPIResponse("You don't have any followers yet");
         }
-        List<AccountDto2> peopleFollowYou = listFollowYou.stream()
-                .map(accountMapper::accountDtoFromFollow)
+        List<Notification> peopleFollowYou = listFollowYou.stream()
+                .map(accountMapper::notificationFromFollow)
                 .collect(Collectors.toList());
         return new SuccessAPIResponse("Get your follower list successfully", peopleFollowYou);
     }

@@ -2,6 +2,7 @@ package com.app.service;
 
 import com.app.entity.Blog;
 import com.app.entity.Voucher;
+import com.app.payload.request.BaseQueryRequest;
 import com.app.payload.request.BlogModalQueryParam;
 import com.app.payload.request.BlogQueryParam;
 import com.app.payload.request.TourQueryParam;
@@ -39,5 +40,5 @@ public interface BlogServices {
 
     APIResponse getBlogAccount(Integer id,BlogModalQueryParam blogModalQueryParam);
 
-    APIResponse getComment(Integer blogId);
+    APIResponse getComment(Integer blogId, BaseQueryRequest baseQueryRequest);
 }

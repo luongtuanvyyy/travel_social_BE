@@ -1,16 +1,17 @@
 package com.app.service.serviceImpl;
 
-import com.app.dto.AccountData;
+import com.app.dto.AccountCommentDto;
 import com.app.dto.BlogDto;
 import com.app.entity.Account;
 import com.app.entity.Blog;
 import com.app.entity.BlogComment;
+import com.app.mapper.AccountMapper;
 import com.app.mapper.BlogMapper;
 import com.app.modal.BlogModal;
+import com.app.payload.request.BaseQueryRequest;
 import com.app.payload.request.BlogModalQueryParam;
 import com.app.payload.request.BlogQueryParam;
 import com.app.payload.response.APIResponse;
-import com.app.payload.response.CloudinaryResponse;
 import com.app.payload.response.FailureAPIResponse;
 import com.app.payload.response.SuccessAPIResponse;
 import com.app.repository.*;
@@ -63,6 +64,9 @@ public class BlogServicesImpl implements BlogServices {
     @Autowired
     BlogMapper blogMapper;
 
+    @Autowired
+    AccountMapper accountMapper;
+
     @Override
     public List<Blog> findAll() {
         return blogRepository.findAll();
@@ -73,9 +77,11 @@ public class BlogServicesImpl implements BlogServices {
         return blogRepository.findById(id);
     }
 
+
     @Override
     public APIResponse filterBlog(BlogQueryParam blogQueryParam) {
         try {
+
             Specification<Blog> spec = blogSpecification.getBlogSpecification(blogQueryParam);
             Pageable pageable = requestParamsUtils.getPageable(blogQueryParam);
             Page<Blog> response = blogRepository.findAll(spec, pageable);
@@ -117,14 +123,20 @@ public class BlogServicesImpl implements BlogServices {
     }
 
     @Override
-    public APIResponse getComment(Integer blogId) {
+    public APIResponse getComment(Integer blogId , BaseQueryRequest baseQueryRequest) {
+        Pageable pageable = requestParamsUtils.getPageable(baseQueryRequest);
         Optional<Blog> existBlog = blogRepository.findById(blogId);
         if (existBlog.isEmpty()) {
             return new FailureAPIResponse("This blogId does not exist");
         }
         try {
-            List<BlogComment> blogCommentList = blogCommentRepository.findByBlog(existBlog.get());
-            return new SuccessAPIResponse(blogCommentList);
+            Page<BlogComment> blogCommentList = blogCommentRepository.findByBlog(existBlog.get(), pageable);
+            List<AccountCommentDto> commentDtoList = blogCommentList.stream()
+                    .map(blogComment -> accountMapper.mapToAccountCommentDto(blogComment))
+                    .collect(Collectors.toList());
+
+            Page<AccountCommentDto> commentDtoPage = new PageImpl<>(commentDtoList, pageable, blogCommentList.getTotalElements());
+            return new SuccessAPIResponse(PageUtils.toPageResponse(commentDtoPage));
         } catch (Exception e) {
             return new FailureAPIResponse("Error: " + e.getMessage());
         }

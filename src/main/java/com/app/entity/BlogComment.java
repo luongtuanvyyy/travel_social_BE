@@ -24,8 +24,9 @@ public class BlogComment extends BaseEntity {
     @JsonIgnore
     private BlogComment parentComment;
 
-    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<BlogComment> replies;
+
 
     private String content;
 }

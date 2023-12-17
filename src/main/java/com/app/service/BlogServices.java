@@ -35,4 +35,9 @@ public interface BlogServices {
     APIResponse getAccountByBlogId(Integer id, BlogQueryParam blogQueryParam);
 
     APIResponse getAllBlogWithAccount(BlogModalQueryParam blogModalQueryParam);
+<<<<<<< Updated upstream
+=======
+
+    APIResponse getComment(Integer blogId);
+>>>>>>> Stashed changes
 }

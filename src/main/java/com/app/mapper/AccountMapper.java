@@ -3,6 +3,7 @@ package com.app.mapper;
 import com.app.dto.AccountDto;
 import com.app.dto.AccountDto2;
 import com.app.entity.Account;
+import com.app.entity.Blog;
 import com.app.entity.Follow;
 import com.app.entity.Like;
 import org.modelmapper.ModelMapper;

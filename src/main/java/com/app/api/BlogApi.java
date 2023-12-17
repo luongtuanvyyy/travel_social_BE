@@ -34,10 +34,16 @@ public class BlogApi {
         return ResponseEntity.ok(blogServices.getAccountByBlogId(id, blogQueryParam));
     }
 
+//    @GetMapping("/public/blogs")
+//    public ResponseEntity<?> getAllBlog(BlogModalQueryParam blogModalQueryParam) {
+//        return ResponseEntity.ok(blogServices.getAllBlogWithAccount(blogModalQueryParam));
+//    }
+
     @GetMapping("/public/blogs")
-    public ResponseEntity<?> getAllBlog(BlogModalQueryParam blogModalQueryParam) {
-        return ResponseEntity.ok(blogServices.getAllBlogWithAccount(blogModalQueryParam));
+    public ResponseEntity<?> filterBlog(BlogQueryParam blogQueryParam) {
+        return ResponseEntity.ok(blogServices.filterBlog(blogQueryParam));
     }
+
 
     @GetMapping("/public/blogs/notSeen")
     public ResponseEntity<?> filterBlogNotSeen(BlogQueryParam blogQueryParam) {
@@ -122,6 +128,18 @@ public class BlogApi {
     @GetMapping("/public/blogs/comments")
     public ResponseEntity<?> getComment(@RequestParam("blogId") Integer blogId) {
         APIResponse response = blogServices.getComment(blogId);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/user/blogs/list-likes")
+    public ResponseEntity<?> getListLikeYourBlog(@CurrentUser UserPrincipal userPrincipal) {
+        APIResponse response = blogInteractionService.getListLikeYourBlog(userPrincipal);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/user/blogs/list-comments")
+    public ResponseEntity<?> getComment(@CurrentUser UserPrincipal userPrincipal) {
+        APIResponse response = blogInteractionService.getListCommentYourBlog(userPrincipal);
         return ResponseEntity.ok().body(response);
     }
 

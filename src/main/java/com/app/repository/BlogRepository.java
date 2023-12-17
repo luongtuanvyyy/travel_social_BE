@@ -12,10 +12,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface BlogRepository extends JpaRepository<Blog, Integer> {
 
     Page<Blog> findAll(Specification<Blog> spec, Pageable pageable);
+
+    List<Blog> findByCreatedBy(String email);
 
     @Query("SELECT COUNT(b) FROM Blog b WHERE b.createdBy = :createdBy")
     Integer countByCreatedBy(@Param("createdBy") String createdBy);

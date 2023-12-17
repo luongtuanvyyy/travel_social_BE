@@ -1,8 +1,10 @@
 package com.app.service.serviceImpl;
 
+import com.app.dto.AccountDto2;
 import com.app.entity.Blog;
 import com.app.entity.BlogComment;
 import com.app.entity.BlogLike;
+import com.app.mapper.AccountMapper;
 import com.app.payload.response.APIResponse;
 import com.app.payload.response.FailureAPIResponse;
 import com.app.payload.response.SuccessAPIResponse;
@@ -15,7 +17,9 @@ import com.app.service.BlogInteractionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BlogInteractionServiceImpl implements BlogInteractionService {
@@ -30,6 +34,9 @@ public class BlogInteractionServiceImpl implements BlogInteractionService {
 
     @Autowired
     AccountRepository accountRepository;
+
+    @Autowired
+    private AccountMapper accountMapper;
     @Override
     public APIResponse addComment(Integer blogId, String content) {
         Optional<Blog> existBlog = blogRepository.findById(blogId);
@@ -133,6 +140,55 @@ public class BlogInteractionServiceImpl implements BlogInteractionService {
         try {
             blogLikeRepository.delete(existBlogLike);
             return new SuccessAPIResponse("Unlike blog successfully");
+        } catch (Exception e) {
+            return new FailureAPIResponse("Error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public APIResponse getListLikeYourBlog(UserPrincipal userPrincipal) {
+        try {
+            List<Blog> blogsCreatedByUser = blogRepository.findByCreatedBy(userPrincipal.getEmail());
+            List<AccountDto2> peopleLikedYourBlogs = blogsCreatedByUser.stream()
+                    .flatMap(blog -> {
+                        List<AccountDto2> likers = blogLikeRepository.findByBlog(blog).stream()
+                                .map(blogLike -> accountMapper.accountDto2(accountRepository.findByEmail(blogLike.getCreatedBy()).get()))
+                                .collect(Collectors.toList());
+                        return likers.stream();
+                    })
+                    .distinct()
+                    .collect(Collectors.toList());
+
+            if (peopleLikedYourBlogs.isEmpty()) {
+                return new SuccessAPIResponse("No one has liked your blog post yet");
+            }
+
+            return new SuccessAPIResponse("Get the list of people who liked your blogs successfully", peopleLikedYourBlogs);
+        } catch (Exception e) {
+            return new FailureAPIResponse("Error: " + e.getMessage());
+        }
+    }
+
+
+    @Override
+    public APIResponse getListCommentYourBlog(UserPrincipal userPrincipal) {
+        try {
+            List<Blog> blogsCreatedByUser = blogRepository.findByCreatedBy(userPrincipal.getEmail());
+            List<AccountDto2> peopleLikedYourBlogs = blogsCreatedByUser.stream()
+                    .flatMap(blog -> {
+                        List<AccountDto2> likers = blogCommentRepository.findByBlog(blog).stream()
+                                .map(blogLike -> accountMapper.accountDto2(accountRepository.findByEmail(blogLike.getCreatedBy()).get()))
+                                .collect(Collectors.toList());
+                        return likers.stream();
+                    })
+                    .distinct()
+                    .collect(Collectors.toList());
+
+            if (peopleLikedYourBlogs.isEmpty()) {
+                return new SuccessAPIResponse("No one has Comment your blog post yet");
+            }
+
+            return new SuccessAPIResponse("Get the list of people who Comment your blogs successfully", peopleLikedYourBlogs);
         } catch (Exception e) {
             return new FailureAPIResponse("Error: " + e.getMessage());
         }

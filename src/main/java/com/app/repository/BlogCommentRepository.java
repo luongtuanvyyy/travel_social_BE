@@ -13,5 +13,6 @@ import java.util.Optional;
 public interface BlogCommentRepository extends JpaRepository<BlogComment, Integer> {
     Optional<BlogComment> findById(Integer id);
     List<BlogComment> findByBlog (Blog blog);
+    long countByBlog(Blog blog);
 }
 

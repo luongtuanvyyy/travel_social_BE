@@ -10,4 +10,6 @@ public interface BlogInteractionService {
     APIResponse updateComment (Integer blogCommentId, String content);
     APIResponse likeBlog (Integer blogId, UserPrincipal userPrincipal);
     APIResponse unlikeBlog (Integer blogId, UserPrincipal userPrincipal);
+    APIResponse getListLikeYourBlog(UserPrincipal userPrincipal);
+    APIResponse getListCommentYourBlog(UserPrincipal userPrincipal);
 }

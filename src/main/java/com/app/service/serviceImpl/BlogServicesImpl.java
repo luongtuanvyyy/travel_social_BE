@@ -1,9 +1,11 @@
 package com.app.service.serviceImpl;
 
 import com.app.dto.AccountData;
+import com.app.dto.BlogDto;
 import com.app.entity.Account;
 import com.app.entity.Blog;
 import com.app.entity.BlogComment;
+import com.app.mapper.BlogMapper;
 import com.app.modal.BlogModal;
 import com.app.payload.request.BlogModalQueryParam;
 import com.app.payload.request.BlogQueryParam;
@@ -11,10 +13,7 @@ import com.app.payload.response.APIResponse;
 import com.app.payload.response.CloudinaryResponse;
 import com.app.payload.response.FailureAPIResponse;
 import com.app.payload.response.SuccessAPIResponse;
-import com.app.repository.AccountRepository;
-import com.app.repository.BlogCommentRepository;
-import com.app.repository.BlogInteractionResponsitory;
-import com.app.repository.BlogRepository;
+import com.app.repository.*;
 import com.app.security.TokenProvider;
 import com.app.service.BlogServices;
 import com.app.speficication.BlogModalSpecification;
@@ -23,6 +22,7 @@ import com.app.utils.PageUtils;
 import com.app.utils.RequestParamsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BlogServicesImpl implements BlogServices {
@@ -55,6 +56,10 @@ public class BlogServicesImpl implements BlogServices {
     ImportExcelService importExcelService;
     @Autowired
     BlogCommentRepository blogCommentRepository;
+    @Autowired
+    BlogLikeRepository blogLikeRepository;
+    @Autowired
+    BlogMapper blogMapper;
 
     @Override
     public List<Blog> findAll() {
@@ -69,13 +74,25 @@ public class BlogServicesImpl implements BlogServices {
     @Override
     public APIResponse filterBlog(BlogQueryParam blogQueryParam) {
         try {
-        Specification<Blog> spec = blogSpecification.getBlogSpecification(blogQueryParam);
-        Pageable pageable = requestParamsUtils.getPageable(blogQueryParam);
-        Page<Blog> response = blogRepository.findAll(spec, pageable);
+            Specification<Blog> spec = blogSpecification.getBlogSpecification(blogQueryParam);
+            Pageable pageable = requestParamsUtils.getPageable(blogQueryParam);
+            Page<Blog> response = blogRepository.findAll(spec, pageable);
+
             if (response.isEmpty()) {
                 return new APIResponse(false, "No data found");
             } else {
-                return new APIResponse(PageUtils.toPageResponse(response));
+                List<BlogDto> blogDtoList = response.getContent().stream()
+                        .map(blog -> {
+                            BlogDto blogDto = blogMapper.blogDto(blog);
+                            blogDto.setTotalLike(blogLikeRepository.countByBlog(blog));
+                            blogDto.setTotalComment(blogCommentRepository.countByBlog(blog));
+                            return blogDto;
+                        })
+                        .collect(Collectors.toList());
+
+                Page<BlogDto> blogDtoPage = new PageImpl<>(blogDtoList, pageable, response.getTotalElements());
+
+                return new APIResponse(PageUtils.toPageResponse(blogDtoPage));
             }
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());

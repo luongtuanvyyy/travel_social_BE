@@ -37,5 +37,7 @@ public interface BlogServices {
 
     APIResponse getAllBlogWithAccount(BlogModalQueryParam blogModalQueryParam);
 
+    APIResponse getBlogAccount(Integer id,BlogModalQueryParam blogModalQueryParam);
+
     APIResponse getComment(Integer blogId);
 }

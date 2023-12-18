@@ -147,7 +147,7 @@ public class BlogServicesImpl implements BlogServices {
         try {
             Pageable pageable = requestParamsUtils.getPageable(blogModalQueryParam);
             Page<BlogModal> response = blogRepository.getBlogAccount(id, pageable);
-            response.getContent().get(0).setComment(blogReactionRepository.getAllCommentByBlogId(id));
+
             if (response.isEmpty()) {
                 return new APIResponse(false, "No data found");
             } else {

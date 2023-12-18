@@ -14,9 +14,9 @@ public interface MailerService {
 
 	void send(String to, String subject, String body) throws MessagingException;
 
-	APIResponse OTP(String gmail) throws MessagingException;
+    APIResponse OTP(String gmail, String Status) throws MessagingException;
 
-	APIResponse CheckOTP(String otb);
+    APIResponse CheckOTP(String otb);
 
 	String sendOTP(String gmail) throws MessagingException;
 	

@@ -18,8 +18,8 @@ import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Integer> {
     Optional<Account> findByEmail(String email);
-
-
+    @Query(value = "SELECT a from Account a where a.email like :email")
+    Account findByGmail(@Param("email") String email);
     Page<Account> findAll(Specification<Account> spec, Pageable pageable);
 
 //    @Query(value = "SELECT new com.app.dto.AccountData(a.id, a.name, a.avatar, a.isVerify)" +

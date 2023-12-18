@@ -19,8 +19,8 @@ public class OtpApi {
     MailerService mailerService;
 
     @GetMapping("/public/otp")
-    public ResponseEntity<?> getOTP(@RequestParam("gmail") String gmail) throws MessagingException {
-        APIResponse response = mailerService.OTP(gmail);
+    public ResponseEntity<?> getOTP(@RequestParam("gmail") String gmail,@RequestParam("status")  String Status) throws MessagingException {
+        APIResponse response = mailerService.OTP(gmail, Status);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

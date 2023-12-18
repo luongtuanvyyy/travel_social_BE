@@ -1,17 +1,22 @@
 package com.app.service.serviceImpl;
 
+import com.app.entity.Account;
 import com.app.entity.MailInfo;
 import com.app.payload.response.APIResponse;
 import com.app.payload.response.FailureAPIResponse;
+import com.app.repository.AccountRepository;
 import com.app.service.MailerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
+import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Random;
 
 
@@ -21,8 +26,10 @@ public class MailerServiceImpl implements MailerService {
 
 	@Autowired
 	JavaMailSender sender;
-
-	String otpCheck;
+	@Autowired
+	AccountRepository accountRepository;
+	private String otpCheck;
+	private LocalDateTime otpGeneratedTime;
 	@Override
 	public void send(MailInfo mail) throws MessagingException {
 		// Tạo message
@@ -63,24 +70,39 @@ public class MailerServiceImpl implements MailerService {
 	}
 
 	@Override
-	public APIResponse OTP(String gmail) throws MessagingException {
-		try{
-		String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-		String subject = "Travel_Social";
-		String body = "Your OTP: ";
-		StringBuilder otp = new StringBuilder();
-		Random random = new Random();
-		for (int i = 0; i < 6; i++) {
-			int index = random.nextInt(characters.length());
-			otp.append(characters.charAt(index));
+	public APIResponse OTP(String gmail, String status) throws MessagingException {
+		Account exists = accountRepository.findByGmail(gmail);
+//		System.out.println(exists.getEmail());
+		if (exists != null && status.equals("Register")) {
+			return new APIResponse(false, "Account exists");
 		}
-		this.send(gmail, subject, body+otp.toString());
+		try {
+			String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+			String subject = "Travel_Social";
+			String body = "Your OTP: ";
+			StringBuilder otp = new StringBuilder();
+			Random random = new Random();
+			for (int i = 0; i < 6; i++) {
+				int index = random.nextInt(characters.length());
+				otp.append(characters.charAt(index));
+			}
+
+			this.send(gmail, subject, body + otp.toString());
 			otpCheck = otp.toString();
-		return new APIResponse(new MailInfo(otp.toString(),gmail));
+			otpGeneratedTime = LocalDateTime.now(); // Record the time when OTP is generated
+
+			return new APIResponse(new MailInfo(otp.toString(), gmail));
 		} catch (Exception ex) {
 			return new FailureAPIResponse(ex.getMessage());
 		}
 	}
+
+	@Scheduled(fixedDelay = 60000) // 1 minute delay
+	public void resetOtp() {
+		otpCheck = null;
+		otpGeneratedTime = null;
+	}
+
 
 	@Override
 	public APIResponse CheckOTP(String otp) {

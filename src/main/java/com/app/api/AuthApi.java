@@ -6,12 +6,16 @@ import com.app.payload.response.APIResponse;
 import com.app.security.CurrentUser;
 import com.app.security.UserPrincipal;
 import com.app.service.AuthService;
+import com.app.service.MailerService;
 import com.app.service.serviceImpl.CloudinaryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.mail.MessagingException;
 
 @RestController
 @RequestMapping("/api")
@@ -20,6 +24,21 @@ public class AuthApi {
     AuthService authService;
     @Autowired
     CloudinaryService cloudinaryService;
+
+    @Autowired
+    MailerService mailerService;
+
+    @PostMapping("/auth/otp")
+    public ResponseEntity<?> getOtp(@RequestParam("gmail") String gmail,@RequestParam("status")  String Status) throws MessagingException {
+        APIResponse response = mailerService.OTP(gmail, Status);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/auth/verify")
+    public ResponseEntity<?> verifyOtp(@RequestParam("otp") String otp) {
+        APIResponse response = mailerService.CheckOTP(otp);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 
     @PostMapping(path = "/auth/register")
     public ResponseEntity<?> registerWithoutAvatar(

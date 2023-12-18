@@ -2,6 +2,7 @@ package com.app.service.serviceImpl;
 
 
 import com.app.dto.AccountData;
+import com.app.dto.TourDto;
 import com.app.entity.Tour;
 import com.app.payload.request.TourQueryParam;
 import com.app.payload.response.APIResponse;
@@ -113,7 +114,22 @@ public class TourServicesImpl implements TourServices {
         return new FailureAPIResponse(ex.getMessage());
     }
     }
+    @Override
+    public APIResponse findTourDetailById(Integer id, TourQueryParam tourQueryParam) {
+        try {
 
+            Pageable pageable = requestParamsUtils.getPageable(tourQueryParam);
+            Page<TourDto> response = tourRepository.findTourDetailById(id, pageable);
+            System.out.println(response);
+            if (response.isEmpty()) {
+                return new APIResponse(false, "No data found");
+            } else {
+                return new APIResponse(PageUtils.toPageResponse(response));
+            }
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
+    }
     @Override
     public APIResponse findbyid(Integer id) {
     try {

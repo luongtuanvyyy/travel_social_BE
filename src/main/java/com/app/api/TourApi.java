@@ -35,6 +35,10 @@ public class TourApi {
         return ResponseEntity.ok(tourServices.filterTourDiscount(tourQueryParam));
     }
 
+    @GetMapping("/public/tours/findTourById")
+    public ResponseEntity<?> findTourById(@RequestParam("id") Integer id,TourQueryParam tourQueryParam) {
+        return ResponseEntity.ok(tourServices.findTourDetailById(id,tourQueryParam));
+    }
     @GetMapping("/public/tours/filterNewlyPosted")
     public ResponseEntity<?> filterNewlyPosted(TourQueryParam tourQueryParam) {
         return ResponseEntity.ok(tourServices.filterNewlyPosted(tourQueryParam));

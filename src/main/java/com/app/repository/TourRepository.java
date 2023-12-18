@@ -1,6 +1,7 @@
 package com.app.repository;
 
 import com.app.dto.AccountData;
+import com.app.dto.TourDto;
 import com.app.entity.Account;
 import com.app.entity.Tour;
 import io.swagger.models.auth.In;
@@ -30,6 +31,16 @@ public interface TourRepository extends JpaRepository<Tour, Integer> {
             ")")
     Page<AccountData> getCompanyCreatedBY(@Param("tourId")Integer tourId, Pageable pageable);
 
+    @Query("SELECT new com.app.dto.TourDto(" +
+            "t.name, t.departure, t.image, t.size, t.registered, t.vehicle, t.adult, t.children, " +
+            "t.baby, t.discount, t.cloudinaryId, t.startDateBooking, t.endDateBooking, " +
+            "t.startDate, t.endDate,  a.name, a.avatar,a.email, r.title, r.comment, r.rating) " +
+            "FROM Tour t " +
+            "JOIN TourDetail td ON t.id = td.tour.id " +
+            "JOIN Review r ON t.id = r.tourId.id " +
+            "JOIN Account a ON r.createdBy = a.email " +
+            "WHERE t.id = :tourId")
+    Page<TourDto> findTourDetailById(@Param("tourId") Integer tourId, Pageable pageable);
 
 }
 

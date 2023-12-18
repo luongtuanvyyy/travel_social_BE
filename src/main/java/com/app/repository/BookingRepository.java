@@ -10,10 +10,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
     Page<Booking> findAll(Specification<Booking> spec, Pageable pageable);
-
+    Optional<Booking> findById(Integer id);
     @Query("SELECT b FROM Booking b WHERE b.status = :status")
     Page<Booking> getBookingByStatus(@Param("status") EBooking status, Pageable pageable);
 }

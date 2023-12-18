@@ -4,6 +4,8 @@ import com.app.entity.Blog;
 import com.app.entity.BlogNotification;
 import com.app.payload.request.BlogNotificationQueryParam;
 import com.app.payload.response.APIResponse;
+import com.app.security.CurrentUser;
+import com.app.security.UserPrincipal;
 import com.app.service.BlogNotificationServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,8 +27,10 @@ public class BlogNotificationApi {
         return ResponseEntity.ok(blogNotificationServices.filterBlogNotification(blogNotificationQueryParam));
     }
 
-    @GetMapping("/public/blog-notifications")
-    public ResponseEntity<?> getAllBlogNotification(@RequestParam("email") String email, BlogNotificationQueryParam blogNotificationQueryParam) {
+    @GetMapping("/user/getAllBlogNotification")
+    public ResponseEntity<?> getAllBlogNotification(@CurrentUser UserPrincipal userPrincipal, BlogNotificationQueryParam blogNotificationQueryParam) {
+        String email = userPrincipal.getEmail();
+        System.out.println(email);
         try {
             APIResponse response = blogNotificationServices.getBlogNotificationByEmail(email, blogNotificationQueryParam);
             return ResponseEntity.ok().body(response);

@@ -1,6 +1,8 @@
 package com.app.api;
 
 import com.app.payload.request.AccountQueryParam;
+import com.app.security.CurrentUser;
+import com.app.security.UserPrincipal;
 import com.app.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,17 @@ public class AccountApi {
     public ResponseEntity<?> getAllAccount(AccountQueryParam accountQueryParam) {
         try {
             return ResponseEntity.ok(accountService.filterAccount(accountQueryParam));
+        } catch (Exception e) {
+            // Handle the exception or log the error message
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+        }
+    }
+
+    @GetMapping("/user/getAllImage")
+    public ResponseEntity<?> getAllImage(@CurrentUser UserPrincipal userPrincipal, AccountQueryParam accountQueryParam) {
+        String gmail = userPrincipal.getEmail();
+        try {
+            return ResponseEntity.ok(accountService.getImageByGmail(gmail, accountQueryParam));
         } catch (Exception e) {
             // Handle the exception or log the error message
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);

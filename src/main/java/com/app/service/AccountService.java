@@ -6,6 +6,8 @@ import com.app.payload.response.APIResponse;
 public interface AccountService {
     APIResponse filterAccount(AccountQueryParam accountQueryParam);
 
+    APIResponse getImageByGmail(String gmail, AccountQueryParam accountQueryParam);
+
     APIResponse blockAccount(Integer id);
 
 

@@ -17,4 +17,5 @@ public class BlogNotification {
     private String avatar;
     private Date createTime;
     private int blogId;
+    private boolean isVerify = false;
 }

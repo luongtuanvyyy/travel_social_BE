@@ -29,12 +29,13 @@ public class BlogModal {
     private String avatar;
     private String name;
     private boolean isVerify;
+    private boolean isLike;
     private long totalLike;
     private long totalComment;
     private long totalShare;
     private List<CommentModel> comment;
 
-    public BlogModal(int id, Date createdAt, String createdBy, boolean isActivated, Date modifiedAt, String modifiedBy, String cloudinaryId, String description, String image, String avatar, String name, boolean isVerify, long totalLike, long totalComment, long totalShare) {
+    public BlogModal(int id, Date createdAt, String createdBy, boolean isActivated, Date modifiedAt, String modifiedBy, String cloudinaryId, String description, String image, String avatar, String name, boolean isVerify,boolean isLike, long totalLike, long totalComment, long totalShare) {
         this.id = id;
         this.createdAt = createdAt;
         this.createdBy = createdBy;
@@ -47,6 +48,7 @@ public class BlogModal {
         this.avatar = avatar;
         this.name = name;
         this.isVerify = isVerify;
+        this.isLike = isLike;
         this.totalLike = totalLike;
         this.totalComment = totalComment;
         this.totalShare = totalShare;

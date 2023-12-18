@@ -39,7 +39,7 @@ public interface BlogRepository extends JpaRepository<Blog, Integer> {
     @Query("SELECT NEW com.app.modal.BlogModal(" +
             "b.id, b.createdAt, b.createdBy, b.isActivated, b.modifiedAt, " +
             "b.modifiedBy, b.cloudinaryId, b.description, b.image, " +
-            "a.avatar, a.name, a.isVerify, " +
+            "a.avatar, a.name, a.isVerify,br.reactionLike, " +
             "COUNT(br.reactionLike), COUNT(br.comment), COUNT(br.share)) " +
             "FROM " +
             "Blog b " +
@@ -57,7 +57,7 @@ public interface BlogRepository extends JpaRepository<Blog, Integer> {
     @Query("SELECT NEW com.app.modal.BlogModal(" +
             "b.id, b.createdAt, b.createdBy, b.isActivated, b.modifiedAt, " +
             "b.modifiedBy, b.cloudinaryId, b.description, b.image, " +
-            "a.avatar, a.name, a.isVerify, " +
+            "a.avatar, a.name, a.isVerify,br.reactionLike, " +
             "COUNT(br.reactionLike), COUNT(br.comment), COUNT(br.share)) " +
             "FROM " +
             "Blog b " +

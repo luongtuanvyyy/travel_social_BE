@@ -35,14 +35,7 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
 //    Page<AccountData> findFollowByGmail(@Param("Gmail") String Gmail, Pageable pageable);
 //
 
-//    @Query(value = "SELECT NEW com.app.modal.Image(id " +
-//            ", cloudinaryId" +
-//            ", createdAt ) " +
-//            "FROM Blog " +
-//            "WHERE " +
-//            "createdBy = 'tuanvy@gmail.com' " +
-//            "AND isActivated = 1 " +
-//            "ORDER BY " +
-//            "createdAt DESC")
-//    Page<Image> getImageByGmail(@Param("Gmail") String Gmail, Pageable pageable);
+    @Query(value = "SELECT NEW com.app.modal.Image(b.id, b.cloudinaryId, b.createdAt) FROM Blog b WHERE b.createdBy = :gmail AND b.isActivated = true ORDER BY b.createdAt DESC")
+    Page<Image> getImageByGmail(@Param("gmail") String gmail, Pageable pageable);
+
 }

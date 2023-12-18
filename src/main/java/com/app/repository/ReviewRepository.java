@@ -20,7 +20,7 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
 
 
     @Query("SELECT new com.app.modal.ReviewModel(" +
-            "a.name, a.avatar, a.email, r.comment, r.rating) " +
+            "a.name, a.avatar, a.email, r.comment, r.rating, a.isVerify) " +
             "FROM Tour t " +
             "JOIN Review r ON t.id = r.tourId.id " +
             "JOIN Account a ON r.createdBy = a.email " +

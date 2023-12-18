@@ -15,4 +15,5 @@ public class ReviewModel {
     private String email;
     private String comment;
     private Float rating;
+    private Boolean verify;
 }

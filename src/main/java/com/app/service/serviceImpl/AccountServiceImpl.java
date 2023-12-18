@@ -1,6 +1,7 @@
 package com.app.service.serviceImpl;
 
 import com.app.entity.Account;
+import com.app.modal.Image;
 import com.app.payload.request.AccountQueryParam;
 import com.app.payload.response.APIResponse;
 import com.app.payload.response.FailureAPIResponse;
@@ -43,6 +44,20 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
+    @Override
+    public APIResponse getImageByGmail(String gmail, AccountQueryParam accountQueryParam) {
+        try{
+            Pageable pageable = requestParamsUtils.getPageable(accountQueryParam);
+            Page<Image> response = accountRepository.getImageByGmail(gmail, pageable);
+            if (response.isEmpty()) {
+                return new APIResponse(false, "No data found");
+            } else {
+                return new APIResponse(PageUtils.toPageResponse(response));
+            }
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
+    }
 
     @Override
     public APIResponse blockAccount(Integer id) {

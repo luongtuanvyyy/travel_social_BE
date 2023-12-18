@@ -1,6 +1,7 @@
 package com.app.repository;
 
 
+import com.app.entity.Blog;
 import com.app.entity.BlogReaction;
 import com.app.modal.CommentModel;
 import org.springframework.data.domain.Page;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,5 +32,12 @@ public interface BlogReactionRepository extends JpaRepository<BlogReaction, Inte
             "    br.blog.id = :blogId " +
             "    AND bn.notificationType = 2")
     List<CommentModel> getAllCommentByBlogId(Integer blogId);
+
+    @Query("SELECT b FROM BlogReaction b WHERE b.reactionLike = true and b.blog.id = :id and b.createdBy = :mail")
+    BlogReaction findByBlogIdAndReactionLikeTrue(@Param("id") Integer id, @Param("mail") String mail);
+    @Query("SELECT b FROM BlogReaction b WHERE b.share = true and b.blog.id = :id and b.createdBy = :mail ")
+    BlogReaction findByBlogIdAndShareTrue(@Param("id") Integer id, @Param("mail") String mail);
+
+
 }
 

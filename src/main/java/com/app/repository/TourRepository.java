@@ -34,7 +34,7 @@ public interface TourRepository extends JpaRepository<Tour, Integer> {
     @Query("SELECT new com.app.dto.TourDto(" +
             "t.name, t.departure, t.image, t.size, t.registered, t.vehicle, t.adult, t.children, " +
             "t.baby, t.discount, t.cloudinaryId, t.startDateBooking, t.endDateBooking, " +
-            "t.startDate, t.endDate,  a.name, a.avatar,a.email, r.title, r.comment, r.rating) " +
+            "t.startDate, t.endDate,  a.name, a.avatar,a.email, r.comment, r.rating) " +
             "FROM Tour t " +
             "JOIN TourDetail td ON t.id = td.tour.id " +
             "JOIN Review r ON t.id = r.tourId.id " +

@@ -14,14 +14,7 @@ import lombok.*;
 @Setter
 public class Review extends BaseEntity {
     private Float rating;
-    private String image;
-
-    private String title;
     private String comment;
-
-    @Column(name = "CLOUDINARY_ID")
-    private String cloudinaryId;
-
     @ManyToOne
     @JoinColumn(name = "TOUR_ID", referencedColumnName = "ID")
     private Tour tourId;

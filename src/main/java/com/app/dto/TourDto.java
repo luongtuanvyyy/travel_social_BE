@@ -36,7 +36,6 @@ public class TourDto {
         private String AccName;
         private String avatar;
         private String email;
-        private String title;
         private String comment;
         private Float rating;
 }

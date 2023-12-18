@@ -28,6 +28,7 @@ public abstract class BaseEntity {
 //    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date createdAt;
     @Column(name = "created_by")
+    @Temporal(TemporalType.TIMESTAMP)
     private String createdBy;
 
     // ...

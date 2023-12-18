@@ -25,7 +25,6 @@ public class BlogNotification extends BaseEntity{
 
     @Column(name = "CREATE_TIME")
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date createTime;
 
     @ManyToOne

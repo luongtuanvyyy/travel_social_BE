@@ -34,16 +34,16 @@ public class Tour extends BaseEntity {
     @Column(name = "CLOUDINARY_ID")
     private String cloudinaryId;
     @Column(name = "START_DATE_BOOKING")
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime startDateBooking;
     @Column(name = "END_DATE_BOOKING")
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime endDateBooking;
     @Column(name = "START_DATE")
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime startDate;
     @Column(name = "END_DATE")
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime endDate;
 
     @ManyToOne

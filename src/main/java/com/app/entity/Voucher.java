@@ -18,11 +18,11 @@ import java.time.LocalDateTime;
 @Setter
 public class Voucher extends BaseEntity {
     @Column(name = "TIME_START")
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime timeStart;
 
     @Column(name = "TIME_END")
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime timeEnd;
 
     @Column(name = "SIZE")

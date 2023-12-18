@@ -21,7 +21,7 @@ public class TourDetail {
     private int id;
     @Column(columnDefinition = "LONGTEXT")
     private String description;
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime date;
 
     @ManyToOne

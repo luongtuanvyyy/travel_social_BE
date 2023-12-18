@@ -24,7 +24,7 @@ public class Account extends BaseEntity {
     private String name;
     private String address;
     private String avatar;
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date birthday;
     @Column(name = "cloudinary_id")
     private String cloudinaryId;

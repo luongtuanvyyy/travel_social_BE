@@ -25,7 +25,7 @@ public abstract class BaseEntity {
 
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "dd-MM-yyyy")
+//    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date createdAt;
     @Column(name = "created_by")
     private String createdBy;
@@ -54,7 +54,7 @@ public abstract class BaseEntity {
     @Column(name = "modified_at")
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "dd-MM-yyyy")
+//    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date modifiedAt;
 
     @Column(name = "modified_by")

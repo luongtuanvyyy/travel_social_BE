@@ -23,4 +23,10 @@ public class OtpApi {
         APIResponse response = mailerService.OTP(gmail);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @GetMapping("/public/otpCheck")
+    public ResponseEntity<?> checkOTP(@RequestParam("otp") String otp) {
+        APIResponse response = mailerService.CheckOTP(otp);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }

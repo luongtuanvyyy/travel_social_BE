@@ -16,6 +16,8 @@ public interface MailerService {
 
 	APIResponse OTP(String gmail) throws MessagingException;
 
+	APIResponse CheckOTP(String otb);
+
 	String sendOTP(String gmail) throws MessagingException;
 	
 	

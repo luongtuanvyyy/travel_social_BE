@@ -2,6 +2,7 @@ package com.app.service.serviceImpl;
 
 import com.app.entity.MailInfo;
 import com.app.payload.response.APIResponse;
+import com.app.payload.response.FailureAPIResponse;
 import com.app.service.MailerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -21,6 +22,7 @@ public class MailerServiceImpl implements MailerService {
 	@Autowired
 	JavaMailSender sender;
 
+	String otpCheck;
 	@Override
 	public void send(MailInfo mail) throws MessagingException {
 		// Tạo message
@@ -62,6 +64,7 @@ public class MailerServiceImpl implements MailerService {
 
 	@Override
 	public APIResponse OTP(String gmail) throws MessagingException {
+		try{
 		String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 		String subject = "Travel_Social";
 		String body = "Your OTP: ";
@@ -72,10 +75,24 @@ public class MailerServiceImpl implements MailerService {
 			otp.append(characters.charAt(index));
 		}
 		this.send(gmail, subject, body+otp.toString());
-
+			otpCheck = otp.toString();
 		return new APIResponse(new MailInfo(otp.toString(),gmail));
+		} catch (Exception ex) {
+			return new FailureAPIResponse(ex.getMessage());
+		}
 	}
 
+	@Override
+	public APIResponse CheckOTP(String otp) {
+		try{
+			if (!otp.equals(otpCheck)){
+				return new APIResponse(false, "OTP Not Equal");
+			}
+			return new APIResponse(true, "OTP Equal");
+		} catch (Exception ex) {
+			return new FailureAPIResponse(ex.getMessage());
+		}
+	}
 	@Override
 	public String sendOTP(String gmail) throws MessagingException {
 		String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";

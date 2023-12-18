@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
@@ -18,12 +19,10 @@ import java.time.LocalDateTime;
 @Setter
 public class Voucher extends BaseEntity {
     @Column(name = "TIME_START")
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime timeStart;
+    private Date timeStart;
 
     @Column(name = "TIME_END")
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime timeEnd;
+    private Date timeEnd;
 
     @Column(name = "SIZE")
     private Integer size;

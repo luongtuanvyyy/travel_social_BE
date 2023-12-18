@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,13 +25,13 @@ public class TourDto {
         private Integer discount;
         private String cloudinaryId;
         @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-        private LocalDateTime startDateBooking;
+        private Date startDateBooking;
         @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-        private LocalDateTime endDateBooking;
+        private Date endDateBooking;
         @JsonFormat(pattern = "dd-MM-yyyy")
-        private LocalDateTime startDate;
+        private Date startDate;
         @JsonFormat(pattern = "dd-MM-yyyy")
-        private LocalDateTime endDate;
+        private Date endDate;
         private String AccName;
         private String avatar;
         private String email;

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "TOUR_DETAIL")
@@ -22,7 +23,7 @@ public class TourDetail {
     @Column(columnDefinition = "LONGTEXT")
     private String description;
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime date;
+    private Date date;
 
     @ManyToOne
     @JoinColumn(name = "TOUR_ID", referencedColumnName = "id")

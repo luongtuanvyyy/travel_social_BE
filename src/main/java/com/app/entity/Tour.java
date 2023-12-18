@@ -10,6 +10,7 @@ import org.hibernate.annotations.FetchMode;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -35,16 +36,16 @@ public class Tour extends BaseEntity {
     private String cloudinaryId;
     @Column(name = "START_DATE_BOOKING")
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime startDateBooking;
+    private Date startDateBooking;
     @Column(name = "END_DATE_BOOKING")
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime endDateBooking;
+    private Date endDateBooking;
     @Column(name = "START_DATE")
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime startDate;
+    private Date startDate;
     @Column(name = "END_DATE")
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime endDate;
+    private Date endDate;
 
     @ManyToOne
     @JoinColumn(name = "TOUR_GUIDE_ID", referencedColumnName = "ID")

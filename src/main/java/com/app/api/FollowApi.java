@@ -4,6 +4,8 @@ import com.app.entity.Favorite;
 import com.app.entity.Follow;
 import com.app.payload.request.FollowQueryParam;
 import com.app.payload.response.APIResponse;
+import com.app.security.CurrentUser;
+import com.app.security.UserPrincipal;
 import com.app.service.FollowServices;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,35 +27,9 @@ public class FollowApi {
         return ResponseEntity.ok(followServices.filterFollow(followQueryParam));
     }
 
-    // fl
-    @GetMapping("/user/follows/getFollowByAccount")
-    public ResponseEntity<?> getFollowById(@RequestParam("id") Integer id, FollowQueryParam followQueryParam)
-            throws JsonProcessingException {
-        return ResponseEntity.ok(followServices.getFollowsByFollowerId(id, followQueryParam));
-    }
-
-    // fler
-    @GetMapping("/user/follows/getFollowsByGmail")
-    public ResponseEntity<?> getFollowerByGmail(@RequestParam("gmail") String gmail, FollowQueryParam followQueryParam)
-            throws JsonProcessingException {
-        return ResponseEntity.ok(followServices.getFollowsByGmail(gmail, followQueryParam));
-    }
-
-    @PostMapping("/user/follows")
-    public ResponseEntity<?> createFollow(@RequestBody Follow follow) {
-        APIResponse response = followServices.create(follow);
-        return ResponseEntity.ok().body(response);
-    }
-
     @PutMapping("/user/follows")
     public ResponseEntity<?> updateFollow(@RequestPart(name = "follow") Follow follow) {
         APIResponse response = followServices.update(follow);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    @DeleteMapping("/user/follows")
-    public ResponseEntity<?> deleteFollow(@RequestParam("id") Integer id) {
-        APIResponse response = followServices.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -67,5 +43,34 @@ public class FollowApi {
     public ResponseEntity<?> createFollowsBatch(@RequestBody List<Follow> follows) {
         APIResponse response = followServices.createBatch(follows);
         return ResponseEntity.ok().body(response);
+    }
+
+    //======
+
+    @PostMapping("/user/follows")
+    public ResponseEntity<?> createFollow(@RequestParam("userId") Integer userId, @CurrentUser UserPrincipal userPrincipal) {
+        APIResponse response = followServices.create(userId, userPrincipal);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @DeleteMapping("/user/follows")
+    public ResponseEntity<?> deleteFollow(@RequestParam("userId") Integer userId, @CurrentUser UserPrincipal userPrincipal) {
+        APIResponse response = followServices.delete(userId, userPrincipal);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/user/follows/list-you-follow")
+    public ResponseEntity<?> getListYouFollow(@CurrentUser UserPrincipal userPrincipal) {
+        return ResponseEntity.ok(followServices.getListYouFollow(userPrincipal));
+    }
+
+    @GetMapping("/user/follows/list-follow-you")
+    public ResponseEntity<?> getListFollowYou(@CurrentUser UserPrincipal userPrincipal) {
+        return ResponseEntity.ok(followServices.getListFollowYou(userPrincipal));
+    }
+
+    @GetMapping("/user/follows/top-follow")
+    public ResponseEntity<?> getTopFollow() {
+        return ResponseEntity.ok(followServices.getTopFollower());
     }
 }

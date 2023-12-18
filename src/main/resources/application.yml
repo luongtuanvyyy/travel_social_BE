@@ -4,7 +4,6 @@ spring:
     # include: common, ${SPRING_PROFILE}
     active: production
     include: common, production
-  devtools:
-    add-properties: false
+
 #    active: local
 #    include: common, local

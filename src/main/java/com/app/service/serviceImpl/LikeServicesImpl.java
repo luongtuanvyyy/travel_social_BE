@@ -1,13 +1,16 @@
 package com.app.service.serviceImpl;
 
-import com.app.entity.Blog;
-import com.app.entity.Follow;
+import com.app.dto.Notification;
+import com.app.entity.Account;
 import com.app.entity.Like;
+import com.app.mapper.AccountMapper;
 import com.app.payload.request.LikeQueryParam;
 import com.app.payload.response.APIResponse;
 import com.app.payload.response.FailureAPIResponse;
 import com.app.payload.response.SuccessAPIResponse;
+import com.app.repository.AccountRepository;
 import com.app.repository.LikeRepository;
+import com.app.security.UserPrincipal;
 import com.app.service.LikeServices;
 import com.app.speficication.LikeSpecification;
 import com.app.utils.PageUtils;
@@ -21,6 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class LikeServicesImpl implements LikeServices  {
@@ -36,6 +41,12 @@ public class LikeServicesImpl implements LikeServices  {
 
     @Autowired
     ImportExcelService importExcelService;
+
+    @Autowired
+    private AccountMapper accountMapper;
+
+    @Autowired
+    AccountRepository accountRepository;
 
     @Override
     public APIResponse filterLike(LikeQueryParam likeQueryParam) {
@@ -53,12 +64,43 @@ public class LikeServicesImpl implements LikeServices  {
         }
     }
     @Override
-    public APIResponse create(Like like) {
+    public APIResponse create(Integer userId, UserPrincipal userPrincipal) {
+        Optional<Account> optionalAccount = accountRepository.findById(userId);
+        if (optionalAccount.isEmpty()) {
+            return new FailureAPIResponse("This userId does not exist");
+        }
+        Account existAcc = optionalAccount.get();
+        Like existingLike = likeRepository.findByAccountAndCreatedBy(existAcc, userPrincipal.getEmail());
+        if (existingLike != null) {
+            return new FailureAPIResponse("You have already liked this userId");
+        }
+        Like like = new Like();
+        like.setAccount(existAcc);
         try {
-        like = likeRepository.save(like);
-        return new SuccessAPIResponse(like);
+            likeRepository.save(like);
+            return new SuccessAPIResponse("Like successfully");
+        } catch (Exception e) {
+            return new FailureAPIResponse("Error: " + e.getMessage());
+        }
+    }
+
+
+    @Override
+    public APIResponse delete(Integer userId, UserPrincipal userPrincipal) {
+        Optional<Account> optionalAccount = accountRepository.findById(userId);
+        if (optionalAccount.isEmpty()) {
+            return new FailureAPIResponse("This userId does not exist");
+        }
+        Account existAcc = optionalAccount.get();
+        Like existingLike = likeRepository.findByAccountAndCreatedBy(existAcc, userPrincipal.getEmail());
+        if (existingLike == null) {
+            return new FailureAPIResponse("You have already unliked this userId");
+        }
+        try {
+            likeRepository.deleteById(existingLike.getId());
+            return new SuccessAPIResponse("Unlike successfully!");
         } catch (Exception ex) {
-            return new FailureAPIResponse(ex.getMessage());
+            return new FailureAPIResponse("Error: " + ex.getMessage());
         }
     }
 
@@ -80,15 +122,7 @@ public class LikeServicesImpl implements LikeServices  {
     }
 
 
-    @Override
-    public APIResponse delete(Integer id) {
-        try {
-            likeRepository.deleteById(id);
-            return new SuccessAPIResponse("Delete successfully!");
-        } catch (Exception ex) {
-            return new FailureAPIResponse(ex.getMessage());
-        }
-    }
+
 
     @Override
     public APIResponse uploadExcel(MultipartFile excel) {
@@ -103,5 +137,30 @@ public class LikeServicesImpl implements LikeServices  {
             createdLikes.add(createdLike);
         }
         return new SuccessAPIResponse(createdLikes);
+    }
+
+    @Override
+    public APIResponse getListYouLike(UserPrincipal userPrincipal) {
+        List<Like> listYouLike = likeRepository.findByCreatedBy(userPrincipal.getEmail());
+        if(listYouLike.size() == 0) {
+            new SuccessAPIResponse("You haven't liked anyone yet");
+        }
+
+        List<Notification> peopleYouLike = listYouLike.stream()
+                .map(accountMapper::notificationFromLike)
+                .collect(Collectors.toList());
+        return new SuccessAPIResponse("Get the list of people you liked successfully", peopleYouLike);
+    }
+
+    @Override
+    public APIResponse getListLikeYou(UserPrincipal userPrincipal) {
+        List<Like> listLikeYou = likeRepository.findByAccount(userPrincipal.toAccount());
+        if(listLikeYou.size() == 0) {
+            return new SuccessAPIResponse("You don't have any liked yet");
+        }
+        List<Notification> peopleLikeYou = listLikeYou.stream()
+                .map(accountMapper::notificationFromLike)
+                .collect(Collectors.toList());
+        return new SuccessAPIResponse("Get the list of people liked you successfully", peopleLikeYou);
     }
 }

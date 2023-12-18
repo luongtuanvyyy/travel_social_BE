@@ -12,10 +12,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface BlogRepository extends JpaRepository<Blog, Integer> {
 
     Page<Blog> findAll(Specification<Blog> spec, Pageable pageable);
+
+    List<Blog> findByCreatedBy(String email);
 
     @Query("SELECT COUNT(b) FROM Blog b WHERE b.createdBy = :createdBy")
     Integer countByCreatedBy(@Param("createdBy") String createdBy);
@@ -49,5 +53,23 @@ public interface BlogRepository extends JpaRepository<Blog, Integer> {
             "ORDER BY " +
             "b.createdAt DESC")
     Page<BlogModal> getAllBlogWithAccount(Specification<BlogModal> spec, Pageable pageable);
+
+    @Query("SELECT NEW com.app.modal.BlogModal(" +
+            "b.id, b.createdAt, b.createdBy, b.isActivated, b.modifiedAt, " +
+            "b.modifiedBy, b.cloudinaryId, b.description, b.image, " +
+            "a.avatar, a.name, a.isVerify, " +
+            "COUNT(br.reactionLike), COUNT(br.comment), COUNT(br.share)) " +
+            "FROM " +
+            "Blog b " +
+            "LEFT JOIN BlogReaction br ON b.id = br.blog.id " +
+            "JOIN Account a ON b.createdBy = a.email " +
+            "WHERE b.id = :id " +
+            "GROUP BY " +
+            "b.id, b.createdAt, b.createdBy, b.isActivated, b.modifiedAt, " +
+            "b.modifiedBy, b.cloudinaryId, b.description, b.image, " +
+            "a.avatar, a.name, a.isVerify " +
+            "ORDER BY " +
+            "b.createdAt DESC")
+    Page<BlogModal> getBlogAccount(@Param("id") Integer id, Pageable pageable);
 }
 

@@ -2,10 +2,14 @@ package com.app.api;
 
 import com.app.entity.Blog;
 import com.app.entity.Voucher;
+import com.app.payload.request.BaseQueryRequest;
 import com.app.payload.request.BlogModalQueryParam;
 import com.app.payload.request.BlogQueryParam;
 import com.app.payload.request.TourQueryParam;
 import com.app.payload.response.APIResponse;
+import com.app.security.CurrentUser;
+import com.app.security.UserPrincipal;
+import com.app.service.BlogInteractionService;
 import com.app.service.BlogServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,14 +27,22 @@ public class BlogApi {
     @Autowired
     BlogServices blogServices;
 
+    @Autowired
+    BlogInteractionService blogInteractionService;
+
     @PostMapping("/user/blogs/share")
     public ResponseEntity<?> getAccount(@RequestParam("id") Integer id, BlogQueryParam blogQueryParam) {
         return ResponseEntity.ok(blogServices.getAccountByBlogId(id, blogQueryParam));
     }
 
+//    @GetMapping("/public/blogs")
+//    public ResponseEntity<?> getAllBlog(BlogModalQueryParam blogModalQueryParam) {
+//        return ResponseEntity.ok(blogServices.getAllBlogWithAccount(blogModalQueryParam));
+//    }
+
     @GetMapping("/public/blogs")
-    public ResponseEntity<?> getAllBlog(BlogModalQueryParam blogModalQueryParam) {
-        return ResponseEntity.ok(blogServices.getAllBlogWithAccount(blogModalQueryParam));
+    public ResponseEntity<?> filterBlog(BlogQueryParam blogQueryParam) {
+        return ResponseEntity.ok(blogServices.filterBlog(blogQueryParam));
     }
 
     @GetMapping("/public/blogs/notSeen")
@@ -45,14 +57,14 @@ public class BlogApi {
 
     @PostMapping("/user/blogs")
     public ResponseEntity<?> createBlog(@RequestPart(name = "blog") Blog blog,
-            HttpServletRequest request) {
+                                        HttpServletRequest request) {
         APIResponse response = blogServices.create(blog, request);
         return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/user/blogs")
     public ResponseEntity<?> updateBlog(@RequestPart(name = "blog") Blog blog,
-            HttpServletRequest request) {
+                                        HttpServletRequest request) {
         APIResponse response = blogServices.update(blog, request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -72,6 +84,62 @@ public class BlogApi {
     @PostMapping("/user/blogs/batch")
     public ResponseEntity<?> createBlogsBatch(@RequestBody List<Blog> blogs) {
         APIResponse response = blogServices.createBatch(blogs);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("/user/blogs/comments")
+    public ResponseEntity<?> addComment(@RequestParam("blogId") Integer blogId, @RequestParam("content") String content) {
+        APIResponse response = blogInteractionService.addComment(blogId, content);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("/user/blogs/replies")
+    public ResponseEntity<?> replyComment(@RequestParam("parentCommentId") Integer parentCommentId, @RequestParam("content") String content) {
+        APIResponse response = blogInteractionService.replyComment(parentCommentId, content);
+        return ResponseEntity.ok().body(response);
+    }
+
+
+    @DeleteMapping("/user/blogs/comments")
+    public ResponseEntity<?> deleteComment(@RequestParam("blogCommentId") Integer blogCommentId) {
+        APIResponse response = blogInteractionService.deleteComment(blogCommentId);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PutMapping("/user/blogs/comments")
+    public ResponseEntity<?> updateComment(@RequestParam("blogCommentId") Integer blogCommentId, @RequestParam("content") String content) {
+        APIResponse response = blogInteractionService.updateComment(blogCommentId, content);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("/user/blogs/likes")
+    public ResponseEntity<?> addComment(@RequestParam("blogId") Integer blogId, @CurrentUser UserPrincipal userPrincipal) {
+        APIResponse response = blogInteractionService.likeBlog(blogId, userPrincipal);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @DeleteMapping("/user/blogs/likes")
+    public ResponseEntity<?> unlikeBlog(@RequestParam("blogId") Integer blogId, @CurrentUser UserPrincipal userPrincipal) {
+        APIResponse response = blogInteractionService.unlikeBlog(blogId, userPrincipal);
+        return ResponseEntity.ok().body(response);
+    }
+
+
+    @GetMapping("/public/blogs/comments")
+    public ResponseEntity<?> getComment(@RequestParam("blogId") Integer blogId, BaseQueryRequest baseQueryRequest) {
+        APIResponse response = blogServices.getComment(blogId, baseQueryRequest);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/user/blogs/list-likes")
+    public ResponseEntity<?> getListLikeYourBlog(@CurrentUser UserPrincipal userPrincipal) {
+        APIResponse response = blogInteractionService.getListLikeYourBlog(userPrincipal);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/user/blogs/list-comments")
+    public ResponseEntity<?> getComment(@CurrentUser UserPrincipal userPrincipal) {
+        APIResponse response = blogInteractionService.getListCommentYourBlog(userPrincipal);
         return ResponseEntity.ok().body(response);
     }
 

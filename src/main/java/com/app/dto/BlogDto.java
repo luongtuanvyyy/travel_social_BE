@@ -18,23 +18,22 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BlogDto {
-    private Integer id;
-    private String title;
-    private String image;
+    private int id;
+    private boolean isActivated;
+    private boolean isVerify;
+    private String cloudinaryId;
     private String description;
+    private String image;
     private String avatar;
     private String name;
-    private boolean isVerify;
-    private Place placeId;
-    private Float sumLike;
-    private Float sumCmt;
-    private Tour tour;
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    private Date createdAt;
     private String createdBy;
-    private String ggProviderId;
-    private String fbProviderId;
-    private Integer totalLike;
-    private Integer totalFollow;
-    private Integer totalBlog;
+    private String modifiedBy;
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private Date modifiedAt;
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private Date createdAt;
+    private long totalLike;
+    private long totalComment;
+    private long totalShare;
+
 }

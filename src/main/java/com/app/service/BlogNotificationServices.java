@@ -11,9 +11,16 @@ import java.util.List;
 public interface BlogNotificationServices {
 
     APIResponse filterBlogNotification(BlogNotificationQueryParam blogQueryParam);
+
     APIResponse create(BlogNotification blogNotification);
+
     APIResponse update(BlogNotification blogNotification);
+
     APIResponse delete(Integer id);
+
     APIResponse uploadExcel(MultipartFile excel);
+
     APIResponse createBatch(List<BlogNotification> blogNotifications);
+
+    APIResponse getBlogNotificationByEmail(String email, BlogNotificationQueryParam blogNotificationQueryParam);
 }

@@ -19,16 +19,16 @@ import java.text.Normalizer;
 @Component
 public class BlogSpecification {
 
-    public Specification<Blog> getBlogSpecification(BlogQueryParam blogQueryParam) {
-        Specification<Blog> spec = Specification.where(null);
-
-        return spec;
+    public Specification<Blog> hasIdEqual(Integer id) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("id"), id);
     }
 
-
-    private String removeDiacritics(String input) {
-        return Normalizer.normalize(input, Normalizer.Form.NFD)
-                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+    public Specification<Blog> getBlogSpecification(BlogQueryParam blogQueryParam) {
+        Specification<Blog> spec = Specification.where(null);
+        if (blogQueryParam.getId() != null) {
+            spec = spec.and(hasIdEqual(blogQueryParam.getId()));
+        }
+        return spec;
     }
 
 }

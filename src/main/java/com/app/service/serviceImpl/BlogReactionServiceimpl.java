@@ -1,5 +1,6 @@
 package com.app.service.serviceImpl;
 
+import com.app.entity.Blog;
 import com.app.entity.BlogReaction;
 import com.app.payload.request.BlogReactionQueryParam;
 import com.app.payload.response.APIResponse;
@@ -7,7 +8,9 @@ import com.app.payload.response.FailureAPIResponse;
 import com.app.payload.response.SuccessAPIResponse;
 import com.app.repository.AccountRepository;
 import com.app.repository.BlogReactionRepository;
+import com.app.repository.BlogRepository;
 import com.app.security.TokenProvider;
+import com.app.security.UserPrincipal;
 import com.app.service.BlogReactionServices;
 import com.app.speficication.BlogReactionSpecification;
 import com.app.utils.PageUtils;
@@ -22,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BlogReactionServiceimpl implements BlogReactionServices {
@@ -35,6 +39,8 @@ public class BlogReactionServiceimpl implements BlogReactionServices {
     RequestParamsUtils requestParamsUtils;
     @Autowired
     BlogReactionRepository blogReactionRepository;
+    @Autowired
+    BlogRepository blogRepository;
     @Autowired
     CloudinaryService cloudinaryService;
     @Autowired
@@ -105,6 +111,51 @@ public class BlogReactionServiceimpl implements BlogReactionServices {
             createdBlogReactions.add(createdBlogReaction);
         }
         return new SuccessAPIResponse(createdBlogReactions);
+    }
+
+
+    @Override
+    public APIResponse createLike(Integer blogId, UserPrincipal userPrincipal) {
+
+        BlogReaction existingReaction = blogReactionRepository.findByBlogIdAndReactionLikeTrue(blogId, userPrincipal.getEmail());
+        if (existingReaction != null) {
+            // Người dùng đã thích bài viết trước đó, hủy thích bằng cách xóa bản ghi
+            blogReactionRepository.delete(existingReaction);
+            return new SuccessAPIResponse("Bài viết đã được hủy thích thành công");
+        } else {
+            // Người dùng chưa thích bài viết trước đó, thực hiện thích bình thường
+            BlogReaction blogReaction = new BlogReaction();
+            blogReaction.setReactionLike(true);
+            Blog blog = blogRepository.findById(blogId).orElse(null);
+            blogReaction.setBlog(blog);
+            BlogReaction savedReaction = blogReactionRepository.save(blogReaction);
+            if (savedReaction != null) {
+                return new SuccessAPIResponse("Bài viết đã được thích thành công");
+            } else {
+                return new FailureAPIResponse("Lỗi khi thích bài viết");
+            }
+        }
+    }
+
+    @Override
+    public APIResponse deleteShare(Integer id, UserPrincipal userPrincipal) {
+        // Thực hiện logic xóa chia sẻ
+        Blog blog = blogRepository.findById(id).orElse(null);
+        BlogReaction blogReaction  = blogReactionRepository.findByBlogIdAndShareTrue(id, userPrincipal.getEmail());
+        if (blog != null) {
+            // Kiểm tra xem người dùng hiện tại có quyền xóa chia sẻ này hay không
+            if (!blog.getModifiedBy().equals(userPrincipal.getEmail())) {
+                return new FailureAPIResponse("Bạn không có quyền xóa chia sẻ này");
+            }
+
+            // Xóa chia sẻ
+            blogReactionRepository.delete(blogReaction);
+            blogRepository.delete(blog);
+
+            return new SuccessAPIResponse("Chia sẻ đã được xóa thành công");
+        } else {
+            return new FailureAPIResponse("Không tìm thấy chia sẻ");
+        }
     }
     public String getTokenFromHeader(HttpServletRequest request) {
         // Lấy header authorization

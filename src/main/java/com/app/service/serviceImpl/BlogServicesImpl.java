@@ -5,6 +5,7 @@ import com.app.dto.BlogDto;
 import com.app.entity.Account;
 import com.app.entity.Blog;
 import com.app.entity.BlogComment;
+import com.app.entity.BlogReaction;
 import com.app.mapper.AccountMapper;
 import com.app.mapper.BlogMapper;
 import com.app.modal.BlogModal;
@@ -258,6 +259,10 @@ public class BlogServicesImpl implements BlogServices {
         Blog blog = new Blog();
         Pageable pageable = requestParamsUtils.getPageable(blogQueryParam);
         Page<Blog> response = blogRepository.BlogID(id, pageable);
+        Blog blogg = blogRepository.findById(id).orElse(null);
+        BlogReaction blogReaction = new BlogReaction();
+        blogReaction.setBlog(blog);
+        blogReaction.setShare(true);
         if (response.hasContent()) {
             blog.setDescription(response.getContent().get(0).getDescription());
             blog.setPlaceId(response.getContent().get(0).getPlaceId());
@@ -266,9 +271,9 @@ public class BlogServicesImpl implements BlogServices {
             blog.setCloudinaryId(response.getContent().get(0).getCloudinaryId());
             blog.setCreatedAt(response.getContent().get(0).getCreatedAt());
             blog.setCreatedBy(response.getContent().get(0).getCreatedBy());
-
         }
         blog = blogRepository.save(blog);
+        BlogReaction savedReaction = blogReactionRepository.save(blogReaction);
         return new SuccessAPIResponse(blog);
     }
 

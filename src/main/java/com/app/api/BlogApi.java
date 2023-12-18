@@ -1,15 +1,18 @@
 package com.app.api;
 
 import com.app.entity.Blog;
+import com.app.entity.BlogReaction;
 import com.app.entity.Voucher;
 import com.app.payload.request.BaseQueryRequest;
 import com.app.payload.request.BlogModalQueryParam;
 import com.app.payload.request.BlogQueryParam;
 import com.app.payload.request.TourQueryParam;
 import com.app.payload.response.APIResponse;
+import com.app.repository.BlogReactionRepository;
 import com.app.security.CurrentUser;
 import com.app.security.UserPrincipal;
 import com.app.service.BlogInteractionService;
+import com.app.service.BlogReactionServices;
 import com.app.service.BlogServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,15 +29,24 @@ import java.util.List;
 public class BlogApi {
     @Autowired
     BlogServices blogServices;
-
+    @Autowired
+    BlogReactionRepository blogReactionRepository;
     @Autowired
     BlogInteractionService blogInteractionService;
-
+    @Autowired
+    BlogReactionServices blogReactionServices;
     @PostMapping("/user/blogs/share")
-    public ResponseEntity<?> getAccount(@RequestParam("id") Integer id, BlogQueryParam blogQueryParam) {
+    public ResponseEntity<?> getShare(@RequestParam("id") Integer id, BlogQueryParam blogQueryParam) {
         return ResponseEntity.ok(blogServices.getAccountByBlogId(id, blogQueryParam));
     }
-
+    @DeleteMapping("/user/blogs/share")
+    public ResponseEntity<?> getDeleteShare(@RequestParam("id") Integer id, @CurrentUser UserPrincipal userPrincipal) {
+        return ResponseEntity.ok(blogReactionServices.deleteShare(id, userPrincipal));
+    }
+    @PostMapping("/user/blogs/like")
+    public ResponseEntity<?> cretaLike(@RequestParam("id") Integer id, @CurrentUser UserPrincipal userPrincipal) {
+        return ResponseEntity.ok(blogReactionServices.createLike(id, userPrincipal));
+    }
     @GetMapping("/public/blogs")
     public ResponseEntity<?> getAllBlog(BlogModalQueryParam blogModalQueryParam) {
         return ResponseEntity.ok(blogServices.getAllBlogWithAccount(blogModalQueryParam));
@@ -118,11 +130,11 @@ public class BlogApi {
         return ResponseEntity.ok().body(response);
     }
 
-    @DeleteMapping("/user/blogs/likes")
-    public ResponseEntity<?> unlikeBlog(@RequestParam("blogId") Integer blogId, @CurrentUser UserPrincipal userPrincipal) {
-        APIResponse response = blogInteractionService.unlikeBlog(blogId, userPrincipal);
-        return ResponseEntity.ok().body(response);
-    }
+//    @DeleteMapping("/user/blogs/likes")
+//    public ResponseEntity<?> unlikeBlog(@RequestParam("blogId") Integer blogId, @CurrentUser UserPrincipal userPrincipal) {
+//        APIResponse response = blogInteractionService.unlikeBlog(blogId, userPrincipal);
+//        return ResponseEntity.ok().body(response);
+//    }
 
 
     @GetMapping("/public/blogs/comments")

@@ -15,7 +15,8 @@ public interface ReviewServices {
     APIResponse update(Review review);
     APIResponse delete(Integer id);
 
-    APIResponse findByReviewTour(Integer id);
+    APIResponse findReviewByTourId(Integer id, ReviewQueryParam reviewQueryParam);
+
     APIResponse uploadExcel(MultipartFile excel);
 
     APIResponse createBatch(List<Review> reviews);

@@ -1,5 +1,6 @@
 package com.app.dto;
 
+import com.app.modal.CommentModel;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;

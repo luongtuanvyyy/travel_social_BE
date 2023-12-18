@@ -1,11 +1,9 @@
 package com.app.service.serviceImpl;
 
-import com.app.entity.Blog;
-import com.app.entity.Follow;
 import com.app.entity.Review;
+import com.app.modal.ReviewModel;
 import com.app.payload.request.ReviewQueryParam;
 import com.app.payload.response.APIResponse;
-import com.app.payload.response.CloudinaryResponse;
 import com.app.payload.response.FailureAPIResponse;
 import com.app.payload.response.SuccessAPIResponse;
 import com.app.repository.ReviewRepository;
@@ -93,9 +91,18 @@ public class ReviewServicesimpl implements ReviewServices {
     }
 
     @Override
-    public APIResponse findByReviewTour(Integer id) {
-//        List<Review> respone = reviewRepository.findByReviewTour(id);
-        return new APIResponse(null);
+    public APIResponse findReviewByTourId(Integer id, ReviewQueryParam reviewQueryParam) {
+        try {
+            Pageable pageable = requestParamsUtils.getPageable(reviewQueryParam);
+            Page<ReviewModel> response = reviewRepository.findReviewByTourId(id, pageable);
+            if (response.isEmpty()) {
+                return new APIResponse(false, "No data found");
+            } else {
+                return new APIResponse(PageUtils.toPageResponse(response));
+            }
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
     }
 
     @Override

@@ -13,5 +13,7 @@ public interface AccountService {
 
     APIResponse removeAccount(Integer id);
 
+    APIResponse getAccountDetail(Integer id, AccountQueryParam accountQueryParam);
+
 
 }

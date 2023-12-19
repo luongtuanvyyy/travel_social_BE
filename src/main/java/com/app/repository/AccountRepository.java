@@ -4,6 +4,8 @@ import com.app.dto.AccountData;
 import com.app.entity.Account;
 import com.app.entity.Blog;
 
+
+import com.app.modal.AccountDetail;
 import com.app.modal.Image;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,5 +39,18 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
 
     @Query(value = "SELECT NEW com.app.modal.Image(b.id, b.cloudinaryId, b.createdAt) FROM Blog b WHERE b.createdBy = :gmail AND b.isActivated = true ORDER BY b.createdAt DESC")
     Page<Image> getImageByGmail(@Param("gmail") String gmail, Pageable pageable);
+
+    @Query("SELECT NEW com.app.modal.AccountDetail" +
+            "(a.avatar, a.name, a.email, " +
+            "COUNT(DISTINCT b.id) ," +
+            "COUNT(DISTINCT l.id) ," +
+            "COUNT(DISTINCT f.id))" +
+            "FROM Account a " +
+            "LEFT JOIN Blog b ON a.email = b.createdBy " +
+            "LEFT JOIN Like l ON a.id = l.account.id " +
+            "LEFT JOIN Follow f ON a.id = f.account.id " +
+            "WHERE a.id = :id " +
+            "GROUP BY a.avatar, a.name, a.email")
+    AccountDetail getAccount(@Param("id") Integer id);
 
 }

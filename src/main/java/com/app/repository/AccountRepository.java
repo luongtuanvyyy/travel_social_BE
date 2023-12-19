@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Integer> {
+    Optional<Account> findById(Integer id);
     Optional<Account> findByEmail(String email);
     @Query(value = "SELECT a from Account a where a.email like :email")
     Account findByGmail(@Param("email") String email);

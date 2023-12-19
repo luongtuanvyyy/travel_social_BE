@@ -41,7 +41,7 @@ public interface BlogRepository extends JpaRepository<Blog, Integer> {
     @Query("SELECT NEW com.app.modal.BlogModal(" +
             "b.id, b.createdAt, b.createdBy, b.isActivated, b.modifiedAt, " +
             "b.modifiedBy, b.cloudinaryId, b.description, b.image, " +
-            "a.avatar, a.name, a.isVerify, COALESCE(br.reactionLike, false), " +
+            "a.avatar, a.name, COALESCE(a.isVerify, false), COALESCE(br.reactionLike, false), " +
             "COUNT(br.reactionLike), COUNT(br.comment), COUNT(br.share)) " +
             "FROM " +
             "Blog b " +
@@ -51,7 +51,7 @@ public interface BlogRepository extends JpaRepository<Blog, Integer> {
             "GROUP BY " +
             "b.id, b.createdAt, b.createdBy, b.isActivated, b.modifiedAt, " +
             "b.modifiedBy, b.cloudinaryId, b.description, b.image, " +
-            "a.avatar, a.name, a.isVerify, COALESCE(br.reactionLike, false) " +
+            "a.avatar, a.name, COALESCE(a.isVerify, false), COALESCE(br.reactionLike, false) " +
             "ORDER BY " +
             "b.createdAt DESC")
     Page<BlogModal> getAllBlogWithAccount(
@@ -61,7 +61,7 @@ public interface BlogRepository extends JpaRepository<Blog, Integer> {
     @Query("SELECT NEW com.app.modal.BlogModal(" +
             "b.id, b.createdAt, b.createdBy, b.isActivated, b.modifiedAt, " +
             "b.modifiedBy, b.cloudinaryId, b.description, b.image, " +
-            "a.avatar, a.name, a.isVerify, COALESCE(br.reactionLike, false), " +
+            "a.avatar, a.name, COALESCE(a.isVerify, false), COALESCE(br.reactionLike, false), " +
             "COUNT(br.reactionLike), COUNT(br.comment), COUNT(br.share)) " +
             "FROM " +
             "Blog b " +
@@ -71,7 +71,7 @@ public interface BlogRepository extends JpaRepository<Blog, Integer> {
             "GROUP BY " +
             "b.id, b.createdAt, b.createdBy, b.isActivated, b.modifiedAt, " +
             "b.modifiedBy, b.cloudinaryId, b.description, b.image, " +
-            "a.avatar, a.name, a.isVerify, COALESCE(br.reactionLike, false) " +
+            "a.avatar, a.name, COALESCE(a.isVerify, false), COALESCE(br.reactionLike, false) " +
             "ORDER BY " +
             "b.createdAt DESC")
     Page<BlogModal> getBlogAccount(@Param("id") Integer id, Pageable pageable);

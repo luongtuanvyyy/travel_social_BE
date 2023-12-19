@@ -21,5 +21,7 @@ public interface AuthService {
 //    APIResponse getAccount(String token);
 
 
+    APIResponse getAccount(UserPrincipal userPrincipal);
+
     APIResponse getUserRequest(HttpServletRequest request);
 }

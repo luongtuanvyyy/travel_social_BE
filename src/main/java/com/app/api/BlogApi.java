@@ -47,6 +47,10 @@ public class BlogApi {
     public ResponseEntity<?> cretaLike(@RequestParam("id") Integer id, @CurrentUser UserPrincipal userPrincipal) {
         return ResponseEntity.ok(blogReactionServices.createLike(id, userPrincipal));
     }
+    @GetMapping("/public/blogs/findAll")
+    public ResponseEntity<?> filterBlog(BlogQueryParam blogModalQueryParam) {
+        return ResponseEntity.ok(blogServices.filterBlog(blogModalQueryParam));
+    }
     @GetMapping("/public/blogs")
     public ResponseEntity<?> getAllBlog(BlogModalQueryParam blogModalQueryParam) {
         return ResponseEntity.ok(blogServices.getAllBlogWithAccount(blogModalQueryParam));

@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -228,16 +229,11 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
-//    @Override
-//    public APIResponse getAccount(String token) {
-//        Account account;
-//        Claims claims =  tokenProvider.getDataFromToken(token);
-//        for (Map.Entry<String, Object> entry : claims.entrySet()) {
-//            System.out.println(entry.getKey() + ": " + entry.getValue());
-//        }
-//        APIResponse response = new APIResponse(claims);
-//        return response;
-//    }
+    @Override
+    public APIResponse getAccount(UserPrincipal userPrincipal) {
+        Optional<Account> response =  accountRepository.findById(userPrincipal.getId());
+        return new APIResponse(response);
+    }
 
     @Override
     public APIResponse getUserRequest(HttpServletRequest request) {

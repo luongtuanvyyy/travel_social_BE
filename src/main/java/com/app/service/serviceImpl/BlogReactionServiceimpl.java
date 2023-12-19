@@ -120,9 +120,11 @@ public class BlogReactionServiceimpl implements BlogReactionServices {
         BlogReaction existingReaction = blogReactionRepository.findByBlogIdAndReactionLikeTrue(blogId, userPrincipal.getEmail());
         if (existingReaction != null) {
             // Người dùng đã thích bài viết trước đó, hủy thích bằng cách xóa bản ghi
-            blogReactionRepository.delete(existingReaction);
+            existingReaction.setReactionLike(false);
+            blogReactionRepository.save(existingReaction);
             return new SuccessAPIResponse("Bài viết đã được hủy thích thành công");
-        } else {
+        }
+        else {
             // Người dùng chưa thích bài viết trước đó, thực hiện thích bình thường
             BlogReaction blogReaction = new BlogReaction();
             blogReaction.setReactionLike(true);
@@ -135,6 +137,7 @@ public class BlogReactionServiceimpl implements BlogReactionServices {
                 return new FailureAPIResponse("Lỗi khi thích bài viết");
             }
         }
+
     }
 
     @Override

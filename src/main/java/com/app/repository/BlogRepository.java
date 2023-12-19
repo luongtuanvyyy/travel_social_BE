@@ -1,8 +1,10 @@
 package com.app.repository;
 
 import com.app.entity.Blog;
+import com.app.entity.BlogComment;
 import com.app.modal.BlogModal;
 
+import com.app.modal.CommentModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -73,5 +75,13 @@ public interface BlogRepository extends JpaRepository<Blog, Integer> {
             "ORDER BY " +
             "b.createdAt DESC")
     Page<BlogModal> getBlogAccount(@Param("id") Integer id, Pageable pageable);
+
+    @Query("SELECT NEW com.app.modal.CommentModel(a.avatar,a.name,br.comment,br.createdAt,a.isVerify) " +
+            "FROM " +
+            "Blog b " +
+            "left join BlogReaction br ON b.id = br.blog.id " +
+            "left join Account a ON b.createdBy = a.email " +
+            "WHERE b.id = :id ")
+    Page<CommentModel> getBlogComment(@Param("id") Integer id, Pageable pageable);
 }
 

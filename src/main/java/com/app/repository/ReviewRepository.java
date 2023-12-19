@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Integer> {
-    Optional<Review> findByRating(Float rating);
+    Page<Review> findByRating(Float rating, Pageable pageable);
 
     // @EntityGraph("graph.product")
     Page<Review> findAll(Specification<Review> spec, Pageable pageable);

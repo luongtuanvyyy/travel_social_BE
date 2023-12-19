@@ -57,6 +57,10 @@ public class BlogApi {
         return ResponseEntity.ok(blogServices.getBlogAccount(id, blogModalQueryParam));
     }
 
+    @GetMapping("/public/blog/comment")
+    public ResponseEntity<?> getBlogComment(@RequestParam("id") Integer id, BlogModalQueryParam blogModalQueryParam) {
+        return ResponseEntity.ok(blogServices.getBlogComment(id, blogModalQueryParam));
+    }
     @GetMapping("/public/blogs/notSeen")
     public ResponseEntity<?> filterBlogNotSeen(BlogQueryParam blogQueryParam) {
         return ResponseEntity.ok(blogServices.filterBlogNotSeen(blogQueryParam));

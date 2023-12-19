@@ -29,6 +29,12 @@ public class ReviewApi {
     public ResponseEntity<?> findByTourId(@RequestParam(name = "id") Integer id, ReviewQueryParam reviewQueryParam) {
         return ResponseEntity.ok(reviewServices.findReviewByTourId(id,reviewQueryParam));
     }
+
+    @GetMapping("/public/reviews/findByRating")
+    public ResponseEntity<?> findByRating(@RequestParam(name = "rating") Float rating, ReviewQueryParam reviewQueryParam) {
+        return ResponseEntity.ok(reviewServices.findReviewByRatting(rating,reviewQueryParam));
+    }
+
     @PostMapping("/user/reviews")
     public ResponseEntity<?> createReview(@RequestPart(name = "review") Review review) {
         APIResponse response = reviewServices.create(review);

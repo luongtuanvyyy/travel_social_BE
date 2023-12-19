@@ -20,6 +20,8 @@ public interface BlogServices {
 
     APIResponse filterBlog(BlogQueryParam blogQueryParam);
 
+    APIResponse getBlogComment(Integer id, BlogModalQueryParam blogModalQueryParam);
+
     APIResponse filterBlogNotSeen(BlogQueryParam blogQueryParam);
 
     APIResponse filterLeastBlog(BlogQueryParam blogQueryParam);

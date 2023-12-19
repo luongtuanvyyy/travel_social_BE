@@ -9,6 +9,7 @@ import com.app.entity.BlogReaction;
 import com.app.mapper.AccountMapper;
 import com.app.mapper.BlogMapper;
 import com.app.modal.BlogModal;
+import com.app.modal.CommentModel;
 import com.app.payload.request.BaseQueryRequest;
 import com.app.payload.request.BlogModalQueryParam;
 import com.app.payload.request.BlogQueryParam;
@@ -148,6 +149,22 @@ public class BlogServicesImpl implements BlogServices {
         try {
             Pageable pageable = requestParamsUtils.getPageable(blogModalQueryParam);
             Page<BlogModal> response = blogRepository.getBlogAccount(id, pageable);
+
+            if (response.isEmpty()) {
+                return new APIResponse(false, "No data found");
+            } else {
+                return new APIResponse(PageUtils.toPageResponse(response));
+            }
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
+    }
+
+    @Override
+    public APIResponse getBlogComment(Integer id, BlogModalQueryParam blogModalQueryParam) {
+        try {
+            Pageable pageable = requestParamsUtils.getPageable(blogModalQueryParam);
+            Page<CommentModel> response = blogRepository.getBlogComment(id, pageable);
 
             if (response.isEmpty()) {
                 return new APIResponse(false, "No data found");

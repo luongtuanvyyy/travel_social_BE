@@ -17,6 +17,8 @@ public interface ReviewServices {
 
     APIResponse findReviewByTourId(Integer id, ReviewQueryParam reviewQueryParam);
 
+    APIResponse findReviewByRatting(Float ratting, ReviewQueryParam reviewQueryParam);
+
     APIResponse uploadExcel(MultipartFile excel);
 
     APIResponse createBatch(List<Review> reviews);

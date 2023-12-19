@@ -106,6 +106,20 @@ public class ReviewServicesimpl implements ReviewServices {
     }
 
     @Override
+    public APIResponse findReviewByRatting(Float ratting, ReviewQueryParam reviewQueryParam) {
+        try {
+            Pageable pageable = requestParamsUtils.getPageable(reviewQueryParam);
+            Page<Review> response = reviewRepository.findByRating(ratting, pageable);
+            if (response.isEmpty()) {
+                return new APIResponse(false, "No data found");
+            } else {
+                return new APIResponse(PageUtils.toPageResponse(response));
+            }
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
+    }
+    @Override
     public APIResponse uploadExcel(MultipartFile excel) {
         return importExcelService.uploadExcel(excel, Review.class, reviewRepository);
     }

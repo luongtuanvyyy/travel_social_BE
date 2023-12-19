@@ -7,6 +7,7 @@ import com.app.payload.request.TourQueryParam;
 import com.app.payload.response.APIResponse;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 
 public interface TourServices {

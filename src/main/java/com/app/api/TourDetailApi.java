@@ -24,8 +24,8 @@ public class TourDetailApi {
     }
 
     @PostMapping("/company/tour-details")
-    public ResponseEntity<?> createTourDetail(@RequestPart(name = "tour") TourDetail tour) {
-        APIResponse response = tourDetailServices.create(tour);
+    public ResponseEntity<?> createTourDetail(@RequestBody TourDetail tourDetail) {
+        APIResponse response = tourDetailServices.create(tourDetail);
         return ResponseEntity.ok().body(response);
     }
 

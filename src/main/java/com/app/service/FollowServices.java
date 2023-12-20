@@ -2,6 +2,7 @@ package com.app.service;
 
 import com.app.entity.Follow;
 import com.app.entity.Voucher;
+import com.app.payload.request.AccountDataQueryParam;
 import com.app.payload.request.FollowQueryParam;
 import com.app.payload.response.APIResponse;
 import com.app.security.UserPrincipal;
@@ -21,5 +22,5 @@ public interface FollowServices {
     APIResponse delete(Integer userId, UserPrincipal userPrincipal);
     APIResponse getListYouFollow(UserPrincipal userPrincipal);
     APIResponse getListFollowYou(UserPrincipal userPrincipal);
-    APIResponse getTopFollower();
+    APIResponse getTopFollower(AccountDataQueryParam accountDataQueryParam);
 }

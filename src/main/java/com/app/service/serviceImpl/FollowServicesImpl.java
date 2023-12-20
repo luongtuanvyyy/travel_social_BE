@@ -5,6 +5,7 @@ import com.app.dto.Notification;
 import com.app.entity.Account;
 import com.app.entity.Follow;
 import com.app.mapper.AccountMapper;
+import com.app.payload.request.AccountDataQueryParam;
 import com.app.payload.request.FollowQueryParam;
 import com.app.payload.response.APIResponse;
 import com.app.payload.response.FailureAPIResponse;
@@ -18,6 +19,7 @@ import com.app.utils.PageUtils;
 import com.app.utils.RequestParamsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -154,10 +156,16 @@ public class FollowServicesImpl implements FollowServices {
         return new SuccessAPIResponse("Get your follower list successfully", peopleFollowYou);
     }
     @Override
-    public APIResponse getTopFollower() {
+    public APIResponse getTopFollower(AccountDataQueryParam accountDataQueryParam) {
         try {
+            Pageable pageable = requestParamsUtils.getPageable(accountDataQueryParam);
             List<AccountData> response = followRepository.getAccountsOrderByFollowerCount();
-            return new APIResponse(response);
+
+            int start = (int) pageable.getOffset();
+            int end = Math.min((start + pageable.getPageSize()), response.size());
+
+            Page<AccountData> page = new PageImpl<>(response.subList(start, end), pageable, response.size());
+            return new APIResponse(PageUtils.toPageResponse(page));
         } catch (Exception ex) {
             ex.printStackTrace();
             return new FailureAPIResponse(ex.getMessage());

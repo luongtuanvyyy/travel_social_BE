@@ -1,7 +1,5 @@
 package com.app.service.serviceImpl;
 
-import com.app.entity.Review;
-import com.app.entity.TourCancel;
 import com.app.entity.TourDetail;
 import com.app.payload.request.TourDetailQueryParam;
 import com.app.payload.response.APIResponse;
@@ -43,9 +41,9 @@ public class TourDetailServicesImpl implements TourDetailServices {
     @Override
     public APIResponse filterTourDetail(TourDetailQueryParam tourDetailQueryParam) {
         try {
-        Specification<TourDetail> spec = tourDetailSpecification.getTourDetailSpecification(tourDetailQueryParam);
-        Pageable pageable = requestParamsUtils.getPageable(tourDetailQueryParam);
-        Page<TourDetail> response = tourDetailRepository.findAll(spec, pageable);
+            Specification<TourDetail> spec = tourDetailSpecification.getTourDetailSpecification(tourDetailQueryParam);
+            Pageable pageable = requestParamsUtils.getPageable(tourDetailQueryParam);
+            Page<TourDetail> response = tourDetailRepository.findAll(spec, pageable);
             if (response.isEmpty()) {
                 return new APIResponse(false, "No data found");
             } else {
@@ -59,8 +57,8 @@ public class TourDetailServicesImpl implements TourDetailServices {
     @Override
     public APIResponse create(TourDetail tourDetail) {
         try {
-        tourDetail = tourDetailRepository.save(tourDetail);
-        return new SuccessAPIResponse(tourDetail);
+            tourDetail = tourDetailRepository.save(tourDetail);
+            return new SuccessAPIResponse(tourDetail);
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }
@@ -69,15 +67,15 @@ public class TourDetailServicesImpl implements TourDetailServices {
     @Override
     public APIResponse update(TourDetail tourDetail) {
         try {
-        if(tourDetail == null){
-            return  new FailureAPIResponse("Tour id is required!");
-        }
-        TourDetail exists = tourDetailRepository.findById(tourDetail.getId()).orElse(null);
-        if(exists == null){
-            return  new FailureAPIResponse("Cannot find tour with id: "+tourDetail.getId());
-        }
-        tourDetail = tourDetailRepository.save(tourDetail);
-        return new SuccessAPIResponse(tourDetail);
+            if (tourDetail == null) {
+                return new FailureAPIResponse("Tour id is required!");
+            }
+            TourDetail exists = tourDetailRepository.findById(tourDetail.getId()).orElse(null);
+            if (exists == null) {
+                return new FailureAPIResponse("Cannot find tour with id: " + tourDetail.getId());
+            }
+            tourDetail = tourDetailRepository.save(tourDetail);
+            return new SuccessAPIResponse(tourDetail);
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }

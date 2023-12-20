@@ -3,13 +3,11 @@ package com.app.repository;
 import com.app.dto.AccountData;
 import com.app.entity.Account;
 import com.app.entity.Follow;
-import io.swagger.models.auth.In;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,8 +22,7 @@ public interface FollowRepository extends JpaRepository<Follow, Integer> {
     @Query("SELECT new com.app.dto.AccountData(a.id, a.name, a.avatar, a.isVerify, a.email, COUNT(f)) " +
             "FROM Account a " +
             "JOIN Follow f ON f.account.id = a.id " +
-            "GROUP BY a.id, a.name, a.avatar, a.isVerify, a.email " +
-            "ORDER BY COUNT(f) DESC")
+            "GROUP BY a.id, a.name, a.avatar, a.isVerify, a.email ")
     List<AccountData> getAccountsOrderByFollowerCount();
 
     Follow findByAccountAndCreatedBy(com.app.entity.Account account, String createdBy);

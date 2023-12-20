@@ -32,17 +32,17 @@ public class TourDetail {
 
     @ManyToOne
     @JoinColumn(name = "PLACE_ID", referencedColumnName = "id")
-    private Place placeId;
+    private Place place;
 
     @ManyToOne
     @JoinColumn(name = "HOTEL_ID", referencedColumnName = "id")
-    private Hotel hotelId;
+    private Hotel hotel;
 
     @ManyToOne
     @JoinColumn(name = "RESTAURANT_ID", referencedColumnName = "id")
-    private Restaurant restaurantId;
+    private Restaurant restaurant;
 
     @ManyToOne
     @JoinColumn(name = "VEHICLE_ID", referencedColumnName = "id")
-    private Vehicle vehicleId;
+    private Vehicle vehicle;
 }

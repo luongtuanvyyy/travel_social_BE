@@ -2,6 +2,7 @@ package com.app.api;
 
 import com.app.entity.Favorite;
 import com.app.entity.Follow;
+import com.app.payload.request.AccountDataQueryParam;
 import com.app.payload.request.FollowQueryParam;
 import com.app.payload.response.APIResponse;
 import com.app.security.CurrentUser;
@@ -70,7 +71,7 @@ public class FollowApi {
     }
 
     @GetMapping("/user/follows/top-follow")
-    public ResponseEntity<?> getTopFollow() {
-        return ResponseEntity.ok(followServices.getTopFollower());
+    public ResponseEntity<?> getTopFollow(AccountDataQueryParam accountDataQueryParam) {
+        return ResponseEntity.ok(followServices.getTopFollower(accountDataQueryParam));
     }
 }

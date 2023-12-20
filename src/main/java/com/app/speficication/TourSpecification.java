@@ -23,6 +23,10 @@ public class TourSpecification {
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("id"), id);
     }
 
+    public Specification<Tour> hasIsActivatedEqual(Boolean isActivated) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("isActivated"), isActivated);
+    }
+
     public Specification<Tour> hasVehicleLike(String vehicle) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("vehicle"), "%" + vehicle + "%");
     }
@@ -102,6 +106,10 @@ public class TourSpecification {
 
     public Specification<Tour> getTourSpecification(TourQueryParam tourQueryParam) {
         Specification<Tour> spec = Specification.where(null);
+        System.out.println("===getIsActivated: " + tourQueryParam.getIsActivated());
+        if (tourQueryParam.getIsActivated() != null) {
+            spec = spec.and(hasIsActivatedEqual(tourQueryParam.getIsActivated()));
+        }
         if (tourQueryParam.getId() != null) {
             spec = spec.and(hasIdEqual(tourQueryParam.getId()));
         }

@@ -8,4 +8,5 @@ public class BaseQueryRequest {
     int pageSize = 16;
     String orderBy = "desc";
     String sortField = "id";
+    Boolean isActivated = Boolean.TRUE;
 }

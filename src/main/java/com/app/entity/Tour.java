@@ -55,6 +55,10 @@ public class Tour extends BaseEntity {
     @JoinColumn(name = "TOUR_TEMPLATE_ID", referencedColumnName = "ID")
     private TourTemplate tourTemplateId;
 
+    @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    @Fetch(FetchMode.SUBSELECT)
+    private List<TourDetail> tourDetailList;
 
 //    @OneToMany(mappedBy = "tour", fetch = FetchType.EAGER)
 //    @JsonManagedReference
@@ -65,11 +69,8 @@ public class Tour extends BaseEntity {
 //    @JsonManagedReference
 //    @Fetch(FetchMode.SUBSELECT)
 //    private List<Review> reviewList;
-//
-//    @OneToMany(mappedBy = "tour", fetch = FetchType.EAGER)
-//    @JsonManagedReference
-//    @Fetch(FetchMode.SUBSELECT)
-//    private List<TourDetail> tourDetailList;
+
+
 
 }
 

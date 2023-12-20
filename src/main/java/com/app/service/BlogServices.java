@@ -1,5 +1,6 @@
 package com.app.service;
 
+import com.app.dto.BlogUpdateDto;
 import com.app.entity.Blog;
 import com.app.entity.Voucher;
 import com.app.payload.request.BaseQueryRequest;
@@ -28,7 +29,11 @@ public interface BlogServices {
 
     APIResponse create(Blog blog, HttpServletRequest request);
 
+    APIResponse create(Blog blog, MultipartFile image);
+
     APIResponse update(Blog blog, HttpServletRequest request);
+
+    APIResponse update(BlogUpdateDto blog, MultipartFile image);
 
     APIResponse delete(Integer id);
 

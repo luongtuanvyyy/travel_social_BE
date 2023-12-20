@@ -1,5 +1,6 @@
 package com.app.api;
 
+import com.app.dto.BlogUpdateDto;
 import com.app.entity.Blog;
 import com.app.entity.BlogReaction;
 import com.app.entity.Voucher;
@@ -35,18 +36,22 @@ public class BlogApi {
     BlogInteractionService blogInteractionService;
     @Autowired
     BlogReactionServices blogReactionServices;
+
     @PostMapping("/user/blogs/share")
     public ResponseEntity<?> getShare(@RequestParam("id") Integer id, BlogQueryParam blogQueryParam) {
         return ResponseEntity.ok(blogServices.getAccountByBlogId(id, blogQueryParam));
     }
+
     @DeleteMapping("/user/blogs/share")
     public ResponseEntity<?> getDeleteShare(@RequestParam("id") Integer id, @CurrentUser UserPrincipal userPrincipal) {
         return ResponseEntity.ok(blogReactionServices.deleteShare(id, userPrincipal));
     }
+
     @PostMapping("/user/blogs/like")
     public ResponseEntity<?> cretaLike(@RequestParam("id") Integer id, @CurrentUser UserPrincipal userPrincipal) {
         return ResponseEntity.ok(blogReactionServices.createLike(id, userPrincipal));
     }
+
     @GetMapping("/public/blogs")
     public ResponseEntity<?> getAllBlog(BlogModalQueryParam blogModalQueryParam) {
         return ResponseEntity.ok(blogServices.getAllBlogWithAccount(blogModalQueryParam));
@@ -61,6 +66,7 @@ public class BlogApi {
     public ResponseEntity<?> getBlogComment(@RequestParam("id") Integer id, BlogModalQueryParam blogModalQueryParam) {
         return ResponseEntity.ok(blogServices.getBlogComment(id, blogModalQueryParam));
     }
+
     @GetMapping("/public/blogs/notSeen")
     public ResponseEntity<?> filterBlogNotSeen(BlogQueryParam blogQueryParam) {
         return ResponseEntity.ok(blogServices.filterBlogNotSeen(blogQueryParam));
@@ -72,16 +78,14 @@ public class BlogApi {
     }
 
     @PostMapping("/user/blogs")
-    public ResponseEntity<?> createBlog(@RequestPart(name = "blog") Blog blog,
-                                        HttpServletRequest request) {
-        APIResponse response = blogServices.create(blog, request);
+    public ResponseEntity<?> createBlog(@RequestPart(name = "blog") Blog blog, @RequestPart(name = "image") MultipartFile image) {
+        APIResponse response = blogServices.create(blog, image);
         return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/user/blogs")
-    public ResponseEntity<?> updateBlog(@RequestPart(name = "blog") Blog blog,
-                                        HttpServletRequest request) {
-        APIResponse response = blogServices.update(blog, request);
+    public ResponseEntity<?> updateBlog(@RequestPart(name = "blog") BlogUpdateDto blog, @RequestPart(name = "image") @Nullable MultipartFile image) {
+        APIResponse response = blogServices.update(blog, image);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

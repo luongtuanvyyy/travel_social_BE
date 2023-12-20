@@ -2,6 +2,7 @@ package com.app.service.serviceImpl;
 
 import com.app.dto.AccountCommentDto;
 import com.app.dto.BlogDto;
+import com.app.dto.BlogUpdateDto;
 import com.app.entity.Account;
 import com.app.entity.Blog;
 import com.app.entity.BlogComment;
@@ -14,6 +15,7 @@ import com.app.payload.request.BaseQueryRequest;
 import com.app.payload.request.BlogModalQueryParam;
 import com.app.payload.request.BlogQueryParam;
 import com.app.payload.response.APIResponse;
+import com.app.payload.response.CloudinaryResponse;
 import com.app.payload.response.FailureAPIResponse;
 import com.app.payload.response.SuccessAPIResponse;
 import com.app.repository.*;
@@ -23,6 +25,7 @@ import com.app.speficication.BlogModalSpecification;
 import com.app.speficication.BlogSpecification;
 import com.app.utils.PageUtils;
 import com.app.utils.RequestParamsUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -68,6 +71,9 @@ public class BlogServicesImpl implements BlogServices {
 
     @Autowired
     AccountMapper accountMapper;
+
+    @Autowired
+    ModelMapper modelMapper;
 
     @Override
     public List<Blog> findAll() {
@@ -223,6 +229,47 @@ public class BlogServicesImpl implements BlogServices {
     }
 
     @Override
+    public APIResponse create(Blog blog, MultipartFile image) {
+        try {
+            if (image != null) {
+                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "product");
+                blog.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
+                blog.setImage(cloudinaryResponse.getUrl());
+            }
+            blogRepository.save(blog);
+            return new SuccessAPIResponse("Save Blog successfully !!");
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
+    }
+
+    @Override
+    public APIResponse update(BlogUpdateDto blog, MultipartFile image) {
+        try {
+            if (blog.getId() == null) {
+                return new FailureAPIResponse("Blog id is required!");
+            }
+            Blog exists = blogRepository.findById(blog.getId()).orElse(null);
+            if (exists == null) {
+                return new FailureAPIResponse("Cannot find blog with id: " + blog.getId());
+            }
+            if (image != null) {
+                cloudinaryService.deleteFile(exists.getCloudinaryId());
+                CloudinaryResponse cloudinaryResponse = cloudinaryService.uploadFile(image, "product");
+                exists.setCloudinaryId(cloudinaryResponse.getCloudinaryId());
+                exists.setImage(cloudinaryResponse.getUrl());
+            }
+
+            modelMapper.map(blog, exists);
+
+            blogRepository.save(exists);
+            return new SuccessAPIResponse("Update Blog successfully");
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
+    }
+
+    @Override
     public APIResponse update(Blog blog, HttpServletRequest request) {
         try {
 
@@ -244,8 +291,13 @@ public class BlogServicesImpl implements BlogServices {
     @Override
     public APIResponse delete(Integer id) {
         try {
-            blogRepository.deleteById(id);
-            return new SuccessAPIResponse("Delete successfully!");
+            Blog exists = blogRepository.findById(id).orElse(null);
+            if (exists == null) {
+                return new FailureAPIResponse("Cannot find blog with id: " + id);
+            }
+            exists.setIsActivated(false);
+            blogRepository.save(exists);
+            return new SuccessAPIResponse("Set un activated successfully!");
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }
@@ -282,7 +334,7 @@ public class BlogServicesImpl implements BlogServices {
         blogReaction.setShare(true);
         if (response.hasContent()) {
             blog.setDescription(response.getContent().get(0).getDescription());
-            blog.setPlaceId(response.getContent().get(0).getPlaceId());
+            blog.setPlace(response.getContent().get(0).getPlace());
             blog.setTour(response.getContent().get(0).getTour());
             blog.setImage(response.getContent().get(0).getImage());
             blog.setCloudinaryId(response.getContent().get(0).getCloudinaryId());

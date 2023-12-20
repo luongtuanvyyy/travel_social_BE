@@ -22,7 +22,7 @@ public class Blog extends BaseEntity {
     private String cloudinaryId;
     @ManyToOne
     @JoinColumn(name = "PLACE_ID", referencedColumnName = "ID")
-    private Place placeId;
+    private Place place;
     @ManyToOne
     @JoinColumn(name = "TOUR_ID", referencedColumnName = "ID")
     @JsonBackReference

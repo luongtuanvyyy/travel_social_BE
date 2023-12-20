@@ -1,6 +1,5 @@
 package com.app.api;
 
-import com.app.entity.Review;
 import com.app.entity.Tour;
 import com.app.payload.request.TourQueryParam;
 import com.app.payload.response.APIResponse;
@@ -10,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -28,32 +26,35 @@ public class TourApi {
     public ResponseEntity<?> findById(@RequestParam("id") Integer id) {
         return ResponseEntity.ok(tourServices.findbyid(id));
     }
+
     @GetMapping("/public/tours/getAccount")
     public ResponseEntity<?> getAccount(@RequestParam("id") Integer id, TourQueryParam tourQueryParam) {
         return ResponseEntity.ok(tourServices.getAccountByTourId(id, tourQueryParam));
     }
+
     @GetMapping("/public/tours/nullDiscount")
     public ResponseEntity<?> filterTourDiscount(TourQueryParam tourQueryParam) {
         return ResponseEntity.ok(tourServices.filterTourDiscount(tourQueryParam));
     }
 
     @GetMapping("/public/tours/findTourById")
-    public ResponseEntity<?> findTourById(@RequestParam("id") Integer id,TourQueryParam tourQueryParam) {
-        return ResponseEntity.ok(tourServices.findTourDetailById(id,tourQueryParam));
+    public ResponseEntity<?> findTourById(@RequestParam("id") Integer id, TourQueryParam tourQueryParam) {
+        return ResponseEntity.ok(tourServices.findTourDetailById(id, tourQueryParam));
     }
+
     @GetMapping("/public/tours/filterNewlyPosted")
     public ResponseEntity<?> filterNewlyPosted(TourQueryParam tourQueryParam) {
         return ResponseEntity.ok(tourServices.filterNewlyPosted(tourQueryParam));
     }
+
     @PostMapping("/company/tours")
-    public ResponseEntity<?> createTour(@RequestPart(name = "tour") Tour tour) {
+    public ResponseEntity<?> createTour(@RequestBody Tour tour) {
         APIResponse response = tourServices.create(tour);
         return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/company/tours")
-    public ResponseEntity<?> updateTour(@RequestPart(name = "tour") Tour tour
-                                     ) {
+    public ResponseEntity<?> updateTour(@RequestBody Tour tour) {
         APIResponse response = tourServices.update(tour);
         return ResponseEntity.ok().body(response);
     }
@@ -69,6 +70,7 @@ public class TourApi {
         APIResponse response = tourServices.uploadExcel(excel);
         return ResponseEntity.ok().body(response);
     }
+
     @PostMapping("/company/tours/batch")
     public ResponseEntity<?> createToursBatch(@RequestBody List<Tour> tours) {
         APIResponse response = tourServices.createBatch(tours);

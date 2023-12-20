@@ -38,6 +38,7 @@ public class AccountMapper {
 
     public AccountCommentDto accountCommentDto(Account account, BlogComment blogComment) {
         AccountCommentDto accountCommentDto = account == null ? null : modelMapper.map(account, AccountCommentDto.class);
+        accountCommentDto.setId(blogComment.getId());
         accountCommentDto.setContent(blogComment.getContent());
         return accountCommentDto;
     }

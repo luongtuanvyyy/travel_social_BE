@@ -53,8 +53,8 @@ public class BlogApi {
     }
 
     @GetMapping("/public/blogs")
-    public ResponseEntity<?> filterBlog(BlogQueryParam blogModalQueryParam) {
-        return ResponseEntity.ok(blogServices.filterBlog(blogModalQueryParam));
+    public ResponseEntity<?> filterBlog(BlogModalQueryParam blogModalQueryParam) {
+        return ResponseEntity.ok(blogServices.getAllBlogWithAccount(blogModalQueryParam));
     }
 
     @GetMapping("/public/blog")

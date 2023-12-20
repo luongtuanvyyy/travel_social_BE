@@ -1,10 +1,12 @@
 package com.app.service;
 
+import com.app.payload.response.APIResponse;
+
 import javax.servlet.http.HttpServletRequest;
 
 public interface VNPayService {
-    public String createOder(int total, String orderInfor, String urlReturn);
+     APIResponse createOder(int total, String orderInfor, String urlReturn);
 
-    public int orderReturn(HttpServletRequest request);
+     int orderReturn(HttpServletRequest request);
 
 }

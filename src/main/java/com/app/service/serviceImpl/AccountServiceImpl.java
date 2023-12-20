@@ -1,6 +1,7 @@
 package com.app.service.serviceImpl;
 
 import com.app.entity.Account;
+import com.app.modal.AccountDetail;
 import com.app.modal.Image;
 import com.app.payload.request.AccountQueryParam;
 import com.app.payload.response.APIResponse;
@@ -79,6 +80,23 @@ public class AccountServiceImpl implements AccountService {
         } catch (Exception ex) {
             return new FailureAPIResponse(ex.getMessage());
         }
+    }
+
+    @Override
+    public APIResponse getAccountDetail(Integer id, AccountQueryParam accountQueryParam) {
+        try{
+            Pageable pageable = requestParamsUtils.getPageable(accountQueryParam);
+            AccountDetail response = accountRepository.getAccount(id);
+//            if (response.isEmpty()) {
+//                return new APIResponse(false, "No data found");
+//            } else {
+//                return new APIResponse(PageUtils.toPageResponse(response));
+//            }
+            return new APIResponse(response);
+        } catch (Exception ex) {
+            return new FailureAPIResponse(ex.getMessage());
+        }
+//        return null;
     }
 
 

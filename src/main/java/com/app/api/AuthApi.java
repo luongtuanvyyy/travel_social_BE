@@ -103,9 +103,10 @@ public class AuthApi {
 //        return ResponseEntity.ok(response);
 //    }
 
-    @GetMapping("/profile")
-    public ResponseEntity<?> getProfile() {
-        return ResponseEntity.ok("null");
+    @GetMapping("/user/profile")
+    public ResponseEntity<?> getProfile(@CurrentUser UserPrincipal userPrincipal) {
+        APIResponse response = authService.getAccount(userPrincipal);
+        return ResponseEntity.ok(response);
     }
 
 }

@@ -57,14 +57,14 @@ public class AccountApi {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
         }
     }
-    @GetMapping("/user/profile")
-    public ResponseEntity<?> getaccountDetaiA(@RequestParam("id") Integer id, AccountQueryParam accountQueryParam) {
-        try {
-            return ResponseEntity.ok(accountService.getAccountDetail(id, accountQueryParam));
-        } catch (Exception e) {
-            // Handle the exception or log the error message
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
-        }
-    }
+//    @GetMapping("/user/profile")
+//    public ResponseEntity<?> getaccountDetaiA(@RequestParam("id") Integer id, AccountQueryParam accountQueryParam) {
+//        try {
+//            return ResponseEntity.ok(accountService.getAccountDetail(id, accountQueryParam));
+//        } catch (Exception e) {
+//            // Handle the exception or log the error message
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+//        }
+//    }
 
 }
